@@ -188,33 +188,40 @@ td.school-name .grade{display:block;font-size:9px;font-weight:500;color:var(--te
 .mini-table tr:last-child td{border-bottom:none}
 
 /* ── BOARD EXPORT VIEW ── */
-.board-view{background:var(--white);color:#1A2A30;border-radius:12px;padding:32px;max-width:680px;margin:0 auto;font-family:'Inter',sans-serif}
+#view-board{background:#F0F2F4;padding:24px}
+#view-board .viewing-as{background:#FBF5E6;border-color:rgba(201,168,76,.3)}
+#view-board .va-text{color:#4A5C64}
+#view-board .va-text strong{color:#B8943E}
+#view-board .va-right{color:#8A9BA3}
+#view-board .header-actions{margin-bottom:18px;display:flex;justify-content:flex-end}
+.board-view{background:#ffffff;color:#1A2A30;border-radius:12px;padding:32px;max-width:680px;margin:0 auto;font-family:'Inter',sans-serif;box-shadow:0 4px 24px rgba(0,0,0,.12)}
 .bv-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;gap:12px}
 .bv-seal{width:44px;height:44px;border-radius:50%;background:#0D1B2A;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:#C9A84C;flex-shrink:0}
-.bv-title h2{font-size:17px;font-weight:900;color:#1A2A30;line-height:1.1}
-.bv-title p{font-size:10px;color:#8A9BA3;margin-top:3px}
-.bv-date{font-size:10px;color:#8A9BA3;text-align:right;flex-shrink:0}
+.bv-title h2{font-size:17px;font-weight:900;color:#0D1B2A;line-height:1.1}
+.bv-title p{font-size:10px;color:#6B7E8A;margin-top:3px}
+.bv-date{font-size:10px;color:#6B7E8A;text-align:right;flex-shrink:0;line-height:1.7}
 .bv-divider{border:none;border-top:2px solid #0D1B2A;margin:16px 0 20px}
 .bv-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
-.bv-kpi{text-align:center;padding:14px 8px;background:#F8F9FA;border-radius:10px}
+.bv-kpi{text-align:center;padding:14px 8px;background:#F4F6F8;border-radius:10px;border:1px solid #E2E8F0}
 .bv-kpi .n{font-size:1.8rem;font-weight:900;line-height:1;margin-bottom:2px}
-.bv-kpi .l{font-size:8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#8A9BA3;line-height:1.3}
+.bv-kpi .l{font-size:8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#6B7E8A;line-height:1.3}
 .bv-section{margin-bottom:20px}
-.bv-section h4{font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#8A9BA3;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #E8EAEA}
-.bv-school-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #F0F0F0}
+.bv-section h4{font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#6B7E8A;margin-bottom:10px;padding-bottom:6px;border-bottom:1.5px solid #E2E8F0}
+.bv-school-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #EEF0F2}
 .bv-school-row:last-child{border-bottom:none}
-.bv-school-name{font-size:11px;font-weight:600;color:#1A2A30;flex:1}
-.bv-bar{height:5px;border-radius:100px;background:#E8EAEA;width:120px}
+.bv-school-name{font-size:11px;font-weight:600;color:#0D1B2A;flex:1}
+.bv-bar{height:6px;border-radius:100px;background:#E2E8F0;width:120px;flex-shrink:0}
 .bv-bar-fill{height:100%;border-radius:100px;background:#1ABCB0}
 .bv-pct{font-size:10px;font-weight:700;color:#1A2A30;min-width:34px;text-align:right}
-.bv-flag{font-size:9px;font-weight:700;padding:2px 7px;border-radius:100px}
+.bv-flag{font-size:9px;font-weight:700;padding:3px 8px;border-radius:100px;white-space:nowrap}
 .bv-flag-ok{background:#E6F9F1;color:#1A7A50}
-.bv-flag-warn{background:#FEF0E6;color:#C05A20}
-.bv-footer{margin-top:18px;padding-top:12px;border-top:1px solid #E8EAEA;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
-.bv-footer p{font-size:9px;color:#8A9BA3;line-height:1.6}
+.bv-flag-warn{background:#FEF0E6;color:#B05010}
+.bv-actions-text{font-size:11px;color:#2A3C46;line-height:1.85}
+.bv-footer{margin-top:20px;padding-top:14px;border-top:1.5px solid #E2E8F0;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:8px}
+.bv-footer p{font-size:9px;color:#6B7E8A;line-height:1.7}
 .bv-sig{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
-.sig-field{border-bottom:1px solid #C0C8CC;width:180px;height:24px}
-.sig-field-label{font-size:8px;color:#8A9BA3;font-weight:600;letter-spacing:.05em}
+.sig-field{border-bottom:1.5px solid #A0B0B8;width:180px;height:24px}
+.sig-field-label{font-size:8px;color:#6B7E8A;font-weight:600;letter-spacing:.05em}
 
 /* ── SPECIALIST / TEACHER / PRINCIPAL VIEWS ── */
 .caseload-header{display:flex;align-items:center;gap:12px;background:var(--navy-card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:18px;flex-wrap:wrap}
@@ -665,7 +672,7 @@ td.school-name .grade{display:block;font-size:9px;font-weight:500;color:var(--te
     </div>
     <div class="bv-section">
       <h4>Key Actions Required</h4>
-      <p style="font-size:11px;color:#4A5C64;line-height:1.8">1. Pleasants Lane Elementary — 11 students require reading specialist assignment before plans can be finalized (state statute § 22.1-253.13:1 G requires co-ownership).<br>2. Vernon Johns Middle — 14 letters pending parent participation documentation.<br>3. Lakemont Elementary — 9 written refusal documents require upload to the district intake folder for audit compliance.</p>
+      <p class="bv-actions-text">1. Pleasants Lane Elementary — 11 students require reading specialist assignment before plans can be finalized (state statute § 22.1-253.13:1 G requires co-ownership).<br>2. Vernon Johns Middle — 14 letters pending parent participation documentation.<br>3. Lakemont Elementary — 9 written refusal documents require upload to the district intake folder for audit compliance.</p>
     </div>
     <div class="bv-footer">
       <p>All data governed by FERPA · Student identifiers not included in this report<br>Virginia Literacy Act compliance reporting · VDOE guidance October 22, 2025<br>Source: Petersburg CIC Reading Plan Compliance System</p>
