@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Command Insight Center — Live Preview · PCPS</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ── RESET & BASE ── */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'Inter',sans-serif;background:#0D1B2A;color:#fff;-webkit-font-smoothing:antialiased;line-height:1.5}
+
+/* ── VARIABLES ── */
+:root{
+  --navy:#0D1B2A;--navy-mid:#111f2e;--navy-card:#152130;--navy-hover:#1a2d3f;
+  --gold:#C9A84C;--gold-light:#e8c96a;--gold-pale:rgba(201,168,76,.08);
+  --teal:#1ABCB0;--teal-pale:rgba(26,188,176,.1);
+  --border:rgba(255,255,255,.07);--border-hover:rgba(201,168,76,.3);
+  --text-dim:rgba(255,255,255,.38);--text-mid:rgba(255,255,255,.6);--text-on:#fff;
+  --green:#2EB87A;--green-pale:rgba(46,184,122,.12);
+  --orange:#E07B39;--orange-pale:rgba(224,123,57,.12);
+  --red:#D94F4F;--red-pale:rgba(217,79,79,.12);
+  --purple:#8B7CF6;--purple-pale:rgba(139,124,246,.12);
+  --nav-h:54px;
+}
+
+/* ── TOP NAV ── */
+.top-nav{position:fixed;top:0;left:0;right:0;height:var(--nav-h);background:rgba(11,23,36,.97);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 20px;gap:12px}
+.nav-brand{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.nav-seal{width:28px;height:28px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:var(--navy)}
+.nav-name{font-size:11px;font-weight:700;color:var(--text-on);line-height:1.2}
+.nav-name span{display:block;font-size:9px;font-weight:400;color:var(--text-dim);letter-spacing:.04em}
+.preview-badge{background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.3);color:var(--gold);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:100px;flex-shrink:0}
+.nav-back{font-size:11px;color:var(--text-dim);text-decoration:none;display:flex;align-items:center;gap:5px;flex-shrink:0;transition:color .15s}
+.nav-back:hover{color:var(--gold)}
+
+/* ── ROLE SWITCHER ── */
+.role-bar{position:fixed;top:var(--nav-h);left:0;right:0;height:44px;background:#0a1520;border-bottom:1px solid var(--border);z-index:190;display:flex;align-items:center;padding:0 20px;gap:6px;overflow-x:auto;scrollbar-width:none}
+.role-bar::-webkit-scrollbar{display:none}
+.role-bar-label{font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);margin-right:6px;flex-shrink:0}
+.rbtn{font-size:10px;font-weight:600;padding:5px 14px;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--text-mid);cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0}
+.rbtn:hover{border-color:var(--border-hover);color:var(--gold)}
+.rbtn.active{background:var(--gold-pale);border-color:rgba(201,168,76,.4);color:var(--gold)}
+
+/* ── MAIN SHELL ── */
+.shell{padding-top:calc(var(--nav-h) + 44px);min-height:100vh}
+.view{display:none;padding:24px 20px;max-width:1100px;margin:0 auto}
+.view.active{display:block}
+
+/* ── VIEWING-AS BANNER ── */
+.viewing-as{display:flex;align-items:center;justify-content:space-between;background:var(--gold-pale);border:1px solid rgba(201,168,76,.2);border-radius:10px;padding:10px 16px;margin-bottom:22px;flex-wrap:wrap;gap:8px}
+.va-left{display:flex;align-items:center;gap:10px}
+.va-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0}
+.va-text{font-size:11px;color:var(--text-mid)}
+.va-text strong{color:var(--gold);font-weight:700}
+.va-right{font-size:10px;color:var(--text-dim);font-style:italic}
+
+/* ── PAGE HEADER ── */
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:12px}
+.page-title{font-size:20px;font-weight:800;color:var(--text-on);line-height:1.1}
+.page-title span{display:block;font-size:11px;font-weight:400;color:var(--text-dim);margin-top:3px;letter-spacing:.02em}
+.header-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:6px;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;padding:9px 16px;border-radius:8px;border:none;cursor:pointer;transition:all .15s;text-decoration:none;white-space:nowrap}
+.btn-gold{background:var(--gold);color:var(--navy)}
+.btn-gold:hover{background:var(--gold-light)}
+.btn-ghost{background:transparent;color:var(--text-mid);border:1px solid var(--border)}
+.btn-ghost:hover{border-color:var(--border-hover);color:var(--gold)}
+.btn-teal{background:rgba(26,188,176,.15);color:var(--teal);border:1px solid rgba(26,188,176,.25)}
+.btn-teal:hover{background:rgba(26,188,176,.25)}
+.btn-sm{padding:6px 12px;font-size:10px}
+
+/* ── KPI CARDS ── */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.kpi{background:var(--navy-card);border:1px solid var(--border);border-radius:12px;padding:18px 16px;transition:border-color .15s}
+.kpi:hover{border-color:var(--border-hover)}
+.kpi-label{font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px}
+.kpi-value{font-size:2rem;font-weight:900;line-height:1;margin-bottom:4px}
+.kpi-sub{font-size:10px;color:var(--text-dim);display:flex;align-items:center;gap:4px}
+.trend-up{color:var(--green)}
+.trend-down{color:var(--red)}
+.kpi-alert .kpi-value{color:var(--red)}
+.kpi-green .kpi-value{color:var(--green)}
+.kpi-gold .kpi-value{color:var(--gold)}
+.kpi-teal .kpi-value{color:var(--teal)}
+
+/* ── SECTION HEADER ── */
+.sec-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.sec-title{font-size:12px;font-weight:700;color:var(--text-on);display:flex;align-items:center;gap:8px}
+.sec-title .dot{width:6px;height:6px;border-radius:50%}
+
+/* ── TABS ── */
+.tabs{display:flex;gap:4px;background:#0a1520;border:1px solid var(--border);border-radius:10px;padding:3px;margin-bottom:18px;width:fit-content}
+.tab{font-size:10px;font-weight:600;padding:6px 16px;border-radius:7px;border:none;background:transparent;color:var(--text-dim);cursor:pointer;transition:all .15s;white-space:nowrap}
+.tab.active{background:var(--navy-card);color:var(--text-on)}
+.tab.next-phase{color:var(--text-dim);opacity:.6;position:relative}
+.tab.next-phase::after{content:'Phase 2';font-size:7px;font-weight:700;background:var(--orange-pale);color:var(--orange);border:1px solid rgba(224,123,57,.3);padding:1px 5px;border-radius:100px;margin-left:4px;letter-spacing:.05em}
+
+/* ── COMPLIANCE TABLE ── */
+.table-wrap{background:var(--navy-card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:22px}
+table{width:100%;border-collapse:collapse}
+thead th{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);padding:12px 14px;text-align:left;border-bottom:1px solid var(--border);background:#0e1e2e;white-space:nowrap}
+tbody tr{border-bottom:1px solid var(--border);transition:background .12s;cursor:pointer}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:var(--navy-hover)}
+tbody td{padding:13px 14px;font-size:11px;color:var(--text-mid);vertical-align:middle}
+td.school-name{font-weight:700;color:var(--text-on);font-size:12px}
+td.school-name .grade{display:block;font-size:9px;font-weight:500;color:var(--text-dim);margin-top:2px}
+
+/* ── STATUS PILLS ── */
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;padding:3px 9px;border-radius:100px;letter-spacing:.04em;white-space:nowrap}
+.pill-green{background:var(--green-pale);color:var(--green)}
+.pill-orange{background:var(--orange-pale);color:var(--orange)}
+.pill-red{background:var(--red-pale);color:var(--red)}
+.pill-teal{background:var(--teal-pale);color:var(--teal)}
+.pill-gold{background:var(--gold-pale);color:var(--gold)}
+.pill-dim{background:rgba(255,255,255,.06);color:var(--text-dim)}
+.pdot{width:5px;height:5px;border-radius:50%;flex-shrink:0;animation:pulse 1.5s ease-in-out infinite}
+.pdot-red{background:var(--red)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.2}}
+
+/* ── PROGRESS BAR ── */
+.pbar-wrap{display:flex;align-items:center;gap:8px}
+.pbar{height:6px;border-radius:100px;background:rgba(255,255,255,.08);flex:1;overflow:hidden;min-width:60px}
+.pbar-fill{height:100%;border-radius:100px;transition:width .4s}
+.pbar-num{font-size:10px;font-weight:700;min-width:30px;text-align:right}
+
+/* ── ALERT PANEL ── */
+.alert-panel{background:var(--red-pale);border:1px solid rgba(217,79,79,.2);border-radius:12px;padding:16px 18px;margin-bottom:22px}
+.alert-header{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.alert-header h4{font-size:12px;font-weight:700;color:var(--red)}
+.alert-items{display:flex;flex-direction:column;gap:8px}
+.alert-item{display:flex;align-items:flex-start;gap:10px;font-size:11px;color:var(--text-mid);line-height:1.5}
+.alert-item::before{content:'!';background:var(--red);color:#fff;font-size:8px;font-weight:900;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+
+/* ── READING PLAN GENERATOR ── */
+.gen-panel{background:var(--navy-card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:22px}
+.gen-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.gen-header h3{font-size:13px;font-weight:700;color:var(--text-on)}
+.gen-header p{font-size:11px;color:var(--text-dim);margin-top:2px}
+.gen-body{padding:20px}
+.gen-form{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+.fgroup{display:flex;flex-direction:column;gap:5px}
+.fgroup label{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim)}
+.fgroup select,.fgroup input{background:#0a1520;border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:11px;font-family:'Inter',sans-serif;color:var(--text-on);outline:none;transition:border-color .15s;-webkit-appearance:none}
+.fgroup select:focus,.fgroup input:focus{border-color:rgba(201,168,76,.4)}
+.fgroup select option{background:#0a1520}
+.gen-footer{border-top:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.gen-note{font-size:10px;color:var(--text-dim);font-style:italic}
+
+/* ── LETTER OUTPUT ── */
+.letter-output{display:none;margin-top:0}
+.letter-output.show{display:block}
+.letter-wrap{background:var(--white);border-radius:12px;padding:32px 36px;color:#1A2A30;font-family:'Inter',sans-serif;position:relative;max-width:700px;margin:0 auto}
+.letter-actions{display:flex;gap:8px;justify-content:flex-end;margin-bottom:16px}
+.letter-district{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#1ABCB0;margin-bottom:2px}
+.letter-school-name{font-size:13px;font-weight:700;color:#1A2A30;margin-bottom:2px}
+.letter-contact{font-size:10px;color:#4A5C64}
+.letter-divider{border:none;border-top:1.5px solid #E8EAEA;margin:14px 0}
+.letter-subject{font-size:12px;font-weight:700;color:#1A2A30;margin-bottom:14px}
+.letter-body-text{font-size:11px;color:#4A5C64;line-height:1.85;margin-bottom:14px}
+.letter-section{border-left:3px solid #1ABCB0;padding:8px 0 8px 14px;margin-bottom:10px}
+.letter-section h5{font-size:10px;font-weight:700;color:#1A2A30;margin-bottom:3px;text-transform:uppercase;letter-spacing:.06em}
+.letter-section p{font-size:11px;color:#4A5C64;line-height:1.75}
+.letter-footer{margin-top:18px;padding-top:14px;border-top:1.5px solid #E8EAEA;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.sig-block p{font-size:10px;color:#4A5C64;margin-bottom:14px}
+.sig-line{border-bottom:1px solid #C0C8CC;margin-bottom:3px;height:28px}
+.sig-label{font-size:9px;color:#8A9BA3;font-weight:600;letter-spacing:.05em}
+.lang-toggle{display:flex;gap:6px;margin-bottom:12px}
+.ltbtn{font-size:9px;font-weight:700;padding:3px 10px;border-radius:100px;border:1px solid #E8EAEA;background:transparent;color:#4A5C64;cursor:pointer;transition:all .15s}
+.ltbtn.active{background:#1ABCB0;border-color:#1ABCB0;color:#fff}
+.compliance-check{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.cc{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:600;padding:3px 9px;border-radius:100px;background:#E0F7F5;color:#0D6B64}
+.cc::before{content:'✓';font-weight:900}
+
+/* ── SCHOOL DRILL VIEW ── */
+.school-drill{display:none;background:var(--navy-card);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:20px}
+.school-drill.show{display:block}
+.drill-header{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.drill-back{background:transparent;border:none;color:var(--text-dim);font-size:11px;cursor:pointer;display:flex;align-items:center;gap:4px;font-family:'Inter',sans-serif;transition:color .15s}
+.drill-back:hover{color:var(--gold)}
+.drill-title{font-size:15px;font-weight:800;color:var(--text-on)}
+.drill-grade{font-size:10px;color:var(--text-dim);margin-left:8px}
+.mini-table{width:100%;border-collapse:collapse}
+.mini-table th{font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);padding:8px 10px;text-align:left;border-bottom:1px solid var(--border)}
+.mini-table td{padding:10px 10px;font-size:10px;color:var(--text-mid);border-bottom:1px solid rgba(255,255,255,.04)}
+.mini-table tr:last-child td{border-bottom:none}
+
+/* ── BOARD EXPORT VIEW ── */
+.board-view{background:var(--white);color:#1A2A30;border-radius:12px;padding:32px;max-width:680px;margin:0 auto;font-family:'Inter',sans-serif}
+.bv-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;gap:12px}
+.bv-seal{width:44px;height:44px;border-radius:50%;background:#0D1B2A;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:#C9A84C;flex-shrink:0}
+.bv-title h2{font-size:17px;font-weight:900;color:#1A2A30;line-height:1.1}
+.bv-title p{font-size:10px;color:#8A9BA3;margin-top:3px}
+.bv-date{font-size:10px;color:#8A9BA3;text-align:right;flex-shrink:0}
+.bv-divider{border:none;border-top:2px solid #0D1B2A;margin:16px 0 20px}
+.bv-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.bv-kpi{text-align:center;padding:14px 8px;background:#F8F9FA;border-radius:10px}
+.bv-kpi .n{font-size:1.8rem;font-weight:900;line-height:1;margin-bottom:2px}
+.bv-kpi .l{font-size:8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#8A9BA3;line-height:1.3}
+.bv-section{margin-bottom:20px}
+.bv-section h4{font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#8A9BA3;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid #E8EAEA}
+.bv-school-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid #F0F0F0}
+.bv-school-row:last-child{border-bottom:none}
+.bv-school-name{font-size:11px;font-weight:600;color:#1A2A30;flex:1}
+.bv-bar{height:5px;border-radius:100px;background:#E8EAEA;width:120px}
+.bv-bar-fill{height:100%;border-radius:100px;background:#1ABCB0}
+.bv-pct{font-size:10px;font-weight:700;color:#1A2A30;min-width:34px;text-align:right}
+.bv-flag{font-size:9px;font-weight:700;padding:2px 7px;border-radius:100px}
+.bv-flag-ok{background:#E6F9F1;color:#1A7A50}
+.bv-flag-warn{background:#FEF0E6;color:#C05A20}
+.bv-footer{margin-top:18px;padding-top:12px;border-top:1px solid #E8EAEA;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.bv-footer p{font-size:9px;color:#8A9BA3;line-height:1.6}
+.bv-sig{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.sig-field{border-bottom:1px solid #C0C8CC;width:180px;height:24px}
+.sig-field-label{font-size:8px;color:#8A9BA3;font-weight:600;letter-spacing:.05em}
+
+/* ── SPECIALIST / TEACHER / PRINCIPAL VIEWS ── */
+.caseload-header{display:flex;align-items:center;gap:12px;background:var(--navy-card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:18px;flex-wrap:wrap}
+.ch-icon{width:36px;height:36px;border-radius:10px;background:var(--purple-pale);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.ch-info h4{font-size:13px;font-weight:700;color:var(--text-on)}
+.ch-info p{font-size:10px;color:var(--text-dim)}
+.ch-stats{display:flex;gap:16px;margin-left:auto;flex-wrap:wrap}
+.ch-stat{text-align:center}
+.ch-stat .n{font-size:1.3rem;font-weight:900;color:var(--teal);line-height:1}
+.ch-stat .l{font-size:8px;color:var(--text-dim);letter-spacing:.08em;text-transform:uppercase}
+
+/* ── RESPONSIVE ── */
+@media(max-width:700px){
+  .kpi-row{grid-template-columns:repeat(2,1fr)}
+  .gen-form{grid-template-columns:1fr}
+  .bv-kpis{grid-template-columns:repeat(2,1fr)}
+  .letter-footer{grid-template-columns:1fr}
+}
+
+/* ── PRINT STYLES ── */
+@media print{
+  .top-nav,.role-bar,.header-actions,.letter-actions,.lang-toggle,.btn,.tabs,.alert-panel,.gen-panel,.table-wrap,.school-drill,.viewing-as,.kpi-row,.sec-header{display:none!important}
+  body,.shell{background:#fff;color:#000;padding-top:0}
+  .view{padding:0;max-width:none}
+  .board-view{box-shadow:none;border:none;max-width:none;padding:0}
+  .bv-kpi{background:#f5f5f5}
+  @page{size:letter portrait;margin:0.7in}
+}
+</style>
+</head>
+<body>
+
+<!-- ── TOP NAV ── -->
+<nav class="top-nav">
+  <div class="nav-brand">
+    <div class="nav-seal">P</div>
+    <div class="nav-name">Command Insight Center<span>Petersburg City Public Schools</span></div>
+  </div>
+  <span class="preview-badge">Live Preview</span>
+  <div class="nav-links" style="display:flex;gap:3px;">
+    <a href="index.html" style="font-size:10px;font-weight:600;color:rgba(255,255,255,.45);text-decoration:none;padding:5px 11px;border-radius:7px;">Overview</a>
+    <a href="pcps_leadership_board.html" style="font-size:10px;font-weight:600;color:rgba(255,255,255,.45);text-decoration:none;padding:5px 11px;border-radius:7px;">Policy Board</a>
+    <a href="pcps_operations_board.html" style="font-size:10px;font-weight:600;color:rgba(255,255,255,.45);text-decoration:none;padding:5px 11px;border-radius:7px;">Operations Board</a>
+  </div>
+</nav>
+
+<!-- ── ROLE SWITCHER ── -->
+<div class="role-bar">
+  <span class="role-bar-label">View as:</span>
+  <button class="rbtn active" onclick="switchRole('district')">Director of C&amp;I</button>
+  <button class="rbtn" onclick="switchRole('principal')">Principal</button>
+  <button class="rbtn" onclick="switchRole('specialist')">Reading Specialist</button>
+  <button class="rbtn" onclick="switchRole('teacher')">Teacher</button>
+  <button class="rbtn" onclick="switchRole('board')">Board / CAO Report</button>
+</div>
+
+<div class="shell">
+
+<!-- ════════════════════════════════════
+     DISTRICT VIEW — EBONI
+════════════════════════════════════ -->
+<div class="view active" id="view-district">
+  <div class="viewing-as">
+    <div class="va-left"><div class="va-dot"></div><div class="va-text">You are viewing as: <strong>Director of Curriculum &amp; Instruction</strong> — District-wide access · All schools · All tracks</div></div>
+    <div class="va-right">Sample data · SY 2025–26 · As of April 2026</div>
+  </div>
+
+  <div class="page-header">
+    <div class="page-title">Reading Plan Compliance
+      <span>Petersburg City Public Schools · K–8 · Virginia Literacy Act SY 2025–26</span>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-ghost btn-sm" onclick="showGen()">+ Generate a Reading Plan</button>
+      <button class="btn btn-gold btn-sm" onclick="showBoard()">⬇ Export Board Report</button>
+    </div>
+  </div>
+
+  <!-- KPI CARDS -->
+  <div class="kpi-row">
+    <div class="kpi kpi-teal">
+      <div class="kpi-label">Students identified</div>
+      <div class="kpi-value">487</div>
+      <div class="kpi-sub">K–8 · all schools</div>
+    </div>
+    <div class="kpi kpi-green">
+      <div class="kpi-label">Plans sent home</div>
+      <div class="kpi-value">341</div>
+      <div class="kpi-sub"><span class="trend-up">70%</span>&nbsp;of identified students</div>
+    </div>
+    <div class="kpi kpi-gold">
+      <div class="kpi-label">Parent response rate</div>
+      <div class="kpi-value">68%</div>
+      <div class="kpi-sub">of letters sent home</div>
+    </div>
+    <div class="kpi kpi-alert">
+      <div class="kpi-label">Require attention</div>
+      <div class="kpi-value">34</div>
+      <div class="kpi-sub"><span class="pdot pdot-red"></span>&nbsp;specialist not yet assigned</div>
+    </div>
+  </div>
+
+  <!-- ALERTS -->
+  <div class="alert-panel">
+    <div class="alert-header">
+      <div class="pdot pdot-red"></div>
+      <h4>Items requiring action before SOL window</h4>
+    </div>
+    <div class="alert-items">
+      <div class="alert-item">Pleasants Lane Elementary · 11 students in grades 3–5 have no reading specialist assigned. Plans cannot be finalized without co-ownership.</div>
+      <div class="alert-item">Vernon Johns Middle · 14 students in grade 6 have letters pending — parent participation offer not yet documented.</div>
+      <div class="alert-item">Lakemont Elementary · 9 parent refusals on file but written documentation not yet uploaded to intake folder.</div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab(this,'tab-reading')">Reading Plans (VLA)</button>
+    <button class="tab next-phase" onclick="switchTab(this,'tab-tutoring')">Tutoring</button>
+  </div>
+
+  <!-- SCHOOL DRILL (hidden by default) -->
+  <div class="school-drill" id="school-drill">
+    <div class="drill-header">
+      <button class="drill-back" onclick="closeDrill()">← All schools</button>
+      <div>
+        <span class="drill-title" id="drill-school-name"></span>
+        <span class="drill-grade" id="drill-school-grade"></span>
+      </div>
+    </div>
+    <table class="mini-table">
+      <thead><tr><th>Student ID</th><th>Grade</th><th>Area of Need</th><th>Specialist</th><th>Letter Sent</th><th>Parent Response</th><th>Status</th></tr></thead>
+      <tbody id="drill-body"></tbody>
+    </table>
+  </div>
+
+  <!-- COMPLIANCE TABLE -->
+  <div id="tab-reading">
+    <div class="sec-header">
+      <div class="sec-title"><div class="dot" style="background:var(--teal)"></div>School-by-school compliance · click a row to drill in</div>
+      <span style="font-size:10px;color:var(--text-dim)">Updated April 12, 2026</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th>School</th><th>Grade Band</th><th>Identified</th><th>Plans Created</th><th>Letters Sent</th><th>Parent Response</th><th>Specialist Assigned</th><th>Status</th>
+        </tr></thead>
+        <tbody>
+          <tr onclick="openDrill('Cool Spring Elementary','K–5','coolspring')">
+            <td class="school-name">Cool Spring Elementary<span class="grade">K–5 · 529 students</span></td>
+            <td>K–5</td>
+            <td>112</td>
+            <td><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill" style="width:89%;background:var(--green)"></div></div><span class="pbar-num" style="color:var(--green)">100</span></div></td>
+            <td><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill" style="width:89%;background:var(--teal)"></div></div><span class="pbar-num" style="color:var(--teal)">100</span></div></td>
+            <td>74%</td>
+            <td><span class="pill pill-green">✓ All assigned</span></td>
+            <td><span class="pill pill-green">On track</span></td>
+          </tr>
+          <tr onclick="openDrill('Lakemont Elementary','K–5','lakemont')">
+            <td class="school-name">Lakemont Elementary<span class="grade">K–5 · 404 students</span></td>
+            <td>K–5</td>
+            <td>87</td>
+            <td><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill" style="width:78%;background:var(--green)"></div></div><span class="pbar-num" style="color:var(--green)">68</span></div></td>
+            <td><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill" style="width:78%;background:var(--teal)"></div></div><span class="pbar-num" style="color:var(--teal)">68</span></div></td>
+            <td>61%</td>
+            <td><span class="pill pill-green">✓ All assigned</span></td>
+            <td><span class="pill pill-orange"><span class="pdot pdot-red" style="background:var(--orange)"></span> Docs needed</span></td>
+          </tr>
+          <tr onclick="openDrill('Pleasants Lane Elementary','K–5','pleasants')">
+            <td class="school-name">Pleasants Lane Elementary<span class="grade">K–5 · 515 students</span></td>
+            <td>K–5</td>
+            <td>118</td>
+            <td><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill" style="width:72%;background:var(--orange)"></div></div><span class="pbar-num" style="color:var(--orange)">85</span></div></td>
+            <td><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill" style="width:65%;background:var(--orange)"></div></div><span class="pbar-num" style="color:var(--orange)">77</span></div></td>
+            <td>58%</td>
+            <td><span class="pill pill-red"><span class="pdot pdot-red"></span> 11 unassigned</span></td>
+            <td><span class="pill pill-red">Action needed</span></td>
+          </tr>
+          <tr onclick="openDrill('Walnut Hill Elementary','K–5','walnut')">
+            <td class="school-name">Walnut Hill Elementary<span class="grade">K–5 · 539 students</span></td>
+            <td>K–5</td>
+            <td>103</td>
+            <td><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill" style="width:91%;background:var(--green)"></div></div><span class="pbar-num" style="color:var(--green)">94</span></div></td>
+            <td><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill" style="width:91%;background:var(--teal)"></div></div><span class="pbar-num" style="color:var(--teal)">94</span></div></td>
+            <td>79%</td>
+            <td><span class="pill pill-green">✓ All assigned</span></td>
+            <td><span class="pill pill-green">On track</span></td>
+          </tr>
+          <tr onclick="openDrill('Vernon Johns Middle School','6–8','vernonjohns')">
+            <td class="school-name">Vernon Johns Middle School<span class="grade">6–8 · 901 students</span></td>
+            <td>6–8</td>
+            <td>67</td>
+            <td><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill" style="width:55%;background:var(--orange)"></div></div><span class="pbar-num" style="color:var(--orange)">37</span></div></td>
+            <td><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill" style="width:34%;background:var(--red)"></div></div><span class="pbar-num" style="color:var(--red)">23</span></div></td>
+            <td>52%</td>
+            <td><span class="pill pill-gold">In progress</span></td>
+            <td><span class="pill pill-orange"><span class="pdot pdot-red" style="background:var(--orange)"></span> Letters pending</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 5 COMPLIANCE FIELDS LEGEND -->
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px;align-items:center">
+      <span style="font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);margin-right:4px">VLA audit fields tracked per student:</span>
+      <span class="pill pill-teal">Plan created</span>
+      <span class="pill pill-teal">Specialist assigned</span>
+      <span class="pill pill-teal">Letter sent home</span>
+      <span class="pill pill-teal">Parent response documented</span>
+      <span class="pill pill-teal">Refusal on file (if applicable)</span>
+    </div>
+  </div>
+
+  <!-- TUTORING TAB (next phase) -->
+  <div id="tab-tutoring" style="display:none">
+    <div style="background:var(--navy-card);border:1px solid var(--border);border-radius:12px;padding:40px;text-align:center">
+      <div style="font-size:2rem;margin-bottom:12px">📊</div>
+      <div style="font-size:13px;font-weight:700;color:var(--text-on);margin-bottom:6px">Tutoring Dashboard — Phase 2</div>
+      <div style="font-size:11px;color:var(--text-dim);max-width:360px;margin:0 auto;line-height:1.75">Sessions, students served, instructor views, and program effectiveness tracking. Coming in Phase 2 alongside the full handoff package.</div>
+      <div style="margin-top:16px"><span class="pill pill-gold">Included in full contract</span></div>
+    </div>
+  </div>
+
+  <!-- READING PLAN GENERATOR (hidden) -->
+  <div class="gen-panel" id="gen-panel" style="display:none">
+    <div class="gen-header">
+      <div>
+        <h3>Generate a Student Reading Plan Letter</h3>
+        <p>Enter the required fields · letter generates automatically · no AI in the data path</p>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="hideGen()">✕ Close</button>
+    </div>
+    <div class="gen-body">
+      <div class="gen-form">
+        <div class="fgroup">
+          <label>School</label>
+          <select id="f-school">
+            <option>Cool Spring Elementary</option>
+            <option>Lakemont Elementary</option>
+            <option>Pleasants Lane Elementary</option>
+            <option>Walnut Hill Elementary</option>
+            <option selected>Vernon Johns Middle School</option>
+          </select>
+        </div>
+        <div class="fgroup">
+          <label>Grade</label>
+          <select id="f-grade">
+            <option>Kindergarten</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option selected>Grade 6</option><option>Grade 7</option><option>Grade 8</option>
+          </select>
+        </div>
+        <div class="fgroup">
+          <label>Area of Need (from screener)</label>
+          <select id="f-need">
+            <option>Phonics / Word Analysis</option>
+            <option>Oral Reading Fluency</option>
+            <option selected>Vocabulary / Morphology</option>
+            <option>Reading Comprehension</option>
+            <option>Phonological Awareness</option>
+          </select>
+        </div>
+        <div class="fgroup">
+          <label>Intervention Program</label>
+          <select id="f-program">
+            <option selected>Amplify CKLA</option>
+            <option>Lexia Core5</option>
+            <option>SPIRE</option>
+            <option>Wilson Reading System</option>
+            <option>Heggerty Phonemic Awareness</option>
+          </select>
+        </div>
+        <div class="fgroup">
+          <label>Reading Specialist Assigned</label>
+          <select id="f-specialist">
+            <option>Elementary Reading Specialist</option>
+            <option selected>Secondary ELA Specialist</option>
+          </select>
+        </div>
+        <div class="fgroup">
+          <label>Progress Monitoring Method</label>
+          <select id="f-monitor">
+            <option>Curriculum-based fluency checks</option>
+            <option selected>Program-embedded assessments every 10 days</option>
+            <option>Word reading inventory</option>
+            <option>Reading rubric + observation</option>
+          </select>
+        </div>
+      </div>
+      <div class="gen-footer">
+        <span class="gen-note">All 5 VLA compliance fields will be logged automatically when you generate.</span>
+        <button class="btn btn-teal" onclick="generateLetter()">Generate Parent Letter →</button>
+      </div>
+    </div>
+
+    <!-- LETTER OUTPUT -->
+    <div class="letter-output" id="letter-output">
+      <div style="padding:0 20px 20px">
+        <div class="lang-toggle">
+          <button class="ltbtn active" onclick="setLang('en',this)">English</button>
+          <button class="ltbtn" onclick="setLang('es',this)">Español</button>
+        </div>
+        <div class="letter-wrap" id="letter-wrap">
+          <!-- filled by JS -->
+        </div>
+        <div class="compliance-check" id="compliance-check"></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end district view -->
+
+
+<!-- ════════════════════════════════════
+     PRINCIPAL VIEW
+════════════════════════════════════ -->
+<div class="view" id="view-principal">
+  <div class="viewing-as">
+    <div class="va-left"><div class="va-dot"></div><div class="va-text">You are viewing as: <strong>Principal — Cool Spring Elementary</strong> · Your school only</div></div>
+    <div class="va-right">Sample data · April 2026</div>
+  </div>
+  <div class="page-header">
+    <div class="page-title">Cool Spring Elementary<span>Reading Plan Compliance · K–5</span></div>
+    <div class="header-actions"><button class="btn btn-ghost btn-sm" onclick="window.print()">⬇ Print School Report</button></div>
+  </div>
+  <div class="kpi-row">
+    <div class="kpi kpi-teal"><div class="kpi-label">Students identified</div><div class="kpi-value">112</div><div class="kpi-sub">K–5 · this school</div></div>
+    <div class="kpi kpi-green"><div class="kpi-label">Plans created</div><div class="kpi-value">100</div><div class="kpi-sub"><span class="trend-up">89%</span>&nbsp;complete</div></div>
+    <div class="kpi kpi-gold"><div class="kpi-label">Letters sent home</div><div class="kpi-value">100</div><div class="kpi-sub">100% of plans</div></div>
+    <div class="kpi kpi-green"><div class="kpi-label">Alerts</div><div class="kpi-value" style="color:var(--green)">0</div><div class="kpi-sub">All specialists assigned</div></div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Grade</th><th>Identified</th><th>Plans Created</th><th>Letters Sent</th><th>Parent Responded</th><th>Specialist</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>Kindergarten</td><td>18</td><td><span class="pill pill-green">18 / 18</span></td><td><span class="pill pill-teal">18 / 18</span></td><td>72%</td><td><span class="pill pill-green">Assigned</span></td><td><span class="pill pill-green">On track</span></td></tr>
+        <tr><td>Grade 1</td><td>22</td><td><span class="pill pill-green">22 / 22</span></td><td><span class="pill pill-teal">22 / 22</span></td><td>68%</td><td><span class="pill pill-green">Assigned</span></td><td><span class="pill pill-green">On track</span></td></tr>
+        <tr><td>Grade 2</td><td>24</td><td><span class="pill pill-green">24 / 24</span></td><td><span class="pill pill-teal">24 / 24</span></td><td>79%</td><td><span class="pill pill-green">Assigned</span></td><td><span class="pill pill-green">On track</span></td></tr>
+        <tr><td>Grade 3</td><td>19</td><td><span class="pill pill-green">19 / 19</span></td><td><span class="pill pill-teal">19 / 19</span></td><td>74%</td><td><span class="pill pill-green">Assigned</span></td><td><span class="pill pill-green">On track</span></td></tr>
+        <tr><td>Grade 4</td><td>16</td><td><span class="pill pill-orange">10 / 16</span></td><td><span class="pill pill-orange">10 / 16</span></td><td>60%</td><td><span class="pill pill-green">Assigned</span></td><td><span class="pill pill-orange">In progress</span></td></tr>
+        <tr><td>Grade 5</td><td>13</td><td><span class="pill pill-orange">7 / 13</span></td><td><span class="pill pill-orange">7 / 13</span></td><td>57%</td><td><span class="pill pill-green">Assigned</span></td><td><span class="pill pill-orange">In progress</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════
+     SPECIALIST VIEW
+════════════════════════════════════ -->
+<div class="view" id="view-specialist">
+  <div class="viewing-as">
+    <div class="va-left"><div class="va-dot"></div><div class="va-text">You are viewing as: <strong>Elementary Reading Specialist</strong> · Your caseload only · VLA co-ownership required on every plan</div></div>
+    <div class="va-right">Sample data · April 2026</div>
+  </div>
+  <div class="page-header">
+    <div class="page-title">My Caseload<span>Elementary · K–5 · Co-ownership &amp; monitoring status</span></div>
+  </div>
+  <div class="caseload-header">
+    <div class="ch-icon">📚</div>
+    <div class="ch-info"><h4>Elementary Reading Specialist</h4><p>Cool Spring · Lakemont · Walnut Hill · Pleasants Lane</p></div>
+    <div class="ch-stats">
+      <div class="ch-stat"><div class="n">420</div><div class="l">Students</div></div>
+      <div class="ch-stat"><div class="n">352</div><div class="l">Plans active</div></div>
+      <div class="ch-stat"><div class="n" style="color:var(--red)">11</div><div class="l">Need action</div></div>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>School</th><th>Grade</th><th>Plans on Caseload</th><th>Co-ownership Confirmed</th><th>Monitoring Active</th><th>Next Check-in</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>Cool Spring Elementary</td><td>K–5</td><td>100</td><td><span class="pill pill-green">100 / 100</span></td><td><span class="pill pill-green">Active</span></td><td>Apr 22</td><td><span class="pill pill-green">On track</span></td></tr>
+        <tr><td>Lakemont Elementary</td><td>K–5</td><td>68</td><td><span class="pill pill-green">68 / 68</span></td><td><span class="pill pill-green">Active</span></td><td>Apr 22</td><td><span class="pill pill-green">On track</span></td></tr>
+        <tr><td>Walnut Hill Elementary</td><td>K–5</td><td>94</td><td><span class="pill pill-green">94 / 94</span></td><td><span class="pill pill-green">Active</span></td><td>Apr 23</td><td><span class="pill pill-green">On track</span></td></tr>
+        <tr><td>Pleasants Lane Elementary</td><td>K–5</td><td>85</td><td><span class="pill pill-red">74 / 85 — 11 pending</span></td><td><span class="pill pill-orange">Partial</span></td><td><span style="color:var(--red)">Overdue</span></td><td><span class="pill pill-red"><span class="pdot pdot-red"></span> Action needed</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════
+     TEACHER VIEW
+════════════════════════════════════ -->
+<div class="view" id="view-teacher">
+  <div class="viewing-as">
+    <div class="va-left"><div class="va-dot"></div><div class="va-text">You are viewing as: <strong>Grade 3 Teacher — Walnut Hill Elementary</strong> · Your students only</div></div>
+    <div class="va-right">Sample data · April 2026</div>
+  </div>
+  <div class="page-header">
+    <div class="page-title">My Students — Reading Plans<span>Grade 3 · Walnut Hill Elementary</span></div>
+    <div class="header-actions"><button class="btn btn-teal btn-sm" onclick="switchRole('district');showGen()">+ Submit a New Plan</button></div>
+  </div>
+  <div class="kpi-row" style="grid-template-columns:repeat(3,1fr)">
+    <div class="kpi kpi-teal"><div class="kpi-label">My students on a plan</div><div class="kpi-value">17</div><div class="kpi-sub">This class</div></div>
+    <div class="kpi kpi-green"><div class="kpi-label">Letters sent home</div><div class="kpi-value">17</div><div class="kpi-sub"><span class="trend-up">All complete</span></div></div>
+    <div class="kpi kpi-gold"><div class="kpi-label">Parent responses</div><div class="kpi-value">13</div><div class="kpi-sub">76% response rate</div></div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Student ID</th><th>Grade</th><th>Area of Need</th><th>Intervention</th><th>Letter Sent</th><th>Parent Response</th><th>Next Monitoring</th></tr></thead>
+      <tbody>
+        <tr><td>STU-0341</td><td>3</td><td>Oral Reading Fluency</td><td>Amplify CKLA</td><td><span class="pill pill-green">Sent</span></td><td><span class="pill pill-green">Accepted</span></td><td>Apr 22</td></tr>
+        <tr><td>STU-0342</td><td>3</td><td>Phonics / Word Analysis</td><td>Lexia Core5</td><td><span class="pill pill-green">Sent</span></td><td><span class="pill pill-green">Accepted</span></td><td>Apr 22</td></tr>
+        <tr><td>STU-0343</td><td>3</td><td>Vocabulary / Morphology</td><td>Amplify CKLA</td><td><span class="pill pill-green">Sent</span></td><td><span class="pill pill-orange">Declined — doc on file</span></td><td>Apr 24</td></tr>
+        <tr><td>STU-0344</td><td>3</td><td>Reading Comprehension</td><td>Amplify CKLA</td><td><span class="pill pill-green">Sent</span></td><td><span class="pill pill-dim">Pending</span></td><td>Apr 22</td></tr>
+        <tr><td>STU-0345</td><td>3</td><td>Oral Reading Fluency</td><td>Wilson Reading</td><td><span class="pill pill-green">Sent</span></td><td><span class="pill pill-green">Accepted</span></td><td>Apr 23</td></tr>
+      </tbody>
+    </table>
+    <div style="padding:10px 14px;font-size:10px;color:var(--text-dim);border-top:1px solid var(--border)">Showing 5 of 17 students · Student names are never displayed in this system · IDs reference your intake records</div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════
+     BOARD / CAO REPORT
+════════════════════════════════════ -->
+<div class="view" id="view-board">
+  <div class="viewing-as">
+    <div class="va-left"><div class="va-dot"></div><div class="va-text">You are viewing as: <strong>Director of C&amp;I — Board / CAO Export view</strong> · This is what prints when you click "Export Board Report"</div></div>
+    <div class="va-right">One click from Eboni's view · never a login for the board</div>
+  </div>
+  <div class="header-actions" style="justify-content:flex-end;display:flex;margin-bottom:18px">
+    <button class="btn btn-gold" onclick="window.print()">⬇ Print / Save as PDF</button>
+  </div>
+  <div class="board-view" id="board-print-area">
+    <div class="bv-header">
+      <div style="display:flex;align-items:flex-start;gap:14px">
+        <div class="bv-seal">P</div>
+        <div class="bv-title">
+          <h2>Reading Plan Compliance Report</h2>
+          <p>Petersburg City Public Schools · Virginia Literacy Act · SY 2025–26</p>
+        </div>
+      </div>
+      <div class="bv-date">Prepared: April 12, 2026<br>Prepared by: Director of C&amp;I<br>For: Superintendent &amp; Board</div>
+    </div>
+    <hr class="bv-divider">
+    <div class="bv-kpis">
+      <div class="bv-kpi"><div class="n" style="color:#1ABCB0">487</div><div class="l">Students Identified K–8</div></div>
+      <div class="bv-kpi"><div class="n" style="color:#2EB87A">70%</div><div class="l">Plans Sent Home</div></div>
+      <div class="bv-kpi"><div class="n" style="color:#C9A84C">68%</div><div class="l">Parent Response Rate</div></div>
+      <div class="bv-kpi"><div class="n" style="color:#D94F4F">34</div><div class="l">Require Immediate Action</div></div>
+    </div>
+    <div class="bv-section">
+      <h4>Compliance by School</h4>
+      <div class="bv-school-row"><span class="bv-school-name">Cool Spring Elementary (K–5)</span><div class="bv-bar"><div class="bv-bar-fill" style="width:89%"></div></div><span class="bv-pct">89%</span><span class="bv-flag bv-flag-ok">On track</span></div>
+      <div class="bv-school-row"><span class="bv-school-name">Walnut Hill Elementary (K–5)</span><div class="bv-bar"><div class="bv-bar-fill" style="width:91%"></div></div><span class="bv-pct">91%</span><span class="bv-flag bv-flag-ok">On track</span></div>
+      <div class="bv-school-row"><span class="bv-school-name">Lakemont Elementary (K–5)</span><div class="bv-bar"><div class="bv-bar-fill" style="width:78%"></div></div><span class="bv-pct">78%</span><span class="bv-flag bv-flag-warn">Docs needed</span></div>
+      <div class="bv-school-row"><span class="bv-school-name">Pleasants Lane Elementary (K–5)</span><div class="bv-bar"><div class="bv-bar-fill" style="width:72%;background:#E07B39"></div></div><span class="bv-pct">72%</span><span class="bv-flag bv-flag-warn">Action needed</span></div>
+      <div class="bv-school-row"><span class="bv-school-name">Vernon Johns Middle School (6–8)</span><div class="bv-bar"><div class="bv-bar-fill" style="width:55%;background:#D94F4F"></div></div><span class="bv-pct">55%</span><span class="bv-flag bv-flag-warn">Letters pending</span></div>
+    </div>
+    <div class="bv-section">
+      <h4>Key Actions Required</h4>
+      <p style="font-size:11px;color:#4A5C64;line-height:1.8">1. Pleasants Lane Elementary — 11 students require reading specialist assignment before plans can be finalized (state statute § 22.1-253.13:1 G requires co-ownership).<br>2. Vernon Johns Middle — 14 letters pending parent participation documentation.<br>3. Lakemont Elementary — 9 written refusal documents require upload to the district intake folder for audit compliance.</p>
+    </div>
+    <div class="bv-footer">
+      <p>All data governed by FERPA · Student identifiers not included in this report<br>Virginia Literacy Act compliance reporting · VDOE guidance October 22, 2025<br>Source: Petersburg CIC Reading Plan Compliance System</p>
+      <div class="bv-sig">
+        <div class="sig-field"></div>
+        <div class="sig-field-label">Director of Curriculum &amp; Instruction · Date</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end shell -->
+
+<script>
+// ── ROLE SWITCHING ──
+function switchRole(role){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.rbtn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('view-'+role).classList.add('active');
+  const map={district:0,principal:1,specialist:2,teacher:3,board:4};
+  document.querySelectorAll('.rbtn')[map[role]].classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── TAB SWITCHING ──
+function switchTab(btn,tabId){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-reading').style.display='none';
+  document.getElementById('tab-tutoring').style.display='none';
+  document.getElementById(tabId).style.display='block';
+}
+
+// ── SCHOOL DRILL ──
+const drillData={
+  coolspring:[
+    ['STU-0118','K','Phonological Awareness','Assigned','Sent','Accepted','On track'],
+    ['STU-0119','1','Oral Reading Fluency','Assigned','Sent','Accepted','On track'],
+    ['STU-0120','2','Phonics / Word Analysis','Assigned','Sent','Pending','On track'],
+    ['STU-0121','3','Vocabulary / Morphology','Assigned','Sent','Accepted','On track'],
+    ['STU-0122','4','Reading Comprehension','Assigned','Sent','Declined — doc on file','On track'],
+  ],
+  lakemont:[
+    ['STU-0201','1','Oral Reading Fluency','Assigned','Sent','Accepted','On track'],
+    ['STU-0202','2','Phonics / Word Analysis','Assigned','Sent','Pending','On track'],
+    ['STU-0203','3','Reading Comprehension','Assigned','Sent','Accepted','On track'],
+  ],
+  pleasants:[
+    ['STU-0301','3','Phonics / Word Analysis','NOT ASSIGNED','Sent','Pending','Action needed'],
+    ['STU-0302','4','Oral Reading Fluency','NOT ASSIGNED','Sent','Pending','Action needed'],
+    ['STU-0303','5','Vocabulary / Morphology','Assigned','Sent','Accepted','On track'],
+  ],
+  walnut:[
+    ['STU-0401','2','Oral Reading Fluency','Assigned','Sent','Accepted','On track'],
+    ['STU-0402','3','Reading Comprehension','Assigned','Sent','Accepted','On track'],
+    ['STU-0403','4','Phonics / Word Analysis','Assigned','Sent','Declined — doc on file','On track'],
+  ],
+  vernonjohns:[
+    ['STU-0501','6','Vocabulary / Morphology','In progress','Not yet sent','—','Letters pending'],
+    ['STU-0502','6','Reading Comprehension','In progress','Not yet sent','—','Letters pending'],
+    ['STU-0503','7','Oral Reading Fluency','Assigned','Sent','Pending','On track'],
+    ['STU-0504','8','Phonics / Word Analysis','Assigned','Sent','Accepted','On track'],
+  ]
+};
+
+function openDrill(name, grade, key){
+  document.getElementById('drill-school-name').textContent=name;
+  document.getElementById('drill-school-grade').textContent=grade;
+  const rows=drillData[key]||[];
+  const tbody=document.getElementById('drill-body');
+  tbody.innerHTML=rows.map(r=>{
+    const statusClass=r[6].includes('needed')||r[6].includes('pending')?'pill-red':r[6].includes('track')?'pill-green':'pill-orange';
+    const specClass=r[3]==='NOT ASSIGNED'?'pill-red':'pill-green';
+    return `<tr>
+      <td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td>
+      <td><span class="pill ${specClass}">${r[3]}</span></td>
+      <td>${r[4]}</td><td>${r[5]}</td>
+      <td><span class="pill ${statusClass}">${r[6]}</span></td>
+    </tr>`;
+  }).join('');
+  document.getElementById('school-drill').classList.add('show');
+  document.getElementById('school-drill').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function closeDrill(){
+  document.getElementById('school-drill').classList.remove('show');
+}
+
+// ── GENERATOR ──
+function showGen(){
+  document.getElementById('gen-panel').style.display='block';
+  document.getElementById('letter-output').classList.remove('show');
+  document.getElementById('gen-panel').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function hideGen(){
+  document.getElementById('gen-panel').style.display='none';
+}
+
+const letterContent={
+  en:{
+    greeting:'Dear Parent or Guardian,',
+    intro:'We are glad to share your child\'s Student Reading Plan with you. Working together is the best way to help your child grow as a reader. This plan will be used for the rest of the 2025–2026 school year.',
+    s1title:'Why your child has this plan',
+    s2title:'What we are doing',
+    s3title:'How we will check progress',
+    s4title:'How you can help at home',
+    s5title:'Your participation',
+    s5body:'You are invited to provide input into this plan. You may also formally decline services by notifying the school in writing. Your child\'s reading specialist and teacher are available to discuss this plan with you at any time.',
+    sig1:'Reading Specialist signature',sig2:'Classroom Teacher signature',sig3:'Parent / Guardian signature',
+    sig3note:'Your signature indicates receipt of this plan. You may also choose to provide input or formally decline services.',
+    footer:'Questions? Contact the school office or your child\'s reading specialist.'
+  },
+  es:{
+    greeting:'Estimado padre o tutor,',
+    intro:'Nos complace compartir el Plan de Lectura Estudiantil de su hijo/a con usted. Trabajar juntos es la mejor manera de ayudar a su hijo/a a crecer como lector/a. Este plan se usará durante el resto del año escolar 2025–2026.',
+    s1title:'Por qué su hijo/a tiene este plan',
+    s2title:'Lo que estamos haciendo',
+    s3title:'Cómo verificaremos el progreso',
+    s4title:'Cómo puede ayudar en casa',
+    s5title:'Su participación',
+    s5body:'Usted está invitado/a a dar su opinión sobre este plan. También puede rechazar formalmente los servicios notificando a la escuela por escrito. El especialista en lectura y el maestro/a de su hijo/a están disponibles para hablar con usted sobre este plan en cualquier momento.',
+    sig1:'Firma del especialista en lectura',sig2:'Firma del maestro/a',sig3:'Firma del padre/tutor',
+    sig3note:'Su firma indica que recibió este plan. También puede optar por dar su opinión o rechazar formalmente los servicios.',
+    footer:'¿Preguntas? Comuníquese con la oficina de la escuela o el especialista en lectura de su hijo/a.'
+  }
+};
+
+let currentLang='en';
+
+function generateLetter(){
+  const school=document.getElementById('f-school').value;
+  const grade=document.getElementById('f-grade').value;
+  const need=document.getElementById('f-need').value;
+  const program=document.getElementById('f-program').value;
+  const specialist=document.getElementById('f-specialist').value;
+  const monitor=document.getElementById('f-monitor').value;
+  renderLetter(currentLang,school,grade,need,program,specialist,monitor);
+  document.getElementById('letter-output').classList.add('show');
+  document.getElementById('letter-output').scrollIntoView({behavior:'smooth',block:'start'});
+  renderCompliance();
+}
+
+function renderLetter(lang,school,grade,need,program,specialist,monitor){
+  const c=letterContent[lang];
+  const today=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  const needBody={
+    'Phonics / Word Analysis':lang==='en'?'assessment results show your child needs support with how letters and sounds work together (phonics and word analysis)':'los resultados de la evaluación muestran que su hijo/a necesita apoyo con cómo funcionan las letras y los sonidos juntos',
+    'Oral Reading Fluency':lang==='en'?'assessment results show your child needs support with reading smoothly and at the right pace':'los resultados de la evaluación muestran que su hijo/a necesita apoyo para leer con fluidez y al ritmo adecuado',
+    'Vocabulary / Morphology':lang==='en'?'assessment results show your child needs support with building vocabulary and understanding word parts and meanings':'los resultados de la evaluación muestran que su hijo/a necesita apoyo para desarrollar vocabulario y comprender las partes y significados de las palabras',
+    'Reading Comprehension':lang==='en'?'assessment results show your child needs support with understanding and making meaning from what they read':'los resultados de la evaluación muestran que su hijo/a necesita apoyo para comprender lo que lee',
+    'Phonological Awareness':lang==='en'?'assessment results show your child needs support with hearing and working with the sounds in words':'los resultados de la evaluación muestran que su hijo/a necesita apoyo para escuchar y trabajar con los sonidos en las palabras'
+  };
+  document.getElementById('letter-wrap').innerHTML=`
+    <div class="letter-district">Petersburg City Public Schools</div>
+    <div class="letter-school-name">${school}</div>
+    <div class="letter-contact">${today}</div>
+    <hr class="bv-divider" style="margin:12px 0">
+    <div class="letter-subject">${lang==='en'?'Subject: Important Information About Your Child\'s Reading Plan':'Asunto: Información Importante Sobre el Plan de Lectura de Su Hijo/a'}</div>
+    <div class="letter-body-text">${c.greeting}<br><br>${c.intro}</div>
+    <div class="letter-section"><h5>${c.s1title}</h5><p>Based on this year's reading screener and state reading assessment results, ${needBody[need]||'assessment results indicate a need for additional reading support'}. ${lang==='en'?'This Student Reading Plan outlines the specific support your child will receive for the rest of this school year.':'Este Plan de Lectura Estudiantil describe el apoyo específico que recibirá su hijo/a durante el resto de este año escolar.'}</p></div>
+    <div class="letter-section"><h5>${c.s2title}</h5><p>${lang==='en'?`Your child will receive targeted reading instruction using <strong>${program}</strong>, a Virginia Board of Education approved reading program. This support will be provided by a ${specialist} in a small-group pull-out setting, focusing specifically on <strong>${need.toLowerCase()}</strong>.`:`Su hijo/a recibirá instrucción de lectura específica usando <strong>${program}</strong>, un programa de lectura aprobado por la Junta Estatal de Educación de Virginia. Este apoyo será brindado por un/a ${lang==='es'?'especialista en lectura':'reading specialist'} en un grupo pequeño, enfocándose específicamente en <strong>${need.toLowerCase()}</strong>.`}</p></div>
+    <div class="letter-section"><h5>${c.s3title}</h5><p>${lang==='en'?`We will monitor your child's progress using ${monitor}. You will be kept informed of how your child is responding to instruction throughout the school year.`:`Monitorearemos el progreso de su hijo/a usando ${monitor}. Se le mantendrá informado/a sobre cómo su hijo/a está respondiendo a la instrucción durante el año escolar.`}</p></div>
+    <div class="letter-section"><h5>${c.s4title}</h5><p>${lang==='en'?'Read with your child for 15–20 minutes daily. Visit <strong>literacy.virginia.edu/resources-families</strong> for activities aligned to your child\'s area of need. Check the school communication platform for weekly reading updates.':'Lea con su hijo/a durante 15–20 minutos diariamente. Visite <strong>literacy.virginia.edu/resources-families</strong> para actividades alineadas con las necesidades de su hijo/a. Consulte la plataforma de comunicación escolar para actualizaciones semanales de lectura.'}</p></div>
+    <div class="letter-section"><h5>${c.s5title}</h5><p>${c.s5body}</p></div>
+    <div class="letter-footer">
+      <div class="sig-block"><p>${c.sig1}</p><div class="sig-line"></div><div class="sig-label">${specialist}</div></div>
+      <div class="sig-block"><p>${c.sig2}</p><div class="sig-line"></div><div class="sig-label">${grade} Teacher · ${school}</div></div>
+      <div class="sig-block" style="grid-column:1/-1"><p>${c.sig3}</p><div class="sig-line"></div><div class="sig-label" style="font-size:9px;color:#8A9BA3;line-height:1.5">${c.sig3note}</div></div>
+    </div>
+    <p style="font-size:10px;color:#8A9BA3;margin-top:14px;text-align:center">${c.footer}</p>
+  `;
+}
+
+function setLang(lang,btn){
+  currentLang=lang;
+  document.querySelectorAll('.ltbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const school=document.getElementById('f-school').value;
+  const grade=document.getElementById('f-grade').value;
+  const need=document.getElementById('f-need').value;
+  const program=document.getElementById('f-program').value;
+  const specialist=document.getElementById('f-specialist').value;
+  const monitor=document.getElementById('f-monitor').value;
+  renderLetter(lang,school,grade,need,program,specialist,monitor);
+}
+
+function renderCompliance(){
+  const fields=['Plan created','Specialist assigned','Letter generated','Parent participation offered','Compliance row logged'];
+  document.getElementById('compliance-check').innerHTML=
+    `<div style="font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#4A5C64;width:100%;margin-bottom:4px">5 VLA audit fields logged automatically:</div>`+
+    fields.map(f=>`<span class="cc">${f}</span>`).join('');
+}
+
+function showBoard(){
+  switchRole('board');
+}
+
+// ── NAV ACTIVE on scroll ──
+window.addEventListener('scroll',()=>{
+  const nav=document.getElementById('topnav');
+  nav.style.boxShadow=window.scrollY>10?'0 2px 20px rgba(0,0,0,.4)':'none';
+});
+</script>
+</body>
+</html>

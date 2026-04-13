@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Command Insight Center — Petersburg City Public Schools</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0D1B2A;--navy-mid:#162236;--navy-card:rgba(255,255,255,.05);
+  --gold:#C9A84C;--gold-light:#F0D080;--gold-pale:#FBF5E6;
+  --teal:#1ABCB0;--teal-pale:#E0F7F5;--teal-deep:#0D6B64;
+  --text:#1A2A30;--mid:#4A5C64;--light:#8A9BA3;--warm:#E8EAEA;--off:#F8F9FA;
+  --orange:#E07B39;--orange-pal:#FEF0E6;
+  --green:#2EB87A;--green-pal:#E6F9F1;
+  --purple:#7B6CF6;--purple-pal:#F0EEFF;
+  --red:#D94F4F;--red-pal:#FDECEC;
+  --white:#fff;--font:'Inter',sans-serif;
+  --nav-h:58px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--white);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;height:var(--nav-h);background:rgba(13,27,42,.97);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,.2);z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 28px}
+.nav-brand{display:flex;align-items:center;gap:10px}
+.nav-seal{width:30px;height:30px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:var(--navy);flex-shrink:0}
+.nav-name{font-size:12px;font-weight:700;color:var(--white);line-height:1.2}
+.nav-name span{display:block;font-size:10px;font-weight:400;color:rgba(255,255,255,.35);letter-spacing:.05em}
+.nav-links{display:flex;align-items:center;gap:4px}
+.nav-links a{font-size:11px;font-weight:600;color:rgba(255,255,255,.45);text-decoration:none;padding:6px 12px;border-radius:8px;transition:color .15s,background .15s;white-space:nowrap}
+.nav-links a:hover,.nav-links a.active{color:var(--white);background:rgba(255,255,255,.07)}
+.nav-links a.active{color:var(--gold)}
+@media(max-width:720px){.nav-links{display:none}}
+
+/* ── PAGE SHELL ── */
+main{padding-top:var(--nav-h)}
+section{padding:64px 28px;scroll-margin-top:var(--nav-h)}
+.container{max-width:900px;margin:0 auto}
+.eyebrow{font-size:9px;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+h2{font-size:clamp(1.5rem,3.5vw,2.2rem);font-weight:800;color:var(--text);line-height:1.15;letter-spacing:-.02em;margin-bottom:10px}
+h2.on-dark{color:var(--white)}
+.section-sub{font-size:14px;color:var(--mid);line-height:1.8;max-width:620px}
+
+/* ── HERO ── */
+#hero{background:var(--navy);padding:72px 28px 64px;text-align:center;position:relative;overflow:hidden}
+#hero::before{content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,.07) 0%,transparent 68%);pointer-events:none}
+#hero .eyebrow{color:var(--gold)}
+#hero h1{font-size:clamp(2rem,5vw,3.4rem);font-weight:900;color:var(--white);line-height:1.05;max-width:760px;margin:0 auto 18px;letter-spacing:-.03em}
+#hero h1 em{font-style:normal;color:var(--gold)}
+#hero p{font-size:15px;color:rgba(255,255,255,.55);max-width:520px;margin:0 auto 44px;line-height:1.85;font-weight:300}
+.hero-stats{display:flex;justify-content:center;gap:0;flex-wrap:wrap;border:1px solid rgba(255,255,255,.08);border-radius:16px;overflow:hidden;max-width:540px;margin:0 auto}
+.hstat{padding:18px 28px;text-align:center;flex:1;border-right:1px solid rgba(255,255,255,.08)}
+.hstat:last-child{border-right:none}
+.hstat .n{font-size:1.8rem;font-weight:900;color:var(--gold);line-height:1;display:block}
+.hstat .l{font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.28);margin-top:4px;display:block}
+
+/* ── POLICY CASCADE ── */
+#policy{background:var(--navy);padding:64px 28px}
+.cascade{display:flex;flex-direction:column;gap:0;max-width:820px;margin:0 auto}
+.clevel{display:grid;grid-template-columns:160px 1fr;gap:0;align-items:stretch}
+.cleft{display:flex;flex-direction:column;align-items:center;padding-bottom:0}
+.cpill{padding:12px 10px;border-radius:10px;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;text-align:center;width:140px;line-height:1.4;flex-shrink:0}
+.cline{width:2px;flex:1;min-height:28px}
+.cp-fed{background:rgba(26,188,176,.14);border:1px solid rgba(26,188,176,.35);color:var(--teal)}
+.cl-fed{background:linear-gradient(to bottom,rgba(26,188,176,.3),rgba(26,188,176,.05))}
+.cp-state{background:rgba(123,108,246,.14);border:1px solid rgba(123,108,246,.35);color:var(--purple)}
+.cl-state{background:linear-gradient(to bottom,rgba(123,108,246,.3),rgba(123,108,246,.05))}
+.cp-dist{background:rgba(201,168,76,.14);border:1px solid rgba(201,168,76,.35);color:var(--gold)}
+.cl-dist{background:linear-gradient(to bottom,rgba(201,168,76,.3),rgba(201,168,76,.05))}
+.cp-school{background:rgba(46,184,122,.14);border:1px solid rgba(46,184,122,.35);color:var(--green)}
+.cl-school{background:linear-gradient(to bottom,rgba(46,184,122,.3),rgba(46,184,122,.05))}
+.cp-fam{background:rgba(224,123,57,.14);border:1px solid rgba(224,123,57,.35);color:var(--orange)}
+.cright{padding:0 0 32px 28px;border-left:1px solid rgba(255,255,255,.06)}
+.clevel:last-child .cright{padding-bottom:0}
+.ctitle{font-size:13px;font-weight:700;color:var(--white);margin-bottom:5px}
+.cbody{font-size:12px;color:rgba(255,255,255,.42);line-height:1.75}
+.cbody strong{color:rgba(255,255,255,.72);font-weight:600}
+.ctags{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px}
+.ctag{font-size:9px;padding:2px 9px;border-radius:100px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.35);border:1px solid rgba(255,255,255,.07)}
+
+/* ── THREE TRACKS ── */
+#tracks{background:var(--off);padding:64px 28px}
+.tracks-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:900px;margin:0 auto}
+.tcard{background:var(--white);border:1.5px solid var(--warm);border-radius:16px;padding:26px 22px;position:relative;overflow:hidden}
+.tcard::after{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.tc-a::after{background:var(--teal)}
+.tc-b::after{background:var(--purple)}
+.tc-c::after{background:var(--orange)}
+.tbadge{font-size:8px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;padding:3px 10px;border-radius:100px;display:inline-block;margin-bottom:12px}
+.tb-a{background:var(--teal-pale);color:var(--teal-deep)}
+.tb-b{background:var(--purple-pal);color:#5B3EC8}
+.tb-c{background:var(--orange-pal);color:var(--orange)}
+.tcard h3{font-size:15px;font-weight:800;color:var(--text);margin-bottom:5px}
+.tcard .tsub{font-size:11px;color:var(--mid);margin-bottom:16px;line-height:1.6}
+.tlist{list-style:none;display:flex;flex-direction:column;gap:6px}
+.tlist li{font-size:11px;color:var(--mid);display:flex;gap:7px;line-height:1.5;align-items:flex-start}
+.tlist li::before{content:'›';font-weight:700;flex-shrink:0;margin-top:1px}
+.li-a::before{color:var(--teal)}
+.li-b::before{color:var(--purple)}
+.li-c::before{color:var(--orange)}
+.urgency{display:inline-flex;align-items:center;gap:5px;background:var(--red-pal);color:var(--red);font-size:8px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:100px;margin-bottom:8px}
+.udot{width:5px;height:5px;border-radius:50%;background:var(--red);animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+@media(max-width:700px){.tracks-grid{grid-template-columns:1fr}}
+
+/* ── ROLES ── */
+#roles{background:var(--white);padding:64px 28px}
+.roles-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;max-width:900px;margin:0 auto}
+.rcard{border:1.5px solid var(--warm);border-radius:14px;padding:20px 18px;transition:border-color .18s,transform .18s}
+.rcard:hover{border-color:var(--gold);transform:translateY(-2px)}
+.rtier{font-size:8px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--light);margin-bottom:7px}
+.rname{font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px;line-height:1.3}
+.rsees{font-size:11px;color:var(--mid);line-height:1.65;margin-bottom:10px}
+.rtags{display:flex;flex-wrap:wrap;gap:4px}
+.rt{font-size:8px;font-weight:700;padding:2px 8px;border-radius:100px;letter-spacing:.05em}
+.rt-v{background:var(--teal-pale);color:var(--teal-deep)}
+.rt-u{background:var(--green-pal);color:#1A7A50}
+.rt-o{background:var(--orange-pal);color:var(--orange)}
+.rt-g{background:var(--purple-pal);color:#5B3EC8}
+.rt-a{background:var(--gold-pale);color:#8A6A10}
+
+/* ── DATA FLOW ── */
+#dataflow{background:var(--off);padding:64px 28px}
+.flow-list{max-width:660px;margin:0 auto;display:flex;flex-direction:column;gap:0}
+.frow{display:grid;grid-template-columns:44px 1fr;gap:14px;align-items:flex-start}
+.ficon-wrap{display:flex;flex-direction:column;align-items:center}
+.ficon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.fline{width:2px;min-height:28px;flex:1;background:var(--warm);margin:4px 0}
+.fcontent{padding-bottom:28px}
+.frow:last-child .fcontent{padding-bottom:0}
+.fcontent h4{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px}
+.fcontent p{font-size:12px;color:var(--mid);line-height:1.75}
+.fnote{display:inline-block;font-size:9px;font-weight:600;color:var(--teal);background:var(--teal-pale);padding:2px 9px;border-radius:100px;margin-top:6px;letter-spacing:.04em}
+.fi-1{background:#EEF4FF}
+.fi-2{background:var(--gold-pale)}
+.fi-3{background:var(--teal-pale)}
+.fi-4{background:var(--green-pal)}
+.fi-5{background:var(--purple-pal)}
+.fi-6{background:var(--navy);color:var(--gold)}
+
+/* ── HANDOFF ── */
+#handoff{background:var(--navy);padding:64px 28px}
+.hgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px;max-width:900px;margin:0 auto 48px}
+.hcard{background:var(--navy-card);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:20px 18px}
+.hico{font-size:1.3rem;display:block;margin-bottom:8px}
+.htitle{font-size:12px;font-weight:700;color:var(--white);margin-bottom:4px}
+.hbody{font-size:11px;color:rgba(255,255,255,.38);line-height:1.65}
+.tl{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:900px;margin:0 auto}
+.tlitem{text-align:center}
+.tlweek{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.tlbar{height:5px;border-radius:100px;background:rgba(255,255,255,.08);margin-bottom:8px;overflow:hidden}
+.tlfill{height:100%;border-radius:100px;background:var(--gold)}
+.tllabel{font-size:10px;color:rgba(255,255,255,.32);line-height:1.55}
+@media(max-width:600px){.tl{grid-template-columns:repeat(2,1fr)}}
+
+/* ── FOOTER ── */
+footer{background:var(--navy-mid);border-top:1px solid rgba(201,168,76,.12);padding:28px;text-align:center}
+footer p{font-size:10px;color:rgba(255,255,255,.2);line-height:1.7;max-width:560px;margin:0 auto}
+footer strong{color:rgba(255,255,255,.4);font-weight:600}
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav id="topnav">
+  <div class="nav-brand">
+    <div class="nav-seal">P</div>
+    <div class="nav-name">Command Insight Center<span>Petersburg City Public Schools</span></div>
+  </div>
+  <div class="nav-links">
+    <a href="#policy">Policy</a>
+    <a href="#tracks">System</a>
+    <a href="#roles">Roles</a>
+    <a href="#dataflow">Data Flow</a>
+    <a href="#handoff">Handoff</a>
+    <a href="pcps_dashboard_preview.html">Dashboard →</a>
+    <a href="pcps_leadership_board.html">Policy Board →</a>
+    <a href="pcps_operations_board.html">Operations Board →</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ── HERO ── -->
+<section id="hero">
+  <div class="eyebrow">Petersburg City Public Schools · SY 2025–26</div>
+  <h1>One system.<br><em>Every child. Every family.</em><br>Every decision-maker.</h1>
+  <p>A district-owned data infrastructure built on federal law, Virginia's Literacy Act, and the policy Petersburg is building right now — from classroom teacher to school board.</p>
+  <div class="hero-stats">
+    <div class="hstat"><span class="n">3</span><span class="l">Build tracks</span></div>
+    <div class="hstat"><span class="n">K–8</span><span class="l">Full coverage</span></div>
+    <div class="hstat"><span class="n">5</span><span class="l">Role views</span></div>
+    <div class="hstat"><span class="n">21</span><span class="l">Days to handoff</span></div>
+  </div>
+</section>
+
+<!-- ── POLICY CASCADE ── -->
+<section id="policy">
+  <div class="container" style="text-align:center;margin-bottom:44px">
+    <div class="eyebrow" style="color:var(--gold)">The governing framework</div>
+    <h2 class="on-dark">Policy flows down.<br>Accountability flows up.</h2>
+    <p style="font-size:13px;color:rgba(255,255,255,.38);max-width:520px;margin:10px auto 0;line-height:1.85">Every field, every report, every parent letter traces back to a statute or standard. This is not a design choice — it is the law, translated into infrastructure.</p>
+  </div>
+  <div class="cascade">
+
+    <div class="clevel">
+      <div class="cleft">
+        <div class="cpill cp-fed">Federal Law</div>
+        <div class="cline cl-fed"></div>
+      </div>
+      <div class="cright">
+        <div class="ctitle">FERPA · ESSA · IDEA · Title I / Title III</div>
+        <div class="cbody"><strong>FERPA</strong> governs who may see student data — the role-gated architecture is a direct compliance mechanism. <strong>ESSA</strong> defines public reporting and disaggregated outcome requirements. <strong>IDEA</strong> requires reading plans even for IEP students who fail the Reading SOL. <strong>Title I and III</strong> govern how federal dollars support intervention services.
+          <div class="ctags">
+            <span class="ctag">20 U.S.C. § 1232g</span><span class="ctag">ESSA</span><span class="ctag">IDEA Part B</span><span class="ctag">Title I · Title III</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="clevel">
+      <div class="cleft">
+        <div class="cpill cp-state">Virginia Law</div>
+        <div class="cline cl-state"></div>
+      </div>
+      <div class="cright">
+        <div class="ctitle">Virginia Literacy Act · VDOE Guidance · VBOE Approved Programs</div>
+        <div class="cbody"><strong>§ 22.1-253.13:1 G</strong> — SY 2025–26 is the first year K–8 Student Reading Plans are mandatory statewide. Students who fail or score Basic on the Reading SOL, or score high-risk on VALLSS, must have a plan co-owned by a licensed reading specialist. Parent participation must be offered and any refusal documented in writing. Every intervention must use a <strong>VBOE-approved program</strong>.
+          <div class="ctags">
+            <span class="ctag">§ 22.1-253.13:1 G</span><span class="ctag">VALLSS screener</span><span class="ctag">VBOE-approved programs</span><span class="ctag">VDOE parent letter templates</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="clevel">
+      <div class="cleft">
+        <div class="cpill cp-dist">District Policy</div>
+        <div class="cline cl-dist"></div>
+      </div>
+      <div class="cright">
+        <div class="ctitle">Petersburg City Public Schools — the policy you are building right now</div>
+        <div class="cbody">District policy defines the intake process, the specialist assignment workflow, the upload schedule, and the reporting cadence that carries state compliance to every school. The Command Insight Center <strong>is</strong> the district policy made operational — not a tool that runs alongside it.
+          <div class="ctags">
+            <span class="ctag">Data intake protocol</span><span class="ctag">Specialist assignment</span><span class="ctag">Naming convention</span><span class="ctag">Reporting cadence</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="clevel">
+      <div class="cleft">
+        <div class="cpill cp-school">School Operations</div>
+        <div class="cline cl-school"></div>
+      </div>
+      <div class="cright">
+        <div class="ctitle">Teachers · Reading Specialists · Principals · Interventionists</div>
+        <div class="cbody">School staff do not interpret law — they execute a clear process. The teacher opens a form, enters minimum required fields, submits. The reading specialist approves co-ownership. The principal sees compliance rates and flags. <strong>The system enforces the law so staff can focus on the child.</strong>
+          <div class="ctags">
+            <span class="ctag">Google Form intake</span><span class="ctag">Specialist co-ownership</span><span class="ctag">School compliance view</span><span class="ctag">Alert flags</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="clevel">
+      <div class="cleft">
+        <div class="cpill cp-fam">Families</div>
+      </div>
+      <div class="cright" style="padding-bottom:0">
+        <div class="ctitle">Every parent and guardian receives a plan they can actually read</div>
+        <div class="cbody">One page. Plain language. 6th-grade reading level. Petersburg letterhead. Their child's area of need, what the school is doing, how they can help at home. Available in English and Spanish. Parent participation is invited — any refusal is documented, creating the audit trail the district needs.
+          <div class="ctags">
+            <span class="ctag">1-page parent letter</span><span class="ctag">English + Spanish</span><span class="ctag">Participation documented</span><span class="ctag">Refusal audit trail</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── THREE TRACKS ── -->
+<section id="tracks">
+  <div class="container" style="text-align:center;margin-bottom:36px">
+    <div class="eyebrow">What gets built</div>
+    <h2>Three tracks. One ecosystem.</h2>
+    <p class="section-sub" style="margin:0 auto">All three share one Google Sheets backbone inside Petersburg's Google Workspace. One dashboard. Data never leaves your environment.</p>
+  </div>
+  <div class="tracks-grid">
+
+    <div class="tcard tc-a">
+      <span class="tbadge tb-a">Track A</span>
+      <h3>Live Tutoring Dashboard</h3>
+      <p class="tsub">Real-time view of sessions, student progress, and program effectiveness across all schools.</p>
+      <ul class="tlist">
+        <li class="li-a">Sessions · students served · improving · alerts</li>
+        <li class="li-a">By instructor, by school, district-wide</li>
+        <li class="li-a">Weekly refresh via coordinator upload</li>
+        <li class="li-a">Role-gated from teacher to district</li>
+      </ul>
+    </div>
+
+    <div class="tcard tc-b">
+      <div class="urgency"><span class="udot"></span>SOL testing April 22</div>
+      <span class="tbadge tb-b">Track B · Highest urgency</span>
+      <h3>Reading Plan Generator</h3>
+      <p class="tsub">District-wide VLA compliance system — generates parent letters and builds the audit trail for every K–8 student with a demonstrated reading need.</p>
+      <ul class="tlist">
+        <li class="li-b">Google Form teacher intake — minimum fields</li>
+        <li class="li-b">Apps Script auto-generates letter — no AI, FERPA-safe</li>
+        <li class="li-b">Reading specialist co-ownership required</li>
+        <li class="li-b">Parent participation + refusal documented</li>
+        <li class="li-b">English and Spanish output</li>
+        <li class="li-b">5-field VLA compliance audit trail</li>
+      </ul>
+    </div>
+
+    <div class="tcard tc-c">
+      <span class="tbadge tb-c">Track C</span>
+      <h3>Graduation Dashboard</h3>
+      <p class="tsub">Credit completion tracking, on-track indicators, and early warning flags by cohort — from counselor to board summary.</p>
+      <ul class="tlist">
+        <li class="li-c">Credit completion by cohort · early warnings</li>
+        <li class="li-c">Counselor · principal · central office views</li>
+        <li class="li-c">Board-ready one-page export</li>
+        <li class="li-c">Weekly refresh via coordinator upload</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── ROLES ── -->
+<section id="roles">
+  <div class="container" style="text-align:center;margin-bottom:36px">
+    <div class="eyebrow">Who sees what</div>
+    <h2>Every role. Exactly what they need.</h2>
+    <p class="section-sub" style="margin:0 auto">Eight roles. Eight views or outputs built for that role's decisions. Nothing more than what they need. Seven quick-start guides at handoff.</p>
+  </div>
+  <div class="roles-grid">
+
+    <div class="rcard">
+      <div class="rtier">District leadership</div>
+      <div class="rname">Director of Curriculum &amp; Instruction</div>
+      <div class="rsees">All schools · compliance rates · all three tracks · runs exports for superintendent and board</div>
+      <div class="rtags"><span class="rt rt-v">District view</span><span class="rt rt-o">Runs exports</span><span class="rt rt-g">1-pager</span></div>
+    </div>
+
+    <div class="rcard">
+      <div class="rtier">District leadership</div>
+      <div class="rname">Director of Data, Assessment &amp; Accountability</div>
+      <div class="rsees">Graduation cohort tracking · district-wide data quality · cross-track compliance overview</div>
+      <div class="rtags"><span class="rt rt-v">District view</span><span class="rt rt-o">Runs exports</span><span class="rt rt-g">1-pager</span></div>
+    </div>
+
+    <div class="rcard">
+      <div class="rtier">District operations</div>
+      <div class="rname">District Technology Lead</div>
+      <div class="rsees">Full system ownership at Day 21 — every credential, repo, script, and folder transfers to this role</div>
+      <div class="rtags"><span class="rt rt-a">System admin</span><span class="rt rt-g">Admin guide ★</span></div>
+    </div>
+
+    <div class="rcard">
+      <div class="rtier">District operations</div>
+      <div class="rname">District Data Coordinator</div>
+      <div class="rsees">Upload protocol · naming conventions · intake folder management · most critical role in the data chain</div>
+      <div class="rtags"><span class="rt rt-u">Uploads data</span><span class="rt rt-g">1-pager ★★</span></div>
+    </div>
+
+    <div class="rcard">
+      <div class="rtier">District specialists</div>
+      <div class="rname">Reading Specialists<br><span style="font-weight:400;opacity:.65;font-size:11px">Elementary + Secondary</span></div>
+      <div class="rsees">Full caseload · plan co-ownership · intervention compliance · parent participation status</div>
+      <div class="rtags"><span class="rt rt-v">Specialist view</span><span class="rt rt-g">1-pager</span></div>
+    </div>
+
+    <div class="rcard">
+      <div class="rtier">Building level</div>
+      <div class="rname">Principals &amp; Building Admins</div>
+      <div class="rsees">Their school only — compliance rate, staff completion, alert flags. No other schools visible.</div>
+      <div class="rtags"><span class="rt rt-v">School view</span><span class="rt rt-g">1-pager</span></div>
+    </div>
+
+    <div class="rcard">
+      <div class="rtier">Building level</div>
+      <div class="rname">Teachers &amp; Interventionists</div>
+      <div class="rsees">Their students only — form submission, plan status, session log. Nothing beyond their caseload.</div>
+      <div class="rtags"><span class="rt rt-u">Form input</span><span class="rt rt-v">Student view</span><span class="rt rt-g">1-pager</span></div>
+    </div>
+
+    <div class="rcard">
+      <div class="rtier">Executive &amp; governance</div>
+      <div class="rname">Superintendent &amp; School Board</div>
+      <div class="rsees">Never log in. Receive a formatted export from the Director of C&amp;I — compliance percentages, trend indicators, board-ready summary only.</div>
+      <div class="rtags"><span class="rt rt-o">Export only</span></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── DATA FLOW ── -->
+<section id="dataflow">
+  <div class="container" style="text-align:center;margin-bottom:44px">
+    <div class="eyebrow">How data moves</div>
+    <h2>Built clean from the start.</h2>
+    <p class="section-sub" style="margin:0 auto">Student data never leaves Petersburg's Google Workspace. The district is the data controller at every step.</p>
+  </div>
+  <div class="flow-list">
+
+    <div class="frow">
+      <div class="ficon-wrap"><div class="ficon fi-1">🏫</div><div class="fline"></div></div>
+      <div class="fcontent">
+        <h4>Source systems</h4>
+        <p>PowerSchool, VALLSS / Amplify, tutoring logs, credit and cohort data — in whatever format they currently exist.</p>
+      </div>
+    </div>
+
+    <div class="frow">
+      <div class="ficon-wrap"><div class="ficon fi-2">🔐</div><div class="fline"></div></div>
+      <div class="fcontent">
+        <h4>District Data Coordinator</h4>
+        <p>Strips student identifiers, validates format, uploads to the correct intake folder. This role controls all data movement.</p>
+        <span class="fnote">FERPA data controller · district-owned · not EJC</span>
+      </div>
+    </div>
+
+    <div class="frow">
+      <div class="ficon-wrap"><div class="ficon fi-3">📁</div><div class="fline"></div></div>
+      <div class="fcontent">
+        <h4>Petersburg Google Drive — intake folders</h4>
+        <p>Tutoring_Uploads, ReadingPlan_Uploads, Graduation_Uploads — inside Petersburg's own Google Workspace. Taskade sends automatic upload confirmations.</p>
+        <span class="fnote">Lives in Petersburg's environment · EJC never accesses</span>
+      </div>
+    </div>
+
+    <div class="frow">
+      <div class="ficon-wrap"><div class="ficon fi-4">📊</div><div class="fline"></div></div>
+      <div class="fcontent">
+        <h4>Google Sheets backbone</h4>
+        <p>One structured, de-identified Sheets backbone per track — all inside Petersburg's Workspace. The Apps Script and dashboard both read from here.</p>
+        <span class="fnote">De-identified · structured · district-owned</span>
+      </div>
+    </div>
+
+    <div class="frow">
+      <div class="ficon-wrap"><div class="ficon fi-5">⚙️</div><div class="fline"></div></div>
+      <div class="fcontent">
+        <h4>Google Apps Script — Track B only</h4>
+        <p>Runs when a teacher submits the reading plan form. Applies the locked VLA-aligned letter template. Writes the compliance row to the tracking sheet simultaneously. No AI. Rules are coded in — not pasted into a prompt.</p>
+        <span class="fnote">No AI · no Gemini · FERPA-safe · replaces the current workflow</span>
+      </div>
+    </div>
+
+    <div class="frow">
+      <div class="ficon-wrap"><div class="ficon fi-6">📡</div></div>
+      <div class="fcontent">
+        <h4>Command Insight Center — GitHub Pages dashboard</h4>
+        <p>Dark, polished, role-aware. Every stakeholder sees exactly one view — built for their role and their decisions. Technology lead owns the repo at handoff.</p>
+        <span class="fnote">Read-only display · role-gated · district-owned at Day 21</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── HANDOFF ── -->
+<section id="handoff">
+  <div class="container" style="text-align:center;margin-bottom:44px">
+    <div class="eyebrow" style="color:var(--gold)">Day 21 transfer</div>
+    <h2 class="on-dark">Petersburg owns everything.<br>Fully transferable. No dependency.</h2>
+    <p style="font-size:13px;color:rgba(255,255,255,.38);max-width:500px;margin:10px auto 0;line-height:1.85">The test of a complete handoff: your technology lead can onboard a new data coordinator in 30 minutes using only the documentation — without making a single call.</p>
+  </div>
+  <div class="hgrid">
+    <div class="hcard"><span class="hico">💻</span><div class="htitle">GitHub repository</div><div class="hbody">Full dashboard codebase transferred to Petersburg. Your team edits and deploys without outside support.</div></div>
+    <div class="hcard"><span class="hico">📁</span><div class="htitle">Google Drive structure</div><div class="hbody">Intake folders, naming conventions, and archive structure — already inside your Google Workspace.</div></div>
+    <div class="hcard"><span class="hico">📊</span><div class="htitle">Sheets backbone</div><div class="hbody">Fully documented schema. The district can add fields, adjust columns, and export data anytime.</div></div>
+    <div class="hcard"><span class="hico">⚙️</span><div class="htitle">Apps Script (annotated)</div><div class="hbody">Reading plan generator with line-by-line comments. Any staff member can update the letter template.</div></div>
+    <div class="hcard"><span class="hico">🤖</span><div class="htitle">Taskade automations</div><div class="hbody">Upload confirmations, compliance alerts, weekly pull reminders — all documented and transferable.</div></div>
+    <div class="hcard"><span class="hico">📋</span><div class="htitle">7 quick-start guides</div><div class="hbody">One page per role. Screenshot-based. What you do · how you do it · who to call if stuck.</div></div>
+    <div class="hcard"><span class="hico">🎥</span><div class="htitle">Recorded orientations</div><div class="hbody">15-minute recorded walkthrough per role. Kept on file for onboarding future staff.</div></div>
+    <div class="hcard"><span class="hico">🔑</span><div class="htitle">All credentials + permissions</div><div class="hbody">Every admin credential, repo permission, and access setting transferred to the technology lead.</div></div>
+  </div>
+
+  <div style="max-width:900px;margin:0 auto">
+    <p style="text-align:center;font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.2);margin-bottom:18px">Build timeline · April – May 2026</p>
+    <div class="tl">
+      <div class="tlitem"><div class="tlweek">Week 0 · Now</div><div class="tlbar"><div class="tlfill" style="width:100%"></div></div><div class="tllabel">Kickoff prep · data intake protocol</div></div>
+      <div class="tlitem"><div class="tlweek">Week 1 · Apr 14</div><div class="tlbar"><div class="tlfill" style="width:75%"></div></div><div class="tllabel">Kickoff call · wireframe · form architecture</div></div>
+      <div class="tlitem"><div class="tlweek">Week 2 · Apr 21</div><div class="tlbar"><div class="tlfill" style="width:50%"></div></div><div class="tllabel">Live dashboard · reading plan generator</div></div>
+      <div class="tlitem"><div class="tlweek">Week 3 · Apr 28</div><div class="tlbar"><div class="tlfill" style="width:25%"></div></div><div class="tllabel">Acceptance · orientation · full handoff</div></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p><strong>Petersburg City Public Schools — Command Insight Center</strong><br>
+  All student data governed by FERPA · VLA compliance current as of VDOE guidance October 22, 2025 · Student data never leaves Petersburg's Google Workspace · District retains full ownership of all systems and credentials at handoff</p>
+</footer>
+
+<script>
+const links = document.querySelectorAll('.nav-links a');
+const sections = document.querySelectorAll('section[id]');
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      links.forEach(l => l.classList.remove('active'));
+      const a = document.querySelector(`.nav-links a[href="#${e.target.id}"]`);
+      if(a) a.classList.add('active');
+    }
+  });
+},{rootMargin:'-30% 0px -60% 0px'});
+sections.forEach(s => obs.observe(s));
+</script>
+</body>
+</html>

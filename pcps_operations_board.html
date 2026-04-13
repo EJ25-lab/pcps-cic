@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Operations Board — Petersburg CIC</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+:root{
+  --bg:#F4F6F8;--white:#fff;--navy:#0D1B2A;--text:#1A2A30;--mid:#4A5C64;--light:#8A9BA3;
+  --gold:#B8943E;--gold-pale:#FBF5E6;--gold-border:#E8D5A0;
+  --teal:#1ABCB0;--teal-pale:#E0F7F5;--teal-deep:#0D6B64;
+  --green:#2EB87A;--green-pale:#E8F9F2;--green-dark:#1A7A50;--green-border:#B8E8D0;
+  --amber:#C97830;--amber-pale:#FEF0E6;--amber-border:#F0C898;
+  --purple:#6B5CE7;--purple-pale:#F0EEFF;--purple-border:#C8C0F8;
+  --blue:#2563EB;--blue-pale:#EFF6FF;--blue-border:#BFDBFE;
+  --red:#D94F4F;--red-pale:#FDECEC;--red-border:#FCA5A5;
+  --gray-border:#E2E8F0;--gray-pale:#F1F5F9;
+  --nav-h:54px;--font:'Inter',sans-serif;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+
+nav{position:fixed;top:0;left:0;right:0;height:var(--nav-h);background:rgba(13,27,42,.97);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.07);z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 24px;gap:12px}
+.nav-brand{display:flex;align-items:center;gap:10px}
+.nav-seal{width:28px;height:28px;border-radius:50%;background:#C9A84C;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#0D1B2A;flex-shrink:0}
+.nav-name{font-size:11px;font-weight:700;color:#fff;line-height:1.2}
+.nav-name span{display:block;font-size:9px;font-weight:400;color:rgba(255,255,255,.35)}
+.nav-links{display:flex;gap:3px}
+.nav-links a{font-size:10px;font-weight:600;color:rgba(255,255,255,.45);text-decoration:none;padding:5px 11px;border-radius:7px;transition:all .15s;white-space:nowrap}
+.nav-links a:hover{color:#fff;background:rgba(255,255,255,.07)}
+.board-pill{background:rgba(46,184,122,.15);border:1px solid rgba(46,184,122,.3);color:#2EB87A;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:100px}
+@media(max-width:680px){.nav-links{display:none}}
+
+main{padding-top:var(--nav-h)}
+.section{padding:60px 24px;scroll-margin-top:var(--nav-h)}
+.section-alt{background:var(--white)}
+.container{max-width:960px;margin:0 auto}
+.eyebrow{font-size:9px;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:var(--teal);margin-bottom:11px}
+h2{font-size:clamp(1.4rem,3vw,2rem);font-weight:800;color:var(--navy);line-height:1.12;letter-spacing:-.02em;margin-bottom:12px}
+.lede{font-size:13px;color:var(--mid);line-height:1.88;max-width:680px}
+
+/* HERO */
+#hero{background:var(--navy);padding:60px 24px 52px;text-align:center;position:relative;overflow:hidden}
+#hero::before{content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(46,184,122,.06) 0%,transparent 68%);pointer-events:none}
+#hero h1{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;color:#fff;line-height:1.08;max-width:700px;margin:0 auto 14px;letter-spacing:-.025em}
+#hero h1 span{color:#2EB87A}
+#hero p{font-size:13px;color:rgba(255,255,255,.48);max-width:560px;margin:0 auto 36px;line-height:1.9}
+.legend{display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
+.leg{display:flex;align-items:center;gap:7px;font-size:10px;font-weight:600;color:rgba(255,255,255,.45)}
+.leg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.ld-a{background:var(--green)}
+.ld-m{background:var(--blue)}
+.ld-e{background:var(--teal)}
+.ld-p{background:var(--purple)}
+.ld-h{background:var(--gold)}
+
+/* CONSTRAINTS */
+.con-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:960px;margin:0 auto}
+.con{background:var(--white);border:1.5px solid var(--gray-border);border-radius:13px;padding:18px 16px;display:flex;gap:12px;align-items:flex-start}
+.con-icon{font-size:1.3rem;flex-shrink:0;margin-top:2px}
+.con-title{font-size:12px;font-weight:700;color:var(--navy);margin-bottom:4px}
+.con-body{font-size:11px;color:var(--mid);line-height:1.72}
+@media(max-width:640px){.con-grid{grid-template-columns:1fr}}
+
+/* APPROVAL MECHANICS */
+.approval-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;max-width:960px;margin:0 auto}
+.apanel{background:var(--white);border:1.5px solid var(--gray-border);border-radius:14px;overflow:hidden}
+.apanel-head{padding:14px 18px;border-bottom:1.5px solid var(--gray-border);display:flex;align-items:center;gap:10px}
+.aph-p{background:var(--purple-pale)}
+.aph-e{background:var(--teal-pale)}
+.aph-m{background:var(--blue-pale)}
+.aph-r{background:#F5F3FF}
+.ap-icon{font-size:1.3rem;flex-shrink:0}
+.ap-title{font-size:13px;font-weight:800;color:var(--navy)}
+.ap-sub{font-size:10px;color:var(--mid);margin-top:2px}
+.apanel-body{padding:16px 18px;display:flex;flex-direction:column;gap:8px}
+.amech{display:flex;gap:10px;align-items:flex-start;padding:9px 12px;border-radius:8px;border:1px solid var(--gray-border)}
+.amech.am-p{background:var(--purple-pale);border-color:var(--purple-border)}
+.amech.am-e{background:var(--teal-pale);border-color:rgba(26,188,176,.25)}
+.amech.am-m{background:var(--blue-pale);border-color:var(--blue-border)}
+.amech.am-a{background:var(--green-pale);border-color:var(--green-border)}
+.amech.am-r{background:#F5F3FF;border-color:var(--purple-border)}
+.am-num{font-size:10px;font-weight:800;width:18px;text-align:center;flex-shrink:0;margin-top:3px}
+.num-p{color:var(--purple)}
+.num-e{color:var(--teal-deep)}
+.num-m{color:var(--blue)}
+.num-a{color:var(--green-dark)}
+.num-r{color:var(--purple)}
+.am-content h5{font-size:11px;font-weight:700;color:var(--text);margin-bottom:2px}
+.am-content p{font-size:10px;color:var(--mid);line-height:1.62}
+.btn-sim{display:inline-flex;align-items:center;gap:5px;font-size:9px;font-weight:700;padding:4px 10px;border-radius:6px;margin-top:6px;border:none;cursor:default}
+.btn-approve{background:var(--green);color:#fff}
+.btn-flag{background:var(--amber-pale);color:var(--amber);border:1px solid var(--amber-border)}
+.btn-batch{background:var(--teal);color:#fff}
+@media(max-width:640px){.approval-grid{grid-template-columns:1fr}}
+
+/* 3-CYCLE */
+.cycles{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:960px;margin:0 auto}
+.cycle{background:var(--white);border:1.5px solid var(--blue-border);border-radius:13px;overflow:hidden}
+.cycle-head{background:var(--navy);padding:12px 16px}
+.cycle-num{font-size:10px;font-weight:700;color:var(--gold);margin-bottom:2px}
+.cycle-title{font-size:13px;font-weight:800;color:#fff}
+.cycle-sub{font-size:10px;color:rgba(255,255,255,.4);margin-top:2px}
+.cycle-body{padding:14px 16px;display:flex;flex-direction:column;gap:7px}
+.cstep{font-size:11px;color:var(--mid);display:flex;gap:8px;align-items:flex-start;line-height:1.55}
+.cs-icon{flex-shrink:0;font-size:11px;margin-top:1px}
+@media(max-width:640px){.cycles{grid-template-columns:1fr}}
+
+/* FLOW */
+.flow-wrap{max-width:820px;margin:0 auto}
+.flow-row{display:grid;grid-template-columns:48px 1fr;gap:0;align-items:stretch}
+.flow-left{display:flex;flex-direction:column;align-items:center}
+.flow-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;border:1.5px solid var(--gray-border);background:var(--white)}
+.fi-m{background:var(--blue-pale);border-color:var(--blue-border)}
+.fi-e{background:var(--teal-pale);border-color:rgba(26,188,176,.3)}
+.fi-p{background:var(--purple-pale);border-color:var(--purple-border)}
+.fi-a{background:var(--green-pale);border-color:var(--green-border)}
+.fi-s{background:var(--gold-pale);border-color:var(--gold-border)}
+.flow-line{width:2px;flex:1;min-height:20px;background:var(--gray-border);margin:4px 0}
+.flow-right{padding:0 0 26px 20px}
+.flow-row:last-child .flow-right{padding-bottom:0}
+.flow-title{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:4px}
+.flow-body{font-size:12px;color:var(--mid);line-height:1.78}
+.flow-body strong{color:var(--text);font-weight:600}
+.flow-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.ftag{font-size:9px;font-weight:700;padding:3px 9px;border-radius:100px;display:inline-flex;align-items:center;gap:4px}
+.ft-a{background:var(--green-pale);color:var(--green-dark);border:1px solid var(--green-border)}
+.ft-m{background:var(--blue-pale);color:var(--blue);border:1px solid var(--blue-border)}
+.ft-e{background:var(--teal-pale);color:var(--teal-deep);border:1px solid rgba(26,188,176,.3)}
+.ft-p{background:var(--purple-pale);color:var(--purple);border:1px solid var(--purple-border)}
+.ft-h{background:var(--gold-pale);color:var(--amber);border:1px solid var(--gold-border)}
+.flow-gate{max-width:820px;margin:4px 48px;background:var(--purple-pale);border:1px solid var(--purple-border);border-radius:8px;padding:10px 16px;display:flex;align-items:center;gap:10px}
+.fg-text{font-size:11px;font-weight:700;color:var(--purple)}
+.fg-sub{font-size:10px;color:var(--purple);opacity:.7;margin-top:1px}
+.flow-sep{max-width:820px;margin:10px 48px;border:none;border-top:2px dashed var(--gray-border);position:relative}
+.flow-sep-label{position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:var(--bg);padding:0 12px;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--light)}
+.flow-sep-label.on-white{background:var(--white)}
+
+/* ACTION TABLE */
+.table-wrap{max-width:960px;margin:0 auto;background:var(--white);border:1.5px solid var(--gray-border);border-radius:14px;overflow:hidden}
+table{width:100%;border-collapse:collapse}
+thead th{font-size:9px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--light);padding:11px 14px;text-align:left;border-bottom:1.5px solid var(--gray-border);background:var(--gray-pale);white-space:nowrap}
+tbody tr{border-bottom:1px solid var(--gray-border);transition:background .1s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:var(--gray-pale)}
+tbody tr.row-m{border-left:3px solid var(--blue)}
+tbody tr.row-e{border-left:3px solid var(--teal)}
+tbody tr.row-p{border-left:3px solid var(--purple)}
+tbody tr.row-a{border-left:3px solid var(--green)}
+tbody tr.row-s{border-left:3px solid var(--gold)}
+tbody td{padding:11px 14px;font-size:11px;color:var(--mid);vertical-align:middle}
+td.act{font-weight:600;color:var(--text);font-size:12px}
+.wp{font-size:9px;font-weight:700;padding:3px 9px;border-radius:100px;white-space:nowrap;display:inline-block}
+.wp-t{background:var(--gold-pale);color:var(--amber)}
+.wp-l{background:var(--purple-pale);color:var(--purple)}
+.wp-e{background:var(--teal-pale);color:var(--teal-deep)}
+.wp-p{background:var(--purple-pale);color:var(--purple);border:1px solid var(--purple-border)}
+.wp-a{background:var(--green-pale);color:var(--green-dark)}
+.wp-m{background:var(--blue-pale);color:var(--blue)}
+.wp-c{background:var(--amber-pale);color:var(--amber)}
+.tp{font-size:9px;font-weight:700;padding:3px 9px;border-radius:100px;display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+.tp-a{background:var(--green-pale);color:var(--green-dark);border:1px solid var(--green-border)}
+.tp-h{background:var(--gold-pale);color:var(--amber);border:1px solid var(--gold-border)}
+.tp-m{background:var(--blue-pale);color:var(--blue);border:1px solid var(--blue-border)}
+.tp-e{background:var(--teal-pale);color:var(--teal-deep);border:1px solid rgba(26,188,176,.3)}
+.tp-p{background:var(--purple-pale);color:var(--purple);border:1px solid var(--purple-border)}
+.tm{font-size:10px;font-weight:700;color:var(--teal);white-space:nowrap}
+.sr td{background:var(--gray-pale);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--light);padding:8px 14px}
+
+/* SWIMLANES */
+.swim-stack{display:flex;flex-direction:column;gap:16px;max-width:960px;margin:0 auto}
+.swim{border:1.5px solid var(--gray-border);border-radius:14px;overflow:hidden;background:var(--white)}
+.swim-head{padding:14px 20px;border-bottom:1.5px solid var(--gray-border);display:flex;align-items:center;gap:12px}
+.sh-m{background:var(--navy)}
+.sh-e{background:var(--teal-pale);border-bottom-color:rgba(26,188,176,.2)}
+.sh-p{background:var(--purple-pale);border-bottom-color:var(--purple-border)}
+.sh-l{background:#F5F3FF;border-bottom-color:var(--purple-border)}
+.sh-t{background:var(--teal-pale);border-bottom-color:rgba(26,188,176,.15)}
+.swim-ico{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;background:rgba(255,255,255,.15)}
+.swim-role{font-size:13px;font-weight:800}
+.sr-d{color:#fff}.sr-l{color:var(--navy)}
+.swim-q{font-size:11px;margin-top:2px;font-style:italic}
+.sq-d{color:rgba(255,255,255,.45)}.sq-l{color:var(--mid)}
+.swim-body{padding:16px 20px}
+.steps{display:flex;flex-direction:column;gap:7px}
+.step{display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:flex-start;padding:10px 13px;border-radius:9px;border:1px solid var(--gray-border)}
+.step.s-a{background:var(--green-pale);border-color:var(--green-border)}
+.step.s-m{background:var(--blue-pale);border-color:var(--blue-border)}
+.step.s-e{background:var(--teal-pale);border-color:rgba(26,188,176,.25)}
+.step.s-p{background:var(--purple-pale);border-color:var(--purple-border)}
+.step.s-h{background:var(--gold-pale);border-color:var(--gold-border)}
+.sn{font-size:10px;font-weight:800;color:var(--light);margin-top:3px;width:20px;text-align:center}
+.sn-a{color:var(--green-dark)}.sn-m{color:var(--blue)}.sn-e{color:var(--teal-deep)}.sn-p{color:var(--purple)}
+.sc h5{font-size:11px;font-weight:700;color:var(--text);margin-bottom:2px}
+.sc p{font-size:10px;color:var(--mid);line-height:1.62}
+.st{font-size:9px;font-weight:700;padding:2px 8px;border-radius:100px;white-space:nowrap;margin-top:3px;align-self:flex-start}
+.st-a{background:var(--green-pale);color:var(--green-dark);border:1px solid var(--green-border)}
+.st-m{background:var(--blue-pale);color:var(--blue);border:1px solid var(--blue-border)}
+.st-e{background:var(--teal-pale);color:var(--teal-deep);border:1px solid rgba(26,188,176,.3)}
+.st-p{background:var(--purple-pale);color:var(--purple);border:1px solid var(--purple-border)}
+.st-h{background:var(--gold-pale);color:var(--amber);border:1px solid var(--gold-border)}
+.swim-note{margin-top:10px;padding:10px 13px;background:var(--gray-pale);border-radius:8px;font-size:10px;color:var(--mid);border-left:3px solid var(--teal);line-height:1.65}
+.auto-note{margin-top:8px;display:flex;align-items:center;gap:7px;font-size:10px;font-weight:600;color:var(--green-dark);background:var(--green-pale);border:1px solid var(--green-border);padding:7px 12px;border-radius:8px}
+
+/* FLAGS */
+.flag-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;max-width:960px;margin:0 auto}
+.flag-card{background:var(--white);border:1.5px solid var(--gray-border);border-radius:13px;padding:20px 18px;transition:border-color .18s}
+.flag-card:hover{border-color:var(--teal)}
+.flag-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.flag-icon{font-size:1.2rem;flex-shrink:0}
+.flag-title{font-size:12px;font-weight:700;color:var(--navy)}
+.flag-who{font-size:9px;font-weight:600;color:var(--light);margin-top:2px}
+.flag-body{font-size:11px;color:var(--mid);line-height:1.75;margin-bottom:8px}
+.flag-action{font-size:10px;font-weight:600;color:var(--teal);display:flex;align-items:flex-start;gap:5px;line-height:1.5}
+.flag-action::before{content:'→';font-weight:800;flex-shrink:0}
+.flag-res{font-size:9px;font-weight:700;background:var(--green-pale);color:var(--green-dark);border:1px solid var(--green-border);padding:2px 9px;border-radius:100px;margin-top:8px;display:inline-block}
+
+/* OWNERSHIP */
+.own-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;max-width:960px;margin:0 auto}
+.own{border:1.5px solid var(--gray-border);border-radius:13px;padding:20px 18px;background:var(--white);transition:border-color .18s}
+.own:hover{border-color:var(--teal)}
+.own-role{font-size:8px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--light);margin-bottom:7px}
+.own-title{font-size:13px;font-weight:800;color:var(--navy);margin-bottom:12px;line-height:1.3}
+.own-items{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.own-item{font-size:11px;color:var(--mid);display:flex;gap:8px;align-items:flex-start;line-height:1.55}
+.own-ico{flex-shrink:0;font-size:12px;width:16px;text-align:center;margin-top:1px}
+.own-time{font-size:9px;font-weight:600;background:var(--teal-pale);color:var(--teal-deep);padding:3px 9px;border-radius:100px;display:inline-block;margin-top:4px}
+
+@media print{nav{display:none!important}body,main{background:#fff;padding-top:0}.section,.section-alt{padding:28px 16px}#hero{background:var(--navy)}@page{size:letter portrait;margin:0.6in}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">
+    <div class="nav-seal">P</div>
+    <div class="nav-name">Command Insight Center<span>Petersburg City Public Schools</span></div>
+  </div>
+  <span class="board-pill">Operations Board</span>
+  <div class="nav-links">
+    <a href="#design">Design</a>
+    <a href="#approval">Approvals</a>
+    <a href="#cycles">3-Cycle</a>
+    <a href="#flow">Full Flow</a>
+    <a href="#actions">Inventory</a>
+    <a href="#swimlanes">Roles</a>
+    <a href="#flags">Flags</a>
+    <a href="#ownership">Ownership</a>
+    <a href="index.html">Overview →</a>
+    <a href="pcps_leadership_board.html">Policy Board →</a>
+    <a href="pcps_dashboard_preview.html">Dashboard →</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- HERO -->
+<section class="section" id="hero">
+  <div class="container">
+    <div style="font-size:9px;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:#2EB87A;margin-bottom:11px">Petersburg City Public Schools · SY 2025–26</div>
+    <h1>Every role. Every action.<br><span>Every approval — documented.</span></h1>
+    <p>This board defines what the system does automatically, what each role does, how grade-by-grade principal confirmation works, how Eboni's approval panel governs mid-year adds, and who owns what at full handoff.</p>
+    <div class="legend">
+      <div class="leg"><div class="leg-dot ld-a"></div>System — automatic</div>
+      <div class="leg"><div class="leg-dot ld-m"></div>Tech lead — data steward</div>
+      <div class="leg"><div class="leg-dot ld-e"></div>Director of C&amp;I — educational authority</div>
+      <div class="leg"><div class="leg-dot ld-p"></div>Principal — grade-band validation</div>
+      <div class="leg"><div class="leg-dot ld-h"></div>School staff — human action</div>
+    </div>
+  </div>
+</section>
+
+<!-- DESIGN CONSTRAINTS -->
+<section class="section" id="design">
+  <div class="container" style="margin-bottom:28px">
+    <div class="eyebrow">Design constraints · April 2026</div>
+    <h2>Four parameters that govern<br>every build decision.</h2>
+    <p class="lede">These are not preferences. They define who owns what decision, where each role's authority begins and ends, and how data reaches schools.</p>
+  </div>
+  <div class="con-grid">
+    <div class="con">
+      <div class="con-icon">🔵</div>
+      <div>
+        <div class="con-title">Tech lead is data steward — not decision-maker</div>
+        <div class="con-body">Runs the query, validates output, loads counts into the board, and pushes school sheets after grade-band confirmation. Does not identify students or add mid-year arrivals without Eboni's direction.</div>
+      </div>
+    </div>
+    <div class="con">
+      <div class="con-icon">🏫</div>
+      <div>
+        <div class="con-title">Principals confirm grade by grade via button click</div>
+        <div class="con-body">Counts are pushed to each principal's board view — not emailed. Principals confirm grade bands individually. Each confirmed grade band is an independent push. One school's hold does not block another.</div>
+      </div>
+    </div>
+    <div class="con">
+      <div class="con-icon">📊</div>
+      <div>
+        <div class="con-title">Eboni holds all educational authority and is the notification layer</div>
+        <div class="con-body">All eligibility decisions belong to the Director of C&I. She notifies principals to review their boards through her normal channels. She approves mid-year adds via a dedicated panel. Her approval is the system trigger — not an email to Monique.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- APPROVAL MECHANICS -->
+<section class="section section-alt" id="approval">
+  <div class="container" style="margin-bottom:32px">
+    <div class="eyebrow">Approval mechanics</div>
+    <h2>How confirmation and approval<br>work in the dashboard.</h2>
+    <p class="lede">Four distinct approval mechanisms — one per role. Each is designed to be the simplest possible action for that role's context.</p>
+  </div>
+  <div class="approval-grid">
+
+    <!-- PRINCIPAL -->
+    <div class="apanel">
+      <div class="apanel-head aph-p">
+        <div class="ap-icon">🏫</div>
+        <div>
+          <div class="ap-title">Principal — grade-band confirmation panel</div>
+          <div class="ap-sub">Appears at the top of the principal board view during each identification cycle</div>
+        </div>
+      </div>
+      <div class="apanel-body">
+        <div class="amech am-p">
+          <div class="am-num num-p">1</div>
+          <div class="am-content"><h5>See grade-by-grade count breakdown</h5><p>Each grade band listed with the identified student count. Example: "Grade K — 18 students · Grade 1 — 22 students · Grade 2 — 24 students"</p></div>
+        </div>
+        <div class="amech am-p">
+          <div class="am-num num-p">2</div>
+          <div class="am-content"><h5>Approve or flag each grade band individually</h5><p>Two buttons per grade row.</p>
+            <span class="btn-sim btn-approve">✓ Approve</span>
+            <span class="btn-sim btn-flag" style="margin-left:6px">⚑ Flag for review</span>
+            <p style="margin-top:6px">Flag opens a one-line note field. Principal or their designee (AP, data lead) can confirm on their behalf.</p>
+          </div>
+        </div>
+        <div class="amech am-a">
+          <div class="am-num num-a">⚡</div>
+          <div class="am-content"><h5>Each approved grade band triggers its own push</h5><p>Grades K–2 approved at Cool Spring push immediately — independent of grade 3–5 or any other school. No waiting.</p></div>
+        </div>
+        <div class="amech am-p">
+          <div class="am-num num-p">✓</div>
+          <div class="am-content"><h5>Panel shows "School confirmed" when all grade bands approved</h5><p>Green confirmed state visible to principal, Eboni, and Monique simultaneously. Panel collapses after full confirmation.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EBONI -->
+    <div class="apanel">
+      <div class="apanel-head aph-e">
+        <div class="ap-icon">📊</div>
+        <div>
+          <div class="ap-title">Director of C&amp;I — district confirmation view</div>
+          <div class="ap-sub">Live status of all schools and grade bands during identification cycles</div>
+        </div>
+      </div>
+      <div class="apanel-body">
+        <div class="amech am-e">
+          <div class="am-num num-e">1</div>
+          <div class="am-content"><h5>See real-time confirmation status — all schools</h5><p>District view shows each school, each grade band, and its current status: Pending / Approved / Flagged. Updates live as principals confirm.</p></div>
+        </div>
+        <div class="amech am-e">
+          <div class="am-num num-e">2</div>
+          <div class="am-content"><h5>See flagged grades with principal notes</h5><p>Any flagged grade band surfaces with the principal's note. Eboni contacts the principal directly to resolve — outside the system, through her normal channels.</p></div>
+        </div>
+        <div class="amech am-e">
+          <div class="am-num num-e">3</div>
+          <div class="am-content"><h5>Mid-year add approval panel — dedicated section</h5><p>All pending add requests listed: student ID · school · grade · area of need · submitted by · date. Individual or batch approve.</p>
+            <span class="btn-sim btn-approve">✓ Approve</span>
+            <span class="btn-sim btn-batch" style="margin-left:6px">✓ Approve all</span>
+          </div>
+        </div>
+        <div class="amech am-a">
+          <div class="am-num num-a">⚡</div>
+          <div class="am-content"><h5>Approval is the system trigger</h5><p>When Eboni approves a mid-year add: row added to school tab · reading lead assigned · five fields initialized · reading lead notified · rollup summary updated. Monique not involved for routine adds.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MONIQUE -->
+    <div class="apanel">
+      <div class="apanel-head aph-m">
+        <div class="ap-icon">🔵</div>
+        <div>
+          <div class="ap-title">Tech lead — admin sheet confirmation view</div>
+          <div class="ap-sub">Live status table for push script timing — per school, per grade band</div>
+        </div>
+      </div>
+      <div class="apanel-body">
+        <div class="amech am-m">
+          <div class="am-num num-m">1</div>
+          <div class="am-content"><h5>See confirmation status per school per grade band</h5><p>Admin sheet table updates live as principals confirm in the board. Columns: School · Grade Band · Status · Confirmed By · Date. Each row turns green on approval.</p></div>
+        </div>
+        <div class="amech am-m">
+          <div class="am-num num-m">2</div>
+          <div class="am-content"><h5>Run push script per school when all grade bands are green</h5><p>Each school operates independently. Cool Spring all green → push Cool Spring. Vernon Johns still pending → hold Vernon Johns. No school waits on another.</p></div>
+        </div>
+        <div class="amech am-a">
+          <div class="am-num num-a">⚡</div>
+          <div class="am-content"><h5>Mid-year adds appear in the log — no action needed</h5><p>When Eboni approves a mid-year add, the row appears in Monique's admin sheet log automatically. She sees the record. If a script error occurs, the error log flags it for her manual trigger.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- READING LEAD -->
+    <div class="apanel">
+      <div class="apanel-head aph-r">
+        <div class="ap-icon">📚</div>
+        <div>
+          <div class="ap-title">Reading lead — dashboard notification</div>
+          <div class="ap-sub">How the reading lead knows when a mid-year student has been approved and added</div>
+        </div>
+      </div>
+      <div class="apanel-body">
+        <div class="amech am-r">
+          <div class="am-num num-r">1</div>
+          <div class="am-content"><h5>Notification badge appears in dashboard caseload view</h5><p>When Eboni approves a mid-year add, a notification appears in the reading lead's view: "[Student ID] has been added to your caseload at [School]."</p></div>
+        </div>
+        <div class="amech am-r">
+          <div class="am-num num-r">2</div>
+          <div class="am-content"><h5>New student row visible immediately</h5><p>The student appears in the caseload with five audit fields initialized to Pending. The reading lead's next action: share the form link with the relevant teacher — same as any other student.</p></div>
+        </div>
+        <div class="amech am-a">
+          <div class="am-num num-a">⚡</div>
+          <div class="am-content"><h5>Rollup summary updates in Eboni's panel</h5><p>Each approval updates a running summary in Eboni's mid-year panel: school name · total mid-year adds · most recent add date. No manual tracking required.</p></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- 3-CYCLE -->
+<section class="section" id="cycles">
+  <div class="container" style="margin-bottom:32px">
+    <div class="eyebrow">Tech lead · 3-cycle process</div>
+    <h2>Three times a year.<br>Same process each time.</h2>
+    <p class="lede">Outside these three cycles, the tech lead's system involvement is the Monday error check (2 min), directed mid-year adds (5 min each), and mapping table updates when staff changes (2 min). Everything else runs automatically.</p>
+  </div>
+  <div class="cycles">
+    <div class="cycle">
+      <div class="cycle-head">
+        <div class="cycle-num">Cycle 1</div>
+        <div class="cycle-title">September</div>
+        <div class="cycle-sub">Beginning-of-year VALLSS complete</div>
+      </div>
+      <div class="cycle-body">
+        <div class="cstep"><span class="cs-icon">🔵</span>Run query — all K–8 students meeting VLA thresholds</div>
+        <div class="cstep"><span class="cs-icon">✅</span>Validate — remove duplicates and anomalies</div>
+        <div class="cstep"><span class="cs-icon">📊</span>Load grade-band counts into principal board views</div>
+        <div class="cstep"><span class="cs-icon">⏳</span>Eboni notifies principals to review and confirm</div>
+        <div class="cstep"><span class="cs-icon">📋</span>Monitor admin sheet — push per school as each goes fully green</div>
+      </div>
+    </div>
+    <div class="cycle">
+      <div class="cycle-head">
+        <div class="cycle-num">Cycle 2</div>
+        <div class="cycle-title">January</div>
+        <div class="cycle-sub">Mid-year VALLSS screening complete</div>
+      </div>
+      <div class="cycle-body">
+        <div class="cstep"><span class="cs-icon">🔵</span>Run query — net-new students only, not already in system</div>
+        <div class="cstep"><span class="cs-icon">✅</span>Validate — cross-check against existing school sheets</div>
+        <div class="cstep"><span class="cs-icon">📊</span>Load net-new counts into principal board views</div>
+        <div class="cstep"><span class="cs-icon">⏳</span>Eboni notifies principals to confirm net-new additions</div>
+        <div class="cstep"><span class="cs-icon">📋</span>Push net-new students per school on confirmation</div>
+      </div>
+    </div>
+    <div class="cycle">
+      <div class="cycle-head">
+        <div class="cycle-num">Cycle 3</div>
+        <div class="cycle-title">May</div>
+        <div class="cycle-sub">SOL results released</div>
+      </div>
+      <div class="cycle-body">
+        <div class="cstep"><span class="cs-icon">🔵</span>Run query — students newly identified from spring SOL</div>
+        <div class="cstep"><span class="cs-icon">✅</span>Validate — flag these students for next year's cycle</div>
+        <div class="cstep"><span class="cs-icon">📊</span>Load counts into principal board views</div>
+        <div class="cstep"><span class="cs-icon">⏳</span>Eboni determines scope — end-of-year vs. next-year action</div>
+        <div class="cstep"><span class="cs-icon">📋</span>Push on Eboni's direction — next-year list archived separately</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FULL FLOW -->
+<section class="section section-alt" id="flow">
+  <div class="container" style="margin-bottom:36px">
+    <div class="eyebrow">End-to-end flow</div>
+    <h2>From identification to closed compliance record.</h2>
+    <p class="lede">Every step, every role, every handoff — including the grade-by-grade principal confirmation gate and the mid-year approval path that runs entirely through Eboni.</p>
+  </div>
+  <div class="flow-wrap">
+
+    <div class="flow-row">
+      <div class="flow-left"><div class="flow-icon fi-m">🔵</div><div class="flow-line"></div></div>
+      <div class="flow-right">
+        <div class="flow-title">Tech lead runs assessment query · validates · loads counts into board</div>
+        <div class="flow-body">Pulls all students meeting VLA thresholds — grades K–8. Removes duplicates and anomalies. Loads grade-band counts into each principal's board view. <strong>Counts are visible to principals in their board — not emailed.</strong></div>
+        <div class="flow-tags"><span class="ftag ft-m">🔵 Tech lead · after each screening · ~45 min</span></div>
+      </div>
+    </div>
+
+    <div class="flow-row">
+      <div class="flow-left"><div class="flow-icon fi-e">📊</div><div class="flow-line"></div></div>
+      <div class="flow-right">
+        <div class="flow-title">Eboni reviews district picture · notifies principals to confirm</div>
+        <div class="flow-body">Eboni sees all schools, all grade bands, all counts in her district view. She notifies principals through her normal channels — the system does not send automated notifications to principals.</div>
+        <div class="flow-tags"><span class="ftag ft-e">Director of C&I · notification layer</span></div>
+      </div>
+    </div>
+
+    <div class="flow-gate">
+      <span style="font-size:1.1rem">🔐</span>
+      <div>
+        <div class="fg-text">Grade-by-grade principal confirmation gate</div>
+        <div class="fg-sub">Each grade band is an independent approval — no grade pushes until that grade is confirmed · no school waits on another school</div>
+      </div>
+    </div>
+
+    <div class="flow-row">
+      <div class="flow-left"><div class="flow-icon fi-p">✅</div><div class="flow-line"></div></div>
+      <div class="flow-right">
+        <div class="flow-title">Principal confirms each grade band in their board view</div>
+        <div class="flow-body">Approve or Flag buttons per grade row. Flagged grades surface in Eboni's district view with the principal's note. <strong>Approved grades push immediately — independent of flagged grades and other schools.</strong> Principal's team can confirm on their behalf.</div>
+        <div class="flow-tags"><span class="ftag ft-p">🏫 Principal · button click per grade</span><span class="ftag ft-e">Eboni resolves flags</span></div>
+      </div>
+    </div>
+
+    <div class="flow-row">
+      <div class="flow-left"><div class="flow-icon fi-m">📋</div><div class="flow-line"></div></div>
+      <div class="flow-right">
+        <div class="flow-title">Tech lead monitors admin sheet · pushes per school as each goes green</div>
+        <div class="flow-body">Admin sheet shows live confirmation status per school per grade band. Each school turns fully green when all grade bands are approved. Tech lead runs the push script per school — not waiting for the full district.</div>
+        <div class="flow-tags"><span class="ftag ft-m">🔵 Tech lead · per school · 1 min each</span></div>
+      </div>
+    </div>
+
+    <div class="flow-row">
+      <div class="flow-left"><div class="flow-icon fi-a">⚡</div><div class="flow-line"></div></div>
+      <div class="flow-right">
+        <div class="flow-title">Confirmed grade bands populate in reading lead dashboard</div>
+        <div class="flow-body">Script writes approved students to the school tab. Reading lead auto-assigned from mapping table. Five audit fields initialized to Pending. Reading lead sees their students immediately — before other schools are confirmed.</div>
+        <div class="flow-tags"><span class="ftag ft-a">⚡ Auto · per confirmed grade band</span></div>
+      </div>
+    </div>
+
+    <hr class="flow-sep on-white"><span class="flow-sep-label on-white">Schools now see their data</span>
+
+    <div class="flow-row">
+      <div class="flow-left"><div class="flow-icon fi-s">📚</div><div class="flow-line"></div></div>
+      <div class="flow-right">
+        <div class="flow-title">Reading lead opens dashboard — students pre-sorted and ready</div>
+        <div class="flow-body">Shares school-specific form link with teachers. Their only initial action — everything upstream was handled before they logged in.</div>
+        <div class="flow-tags"><span class="ftag ft-h">Reading lead · seamless</span></div>
+      </div>
+    </div>
+
+    <div class="flow-row">
+      <div class="flow-left"><div class="flow-icon fi-s">📋</div><div class="flow-line"></div></div>
+      <div class="flow-right">
+        <div class="flow-title">Teacher submits 2-field form</div>
+        <div class="flow-body">Area of need and intervention program. 90 seconds. Teacher's only digital action in this system.</div>
+        <div class="flow-tags"><span class="ftag ft-h">Teacher · 90 seconds</span></div>
+      </div>
+    </div>
+
+    <div class="flow-row">
+      <div class="flow-left"><div class="flow-icon fi-a">⚡</div><div class="flow-line"></div></div>
+      <div class="flow-right">
+        <div class="flow-title">Letter generated · compliance row updated · timestamp logged</div>
+        <div class="flow-body">PDF saved to school Drive folder. Fields 1 and 3 confirmed. Timestamp is the distribution record.</div>
+        <div class="flow-tags"><span class="ftag ft-a">⚡ Auto · 0 min</span></div>
+      </div>
+    </div>
+
+    <div class="flow-row">
+      <div class="flow-left"><div class="flow-icon fi-s">✉️</div><div class="flow-line"></div></div>
+      <div class="flow-right">
+        <div class="flow-title">Teacher prints letter · signs · sends home</div>
+        <div class="flow-body">Reading lead's name prints automatically. No coordination step needed.</div>
+        <div class="flow-tags"><span class="ftag ft-h">Teacher · 2 min</span></div>
+      </div>
+    </div>
+
+    <div class="flow-row">
+      <div class="flow-left"><div class="flow-icon fi-s">🤝</div><div class="flow-line"></div></div>
+      <div class="flow-right">
+        <div class="flow-title">Reading lead logs responses · confirms co-ownership · monitors progress</div>
+        <div class="flow-body">All five VLA audit fields visible and updated in their dashboard. Every 10 days: monitoring update logged.</div>
+        <div class="flow-tags"><span class="ftag ft-h">Reading lead · ongoing</span></div>
+      </div>
+    </div>
+
+    <div class="flow-row">
+      <div class="flow-left"><div class="flow-icon fi-a">✉️</div><div class="flow-line"></div></div>
+      <div class="flow-right">
+        <div class="flow-title">Monday compliance summary delivered to Director of C&I</div>
+        <div class="flow-body">Plain-text email. Each school: compliance rate and outstanding items by category. <strong>Only automated notification the system sends.</strong></div>
+        <div class="flow-tags"><span class="ftag ft-a">⚡ Auto · every Monday 7am · Director of C&I only</span></div>
+      </div>
+    </div>
+
+    <div class="flow-row">
+      <div class="flow-left"><div class="flow-icon fi-e">📄</div></div>
+      <div class="flow-right">
+        <div class="flow-title">Director of C&I exports school or division PDF on demand</div>
+        <div class="flow-body">One click. School-specific or full division. Board-ready in under 10 seconds.</div>
+        <div class="flow-tags"><span class="ftag ft-e">Director of C&I · on demand</span></div>
+      </div>
+    </div>
+
+    <hr class="flow-sep on-white" style="margin-top:20px"><span class="flow-sep-label on-white">Mid-year arrival path</span>
+
+    <div class="flow-row" style="margin-top:16px">
+      <div class="flow-left"><div class="flow-icon fi-s">👤</div><div class="flow-line"></div></div>
+      <div class="flow-right">
+        <div class="flow-title">Reading lead submits add request via their dashboard</div>
+        <div class="flow-body">Student ID, grade, area of need. Request appears in Eboni's dedicated mid-year panel immediately. Reading lead does not contact Monique directly.</div>
+        <div class="flow-tags"><span class="ftag ft-h">Reading lead · 2 min</span></div>
+      </div>
+    </div>
+
+    <div class="flow-row">
+      <div class="flow-left"><div class="flow-icon fi-e">✅</div><div class="flow-line"></div></div>
+      <div class="flow-right">
+        <div class="flow-title">Eboni reviews request · approves via button click</div>
+        <div class="flow-body"><strong>Eboni's approval is the system trigger.</strong> Individual or batch approve from her dedicated panel. She does not notify Monique — the approval itself runs the process.</div>
+        <div class="flow-tags"><span class="ftag ft-e">Director of C&I · educational authority · 1 min</span></div>
+      </div>
+    </div>
+
+    <div class="flow-row">
+      <div class="flow-left"><div class="flow-icon fi-a">⚡</div></div>
+      <div class="flow-right">
+        <div class="flow-title">Row added · reading lead notified · rollup updated · Monique's log updated</div>
+        <div class="flow-body">Student appears in reading lead's caseload. Notification badge appears in their dashboard view. Eboni's rollup summary updates. Monique's admin sheet log records the add. No manual action from Monique unless a script error occurs.</div>
+        <div class="flow-tags"><span class="ftag ft-a">⚡ Auto · triggered by Eboni's approval</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ACTION TABLE -->
+<section class="section" id="actions">
+  <div class="container" style="margin-bottom:28px">
+    <div class="eyebrow">Full action inventory</div>
+    <h2>Every action in the system.</h2>
+    <p class="lede">If an action is not in this table, the system does not require it.</p>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Action</th><th>Role</th><th>Trigger</th><th>Type</th><th>Time</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr class="sr"><td colspan="6">Identification cycle — 3× per year (Sep · Jan · May)</td></tr>
+        <tr class="row-m"><td class="act">Run assessment query · validate · load into board</td><td><span class="wp wp-m">🔵 Tech Lead</span></td><td>After each screening event</td><td><span class="tp tp-m">🔵 Steward</span></td><td class="tm">45 min</td><td>Grade-band counts visible in principal board views</td></tr>
+        <tr class="row-e"><td class="act">Review district picture · notify principals to confirm</td><td><span class="wp wp-e">Director C&I</span></td><td>After counts loaded</td><td><span class="tp tp-e">Authority</span></td><td class="tm">15 min</td><td>Principals receive notification via Eboni's normal channels</td></tr>
+        <tr class="row-p"><td class="act">Confirm each grade band via Approve / Flag button</td><td><span class="wp wp-p">🏫 Principal</span></td><td>On notification from Eboni</td><td><span class="tp tp-p">🏫 Validate</span></td><td class="tm">5 min</td><td>Approved grades push · flagged grades surface in Eboni's view</td></tr>
+        <tr class="row-a"><td class="act">Approved grade band pushes to school tab</td><td><span class="wp wp-a">⚡ System</span></td><td>Principal approval · per grade band</td><td><span class="tp tp-a">⚡ Auto</span></td><td class="tm">0 min</td><td>Students in that grade band populate · reading lead assigned · 5 fields initialized</td></tr>
+        <tr class="row-e"><td class="act">Resolve flagged grade band discrepancy</td><td><span class="wp wp-e">Director C&I</span></td><td>When principal flags a grade</td><td><span class="tp tp-e">Authority</span></td><td class="tm">As needed</td><td>Corrected count confirmed · grade pushes on re-approval</td></tr>
+        <tr class="row-m"><td class="act">Monitor admin sheet · run push script per school</td><td><span class="wp wp-m">🔵 Tech Lead</span></td><td>Each school turns fully green</td><td><span class="tp tp-m">🔵 Steward</span></td><td class="tm">1 min / school</td><td>School tab fully populated · reading lead sees full caseload</td></tr>
+
+        <tr class="sr"><td colspan="6">Mid-year arrivals</td></tr>
+        <tr class="row-s"><td class="act">Submit add request via dashboard</td><td><span class="wp wp-l">Reading Lead</span></td><td>Student transfers in with reading need</td><td><span class="tp tp-h">✎ Human</span></td><td class="tm">2 min</td><td>Request appears in Eboni's dedicated panel</td></tr>
+        <tr class="row-e"><td class="act">Review and approve via button click</td><td><span class="wp wp-e">Director C&I</span></td><td>Pending request in panel</td><td><span class="tp tp-e">Authority</span></td><td class="tm">1 min</td><td>Approval is the system trigger — no Monique involvement</td></tr>
+        <tr class="row-a"><td class="act">Row added · notifications sent · log updated</td><td><span class="wp wp-a">⚡ System</span></td><td>Eboni's approval</td><td><span class="tp tp-a">⚡ Auto</span></td><td class="tm">0 min</td><td>Reading lead caseload updated · badge notification · rollup updated · Monique log updated</td></tr>
+
+        <tr class="sr"><td colspan="6">School front end — reading lead</td></tr>
+        <tr class="row-s"><td class="act">Share form link with teachers</td><td><span class="wp wp-l">Reading Lead</span></td><td>Students appear in dashboard</td><td><span class="tp tp-h">✎ Human</span></td><td class="tm">2 min · once</td><td>Teachers have link for all submissions</td></tr>
+        <tr class="row-s"><td class="act">Confirm co-ownership</td><td><span class="wp wp-l">Reading Lead</span></td><td>When caseload populates</td><td><span class="tp tp-h">✎ Human</span></td><td class="tm">5 min total</td><td>Field 2 confirmed for all students</td></tr>
+        <tr class="row-s"><td class="act">Log parent response</td><td><span class="wp wp-l">Reading Lead</span></td><td>When teacher reports back</td><td><span class="tp tp-h">✎ Human</span></td><td class="tm">30 sec / student</td><td>Field 4 updated</td></tr>
+        <tr class="row-s"><td class="act">Upload written refusal form</td><td><span class="wp wp-l">Reading Lead</span></td><td>When family declines</td><td><span class="tp tp-h">✎ Human</span></td><td class="tm">3 min</td><td>Awaiting coordinator confirmation</td></tr>
+        <tr class="row-s"><td class="act">Confirm refusal documentation</td><td><span class="wp wp-c">Data Coord.</span></td><td>After upload received</td><td><span class="tp tp-h">✎ Human</span></td><td class="tm">30 sec</td><td>Field 5 closed · compliance record complete</td></tr>
+        <tr class="row-s"><td class="act">Log monitoring update</td><td><span class="wp wp-l">Reading Lead</span></td><td>Every 10 days</td><td><span class="tp tp-h">✎ Human</span></td><td class="tm">30 sec / student</td><td>Monitoring record updated · flag cleared if present</td></tr>
+
+        <tr class="sr"><td colspan="6">School front end — teacher</td></tr>
+        <tr class="row-s"><td class="act">Submit 2-field reading plan form</td><td><span class="wp wp-t">Teacher</span></td><td>Receives link from reading lead</td><td><span class="tp tp-h">✎ Human</span></td><td class="tm">90 sec</td><td>Letter generated · Fields 1 + 3 auto-updated</td></tr>
+        <tr class="row-a"><td class="act">Letter generated · saved to school folder</td><td><span class="wp wp-a">⚡ System</span></td><td>Form submission</td><td><span class="tp tp-a">⚡ Auto</span></td><td class="tm">0 min</td><td>PDF ready · timestamp = distribution record</td></tr>
+        <tr class="row-s"><td class="act">Print letter · sign · send home</td><td><span class="wp wp-t">Teacher</span></td><td>After letter generated</td><td><span class="tp tp-h">✎ Human</span></td><td class="tm">2 min</td><td>Family receives letter</td></tr>
+        <tr class="row-s"><td class="act">Tell reading lead when parent responds</td><td><span class="wp wp-t">Teacher</span></td><td>When response received</td><td><span class="tp tp-h">✎ Human</span></td><td class="tm">As it happens</td><td>Reading lead logs response</td></tr>
+
+        <tr class="sr"><td colspan="6">District output — Director of C&I</td></tr>
+        <tr class="row-a"><td class="act">Monday compliance summary sent</td><td><span class="wp wp-a">⚡ System</span></td><td>Every Monday 7am</td><td><span class="tp tp-a">⚡ Auto</span></td><td class="tm">0 min</td><td>Plain-text email to Director of C&I only</td></tr>
+        <tr class="row-e"><td class="act">Export school-specific PDF</td><td><span class="wp wp-e">Director C&I</span></td><td>On demand</td><td><span class="tp tp-e">Authority</span></td><td class="tm">10 sec</td><td>One school compliance report</td></tr>
+        <tr class="row-e"><td class="act">Export full division summary PDF</td><td><span class="wp wp-e">Director C&I</span></td><td>Before board meeting or on request</td><td><span class="tp tp-e">Authority</span></td><td class="tm">10 sec</td><td>Division-wide board-ready compliance report</td></tr>
+
+        <tr class="sr"><td colspan="6">Ongoing maintenance</td></tr>
+        <tr class="row-m"><td class="act">Check error log · re-run failed script</td><td><span class="wp wp-m">🔵 Tech Lead</span></td><td>Every Monday morning</td><td><span class="tp tp-m">🔵 Steward</span></td><td class="tm">2 min</td><td>Scripts confirmed · errors cleared</td></tr>
+        <tr class="row-m"><td class="act">Update reading lead mapping table</td><td><span class="wp wp-m">🔵 Tech Lead</span></td><td>When a reading lead changes</td><td><span class="tp tp-m">🔵 Steward</span></td><td class="tm">2 min</td><td>Future assignments route to new reading lead</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- SWIMLANES -->
+<section class="section section-alt" id="swimlanes">
+  <div class="container" style="margin-bottom:32px">
+    <div class="eyebrow">Role-by-role guide</div>
+    <h2>What each role does —<br>and what they do not have to.</h2>
+    <p class="lede">Each swimlane is the source for that role's quick-start guide.</p>
+  </div>
+  <div class="swim-stack">
+
+    <!-- TECH LEAD -->
+    <div class="swim">
+      <div class="swim-head sh-m">
+        <div class="swim-ico">🔵</div>
+        <div>
+          <div class="swim-role sr-d">Tech Lead — Data Steward</div>
+          <div class="swim-q sq-d">Run the query 3× a year. Validate. Load counts into the board. Monitor the admin sheet. Push per school as each goes green. Handle directed mid-year add errors only.</div>
+        </div>
+      </div>
+      <div class="swim-body">
+        <div class="steps">
+          <div class="step s-m"><div class="sn sn-m">1</div><div class="sc"><h5>Run assessment query after each screening window</h5><p>Sep · Jan · May. Pull all K–8 students meeting VLA thresholds. Student ID, school, grade, screener result, area of need.</p></div><div class="st st-m">30 min · 3× per year</div></div>
+          <div class="step s-m"><div class="sn sn-m">2</div><div class="sc"><h5>Validate output</h5><p>Remove duplicates and transferred-out students. Flag anomalies. Prepare grade-band count summaries per school.</p></div><div class="st st-m">15 min</div></div>
+          <div class="step s-m"><div class="sn sn-m">3</div><div class="sc"><h5>Load counts into principal board views</h5><p>Grade-band counts appear in each principal's board — not emailed. Eboni notifies principals to review through her channels.</p></div><div class="st st-m">5 min</div></div>
+          <div class="step s-m"><div class="sn sn-m">4</div><div class="sc"><h5>Monitor admin sheet — push per school as each turns green</h5><p>Admin sheet shows live confirmation status per school per grade band. Each fully-confirmed school gets its own push. No school waits on another.</p></div><div class="st st-m">1 min / school</div></div>
+          <div class="step s-a"><div class="sn sn-a">⚡</div><div class="sc"><h5>Push script runs · school tabs populate</h5><p>Per confirmed school. Reading leads see their students. Five fields initialized. No further action unless error log shows a failure.</p></div><div class="st st-a">Auto per school</div></div>
+          <div class="step s-m"><div class="sn sn-m">5</div><div class="sc"><h5>Check error log each Monday</h5><p>Admin sheet plain-English log. If any script failed: click manual trigger to re-run. Mid-year adds approved by Eboni appear in the log automatically — no action needed unless an error is present.</p></div><div class="st st-m">2 min / week</div></div>
+        </div>
+        <div class="swim-note">The tech lead does not make eligibility decisions and does not contact reading leads or principals directly about student data. Her admin sheet is the one document she monitors week to week.</div>
+        <div class="auto-note">⚡ System handles: sorting · row initialization · reading lead assignment · letter generation · compliance logging · mid-year add execution on Eboni's approval · Monday summary</div>
+      </div>
+    </div>
+
+    <!-- DIRECTOR C&I -->
+    <div class="swim">
+      <div class="swim-head sh-e">
+        <div class="swim-ico">📊</div>
+        <div>
+          <div class="swim-role sr-l">Director of C&amp;I — Educational Authority</div>
+          <div class="swim-q sq-l">Hold all eligibility decisions. Notify principals. Resolve flagged grades. Approve mid-year adds via button click. Read Monday summary. Export reports.</div>
+        </div>
+      </div>
+      <div class="swim-body">
+        <div class="steps">
+          <div class="step s-e"><div class="sn sn-e">1</div><div class="sc"><h5>Review district confirmation status during each cycle</h5><p>District view shows all schools, all grade bands, live confirmation status. See which principals have confirmed, which have flagged, which are still pending.</p></div><div class="st st-e">15 min · per cycle</div></div>
+          <div class="step s-e"><div class="sn sn-e">2</div><div class="sc"><h5>Notify principals to review and confirm their board</h5><p>Through her normal channels — email, call, team meeting. The system does not send automated notifications to principals. This is an Eboni-to-principal relationship, not a system function.</p></div><div class="st st-e">Per cycle</div></div>
+          <div class="step s-e"><div class="sn sn-e">3</div><div class="sc"><h5>Resolve flagged grade bands directly with principals</h5><p>Flagged grades surface in her district view with the principal's note. She contacts the principal, reviews the underlying data with the tech lead if needed, and makes the final call on the count.</p></div><div class="st st-e">As needed</div></div>
+          <div class="step s-e"><div class="sn sn-e">4</div><div class="sc"><h5>Review and approve mid-year add requests</h5><p>Dedicated panel in her district view shows all pending requests. Student ID · school · grade · area of need · submitted by · date. Individual or batch approve. Her click is the system trigger — the row adds automatically.</p></div><div class="st st-e">As needed · 1 min</div></div>
+          <div class="step s-a"><div class="sn sn-a">⚡</div><div class="sc"><h5>Monday compliance summary arrives by email at 7am</h5><p>Plain-text. Each school: compliance rate and outstanding items by category. No login required to read it.</p></div><div class="st st-a">Auto · weekly</div></div>
+          <div class="step s-e"><div class="sn sn-e">5</div><div class="sc"><h5>Export school-specific or full division PDF on demand</h5><p>One click from district view. School or full division. Formatted for board meetings, principal conversations, state requests.</p></div><div class="st st-e">10 seconds</div></div>
+        </div>
+        <div class="swim-note">All educational eligibility decisions — initial identification and mid-year arrivals — belong to this role. Eboni's approval button is the system trigger for mid-year adds. No step requires Monique to be notified.</div>
+        <div class="auto-note">⚡ System handles: aggregation · compliance calculations · flag generation · mid-year add execution · Monday summary · rollup updates</div>
+      </div>
+    </div>
+
+    <!-- PRINCIPAL -->
+    <div class="swim">
+      <div class="swim-head sh-p">
+        <div class="swim-ico">🏫</div>
+        <div>
+          <div class="swim-role sr-l">Principal — Grade-Band Validation</div>
+          <div class="swim-q sq-l">Confirm each grade band in your board view. Approve what looks right. Flag what doesn't. Your team can confirm on your behalf.</div>
+        </div>
+      </div>
+      <div class="swim-body">
+        <div class="steps">
+          <div class="step s-p"><div class="sn sn-p">1</div><div class="sc"><h5>Open your board view when Eboni notifies you</h5><p>A confirmation panel appears at the top of your school board — grade-band counts waiting for your review. Three times per year.</p></div><div class="st st-p">3× per year</div></div>
+          <div class="step s-p"><div class="sn sn-p">2</div><div class="sc"><h5>Review each grade band count</h5><p>Does the number match what you know about your building? Any students who transferred out? Any grade bands that seem unexpectedly high or low?</p></div><div class="st st-p">5 min</div></div>
+          <div class="step s-p"><div class="sn sn-p">3</div><div class="sc"><h5>Click Approve or Flag — grade by grade</h5><p>Each grade band is independent. Approve grades K–2 while flagging grade 3. Flagging opens a one-line note field. Contact Eboni — not Monique — about any flagged grade. Your AP or designee can confirm on your behalf.</p></div><div class="st st-p">2 min total</div></div>
+          <div class="step s-a"><div class="sn sn-a">⚡</div><div class="sc"><h5>Each approved grade pushes immediately</h5><p>No waiting for other grades or other schools. Approved grades are live in the reading lead's dashboard the moment you click.</p></div><div class="st st-a">Immediate</div></div>
+        </div>
+        <div class="swim-note">The principal's role in this system is the building-level validation checkpoint — grade by grade, three times per year. The reading lead handles day-to-day compliance at the school level.</div>
+      </div>
+    </div>
+
+    <!-- READING LEAD -->
+    <div class="swim">
+      <div class="swim-head sh-l">
+        <div class="swim-ico">📚</div>
+        <div>
+          <div class="swim-role sr-l">Reading Lead — one per school</div>
+          <div class="swim-q sq-l">Share the form link. Confirm co-ownership. Log responses. Monitor progress. Submit mid-year add requests to Eboni.</div>
+        </div>
+      </div>
+      <div class="swim-body">
+        <div class="steps">
+          <div class="step s-a"><div class="sn sn-a">⚡</div><div class="sc"><h5>Students appear in dashboard — no action needed</h5><p>After principal confirmation and the push script, caseload is pre-sorted, pre-assigned, and ready.</p></div><div class="st st-a">Seamless</div></div>
+          <div class="step s-h"><div class="sn">1</div><div class="sc"><h5>Share school-specific form link with teachers</h5><p>One link per grade band, pre-configured for the school. Share via email or team meeting.</p></div><div class="st st-h">Once per cycle</div></div>
+          <div class="step s-h"><div class="sn">2</div><div class="sc"><h5>Confirm co-ownership in the dashboard</h5><p>Bulk confirm if all assignments are correct. Closes Field 2. Satisfies § 22.1-253.13:1 G.</p></div><div class="st st-h">5 min total</div></div>
+          <div class="step s-h"><div class="sn">3</div><div class="sc"><h5>Log parent response as teachers report back</h5><p>Accepted · Declined · Pending. Dashboard or follow-up form. Declined triggers refusal path.</p></div><div class="st st-h">30 sec / student</div></div>
+          <div class="step s-h"><div class="sn">4</div><div class="sc"><h5>Upload written refusal form when family declines</h5><p>District template in quick-start guide. Family signs. Upload to intake folder. Coordinator confirms.</p></div><div class="st st-h">3 min · declined only</div></div>
+          <div class="step s-h"><div class="sn">5</div><div class="sc"><h5>Log monitoring update every 10 days</h5><p>Progressing / Needs attention. Due date visible in caseload view. No manual tracking required.</p></div><div class="st st-h">30 sec / student</div></div>
+          <div class="step s-h"><div class="sn">6</div><div class="sc"><h5>Submit mid-year add request via dashboard</h5><p>When a student transfers in with a reading need — submit the add request from your dashboard view. Student ID, grade, area of need. Request goes to Eboni's approval panel. Do not contact Monique directly.</p></div><div class="st st-h">2 min · as needed</div></div>
+          <div class="step s-a"><div class="sn sn-a">⚡</div><div class="sc"><h5>Notification badge appears when Eboni approves a mid-year add</h5><p>Student row appears in caseload. Notification: "[Student ID] added to your caseload." No action needed — treat the new student the same as any other.</p></div><div class="st st-a">Auto on Eboni's approval</div></div>
+        </div>
+        <div class="swim-note">Flags in the dashboard are visible when the reading lead logs in — no push notifications reach the school level. The notification badge for mid-year adds is the only dashboard-native alert this role receives.</div>
+        <div class="auto-note">⚡ System handles: caseload population · compliance row updates · flag display · monitoring tracking · mid-year add execution</div>
+      </div>
+    </div>
+
+    <!-- TEACHER -->
+    <div class="swim">
+      <div class="swim-head sh-t">
+        <div class="swim-ico">🎓</div>
+        <div>
+          <div class="swim-role sr-l">Teacher / Interventionist</div>
+          <div class="swim-q sq-l">Submit the form. Print the letter. Send it home. Tell the reading lead when a parent responds.</div>
+        </div>
+      </div>
+      <div class="swim-body">
+        <div class="steps">
+          <div class="step s-h"><div class="sn">1</div><div class="sc"><h5>Open the form link · select 2 fields · submit</h5><p>Area of need (4 options) and intervention program (Amplify or Lexia). School, grade, and reading lead pre-set. 90 seconds.</p></div><div class="st st-h">90 seconds</div></div>
+          <div class="step s-a"><div class="sn sn-a">⚡</div><div class="sc"><h5>Letter generated · saved to school Drive folder</h5><p>PDF appears immediately. Reading lead's name on letter. Timestamp logged.</p></div><div class="st st-a">Auto</div></div>
+          <div class="step s-h"><div class="sn">2</div><div class="sc"><h5>Print · sign · send home same day</h5><p>Open school Drive folder. Print. Sign. Send.</p></div><div class="st st-h">2 minutes</div></div>
+          <div class="step s-h"><div class="sn">3</div><div class="sc"><h5>Tell reading lead when parent responds</h5><p>Reading lead logs it. No dashboard access required from the teacher.</p></div><div class="st st-h">As it happens</div></div>
+        </div>
+        <div class="swim-note">Total teacher digital actions: one form submission. No dashboard login. No confirmation clicks. No tracking.</div>
+        <div class="auto-note">⚡ System handles: identification · reading lead assignment · letter generation · compliance logging</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FLAGS -->
+<section class="section" id="flags">
+  <div class="container" style="margin-bottom:32px">
+    <div class="eyebrow">Flag definitions</div>
+    <h2>What surfaces in the dashboard —<br>what it means, and who resolves it.</h2>
+    <p class="lede">Flags appear in dashboard views for the roles that can act on them. The Monday summary is the only automated notification. No push notifications reach school-level roles except the reading lead's mid-year add badge.</p>
+  </div>
+  <div class="flag-grid">
+    <div class="flag-card">
+      <div class="flag-top"><div class="flag-icon">📊</div><div><div class="flag-title">Grade band awaiting principal confirmation</div><div class="flag-who">Visible to: Director of C&I · Tech Lead (admin sheet)</div></div></div>
+      <div class="flag-body">Counts loaded into principal board but the principal has not yet approved that grade band. The grade band does not push until confirmed.</div>
+      <div class="flag-action">Eboni follows up with principal · principal clicks Approve in their board</div>
+      <div class="flag-res">Resolves when: principal clicks Approve for that grade band</div>
+    </div>
+    <div class="flag-card">
+      <div class="flag-top"><div class="flag-icon">⚑</div><div><div class="flag-title">Grade band flagged by principal</div><div class="flag-who">Visible to: Director of C&I with principal's note</div></div></div>
+      <div class="flag-body">Principal flagged a grade band as potentially incorrect. Note visible in Eboni's district view. That grade band holds — other grade bands at the same school are unaffected.</div>
+      <div class="flag-action">Eboni reviews with principal and tech lead · corrected count confirmed · principal re-approves</div>
+      <div class="flag-res">Resolves when: principal approves the corrected grade band</div>
+    </div>
+    <div class="flag-card">
+      <div class="flag-top"><div class="flag-icon">📋</div><div><div class="flag-title">Plan not yet submitted</div><div class="flag-who">Visible to: Director of C&I · Reading Lead</div></div></div>
+      <div class="flag-body">Student is in the dashboard but no form submitted. All five fields show Pending. No letter exists.</div>
+      <div class="flag-action">Reading lead confirms teacher has the form link and has submitted</div>
+      <div class="flag-res">Resolves when: teacher submits the form</div>
+    </div>
+    <div class="flag-card">
+      <div class="flag-top"><div class="flag-icon">👩‍🏫</div><div><div class="flag-title">Co-ownership not yet confirmed</div><div class="flag-who">Visible to: Director of C&I · Reading Lead</div></div></div>
+      <div class="flag-body">Plan submitted and reading lead auto-assigned but reading lead has not confirmed co-ownership. Field 2 open.</div>
+      <div class="flag-action">Reading lead opens dashboard and confirms their caseload</div>
+      <div class="flag-res">Resolves when: reading lead confirms in dashboard</div>
+    </div>
+    <div class="flag-card">
+      <div class="flag-top"><div class="flag-icon">🤝</div><div><div class="flag-title">Parent response pending — 14+ days</div><div class="flag-who">Visible to: Director of C&I · Reading Lead</div></div></div>
+      <div class="flag-body">Letter generated more than 14 calendar days ago and no parent response logged. Field 4 open. Included by school in Monday summary.</div>
+      <div class="flag-action">Reading lead follows up with teacher · logs any response status</div>
+      <div class="flag-res">Resolves when: reading lead logs any response status</div>
+    </div>
+    <div class="flag-card">
+      <div class="flag-top"><div class="flag-icon">🗂️</div><div><div class="flag-title">Refusal documentation required</div><div class="flag-who">Visible to: Director of C&I · Data Coordinator</div></div></div>
+      <div class="flag-body">Parent declined services but Field 5 still open. Written documentation not yet on file. Highest-priority flag — incomplete legal record.</div>
+      <div class="flag-action">Reading lead uploads signed refusal form · data coordinator confirms</div>
+      <div class="flag-res">Resolves when: data coordinator confirms documentation on file</div>
+    </div>
+    <div class="flag-card">
+      <div class="flag-top"><div class="flag-icon">🔄</div><div><div class="flag-title">Monitoring update overdue</div><div class="flag-who">Visible to: Director of C&I · Reading Lead</div></div></div>
+      <div class="flag-body">No monitoring update logged within 12 days of last update. VLA requires every 10 days. Two-day grace period before flag appears.</div>
+      <div class="flag-action">Reading lead logs a monitoring update</div>
+      <div class="flag-res">Resolves when: reading lead logs any monitoring update</div>
+    </div>
+    <div class="flag-card">
+      <div class="flag-top"><div class="flag-icon">👤</div><div><div class="flag-title">Mid-year add pending Eboni's approval</div><div class="flag-who">Visible to: Director of C&I — dedicated panel</div></div></div>
+      <div class="flag-body">Reading lead submitted an add request. Request sits in Eboni's approval panel with student ID, school, grade, area of need, submitted by, and date. Does not appear to Monique or reading lead until approved.</div>
+      <div class="flag-action">Eboni reviews · clicks Approve · system adds row automatically · reading lead notified</div>
+      <div class="flag-res">Resolves when: Eboni approves — student appears in reading lead's caseload</div>
+    </div>
+    <div class="flag-card">
+      <div class="flag-top"><div class="flag-icon">⚠️</div><div><div class="flag-title">Script error</div><div class="flag-who">Visible to: Tech Lead · admin sheet only</div></div></div>
+      <div class="flag-body">A script did not complete. Error logged in plain English — script name, date, description. No school-facing role sees this.</div>
+      <div class="flag-action">Tech lead opens admin sheet · reads error · clicks manual trigger</div>
+      <div class="flag-res">Resolves when: script runs successfully on manual trigger</div>
+    </div>
+  </div>
+</section>
+
+<!-- OWNERSHIP -->
+<section class="section section-alt" id="ownership">
+  <div class="container" style="margin-bottom:32px">
+    <div class="eyebrow">System ownership · Day 21 transfer</div>
+    <h2>Who holds what — permanently.</h2>
+    <p class="lede">Every credential, process, and documentation asset transfers to Petersburg at Day 21. No ongoing EJC involvement required.</p>
+  </div>
+  <div class="own-grid">
+    <div class="own">
+      <div class="own-role">Tech Lead</div>
+      <div class="own-title">Data Stewardship · 3-Cycle Process · Back End</div>
+      <div class="own-items">
+        <div class="own-item"><span class="own-ico">🔵</span>Assessment query — documented and repeatable</div>
+        <div class="own-item"><span class="own-ico">📋</span>Admin sheet — push scripts · triggers · error log · confirmation status table</div>
+        <div class="own-item"><span class="own-ico">🗺️</span>5-row reading lead mapping table</div>
+        <div class="own-item"><span class="own-ico">💻</span>Dashboard repository — transferred at Day 21</div>
+        <div class="own-item"><span class="own-ico">🔑</span>All system credentials documented</div>
+      </div>
+      <div class="own-time">⏱ Active time: 3 cycles/yr · 2 min/wk error check · directed mid-year add errors only</div>
+    </div>
+    <div class="own">
+      <div class="own-role">Director of C&amp;I</div>
+      <div class="own-title">Educational Authority · Approval Panels · District View</div>
+      <div class="own-items">
+        <div class="own-item"><span class="own-ico">✅</span>All eligibility decisions — initial and mid-year</div>
+        <div class="own-item"><span class="own-ico">🔐</span>Grade-band confirmation oversight — all schools</div>
+        <div class="own-item"><span class="own-ico">📊</span>Mid-year add approval panel in district view</div>
+        <div class="own-item"><span class="own-ico">📄</span>School-specific and full-division PDF export</div>
+        <div class="own-item"><span class="own-ico">✉️</span>Monday compliance summary — recipient</div>
+      </div>
+      <div class="own-time">⏱ Transition: 20 min with 1-pager</div>
+    </div>
+    <div class="own">
+      <div class="own-role">Principals</div>
+      <div class="own-title">Grade-Band Validation · School View</div>
+      <div class="own-items">
+        <div class="own-item"><span class="own-ico">✅</span>Grade-band confirmation — 3 board reviews per year</div>
+        <div class="own-item"><span class="own-ico">📊</span>School-level compliance dashboard view</div>
+        <div class="own-item"><span class="own-ico">👥</span>Can delegate confirmation to AP or designee</div>
+      </div>
+      <div class="own-time">⏱ Transition: 10 min with 1-pager</div>
+    </div>
+    <div class="own">
+      <div class="own-role">Reading Leads — one per school</div>
+      <div class="own-title">School Caseload · Compliance · Mid-Year Requests</div>
+      <div class="own-items">
+        <div class="own-item"><span class="own-ico">📊</span>Dashboard view — their school only</div>
+        <div class="own-item"><span class="own-ico">🔗</span>School-specific form link to share with teachers</div>
+        <div class="own-item"><span class="own-ico">➕</span>Mid-year add request submission (routes to Eboni)</div>
+        <div class="own-item"><span class="own-ico">📋</span>District written refusal form template</div>
+      </div>
+      <div class="own-time">⏱ Transition: 15 min with 1-pager</div>
+    </div>
+    <div class="own">
+      <div class="own-role">Data Coordinator</div>
+      <div class="own-title">Refusal Documentation · Annual Reset</div>
+      <div class="own-items">
+        <div class="own-item"><span class="own-ico">🗂️</span>Refusal documentation confirmation — Track B</div>
+        <div class="own-item"><span class="own-ico">📁</span>School intake folder access for refusal uploads</div>
+        <div class="own-item"><span class="own-ico">🔄</span>Annual system reset — August</div>
+      </div>
+      <div class="own-time">⏱ Transition: 10 min with 1-pager</div>
+    </div>
+    <div class="own">
+      <div class="own-role">All Roles — Day 21 Documentation</div>
+      <div class="own-title">Transferred at Handoff</div>
+      <div class="own-items">
+        <div class="own-item"><span class="own-ico">📋</span>5 role-specific quick-start guides — one page each</div>
+        <div class="own-item"><span class="own-ico">🎥</span>Recorded orientation per role — 15 minutes</div>
+        <div class="own-item"><span class="own-ico">📝</span>District written refusal form template</div>
+        <div class="own-item"><span class="own-ico">⚙️</span>Admin sheet diagnostic guide — tech lead</div>
+      </div>
+      <div class="own-time">⏱ Any new staff member operational in 30 min</div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer style="background:var(--navy);border-top:1px solid rgba(255,255,255,.07);padding:26px;text-align:center">
+  <p style="font-size:10px;color:rgba(255,255,255,.28);max-width:540px;margin:0 auto;line-height:1.8">
+    <strong style="color:rgba(255,255,255,.45)">Petersburg City Public Schools · Command Insight Center</strong><br>
+    Operations Board · All student data governed by FERPA (20 U.S.C. § 1232g)<br>
+    Full system ownership transfers to the district at Day 21
+  </p>
+</footer>
+</body>
+</html>
