@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PCPS Command Insight Center — System Data Flow</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{font-family:'Inter',sans-serif;background:#0D1B2A;color:#fff;-webkit-font-smoothing:antialiased;line-height:1.5;min-height:100vh}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;height:54px;background:rgba(11,23,36,.97);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.07);z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 24px;gap:12px}
+.nav-brand{display:flex;align-items:center;gap:10px}
+.nav-seal{width:28px;height:28px;border-radius:50%;background:#C9A84C;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#0D1B2A}
+.nav-name{font-size:11px;font-weight:700;color:#fff;line-height:1.2}
+.nav-name span{display:block;font-size:9px;font-weight:400;color:rgba(255,255,255,.38);letter-spacing:.04em}
+.nav-pill{background:rgba(26,188,176,.12);border:1px solid rgba(26,188,176,.25);color:#1ABCB0;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:100px}
+.nav-links a{font-size:10px;font-weight:600;color:rgba(255,255,255,.45);text-decoration:none;padding:5px 11px;border-radius:7px;transition:all .15s;margin-left:2px}
+.nav-links a:hover{color:#fff;background:rgba(255,255,255,.07)}
+
+/* ── PAGE SHELL ── */
+main{padding:78px 24px 48px;max-width:960px;margin:0 auto}
+.page-header{margin-bottom:28px}
+.eyebrow{font-size:9px;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:#C9A84C;margin-bottom:8px}
+.page-title{font-size:clamp(1.4rem,3vw,2rem);font-weight:800;color:#fff;line-height:1.1;margin-bottom:8px}
+.page-sub{font-size:13px;color:rgba(255,255,255,.5);line-height:1.75;max-width:620px}
+
+/* ── LEGEND ── */
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px;padding:12px 16px;background:rgba(255,255,255,.04);border-radius:10px;border:0.5px solid rgba(255,255,255,.07)}
+.leg-item{display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,.5)}
+.leg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+
+/* ── DIVIDER ── */
+.divider{display:flex;align-items:center;gap:8px;margin:16px 0 10px;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.25)}
+.divider::before,.divider::after{content:'';flex:1;height:0.5px;background:rgba(255,255,255,.08)}
+
+/* ── NODES ── */
+.row{display:flex;gap:10px;align-items:stretch;margin-bottom:4px}
+.node{
+  flex:1;border-radius:10px;border:0.5px solid rgba(255,255,255,.08);
+  padding:14px 14px 12px;cursor:pointer;transition:border-color .15s,background .15s;
+  background:#152130;position:relative;
+}
+.node:hover{border-color:rgba(201,168,76,.3);background:#1A2D3F}
+.node.active{border:1.5px solid rgba(201,168,76,.5);background:#1A2D3F}
+.node-label{font-size:13px;font-weight:700;color:#fff;margin-bottom:4px}
+.node-sub{font-size:11px;color:rgba(255,255,255,.5);line-height:1.55}
+.node-tag{display:inline-block;font-size:9px;font-weight:700;padding:3px 8px;border-radius:100px;margin-top:8px;letter-spacing:.04em}
+.tag-google{background:rgba(26,133,255,.15);color:#5BA3FF;border:0.5px solid rgba(26,133,255,.2)}
+.tag-taskade{background:rgba(224,123,57,.12);color:#E07B39;border:0.5px solid rgba(224,123,57,.2)}
+.tag-sheets{background:rgba(46,184,122,.12);color:#2EB87A;border:0.5px solid rgba(46,184,122,.2)}
+.tag-html{background:rgba(255,255,255,.06);color:rgba(255,255,255,.5);border:0.5px solid rgba(255,255,255,.1)}
+.step-badge{
+  position:absolute;top:10px;right:10px;
+  width:18px;height:18px;border-radius:50%;
+  font-size:9px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.06);color:rgba(255,255,255,.3);
+  border:0.5px solid rgba(255,255,255,.08);
+}
+
+/* ── CONNECTORS ── */
+.connector-row{display:flex;gap:10px;align-items:flex-start;margin-bottom:4px;min-height:36px}
+.connector{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px}
+.arrow-line{width:1px;height:18px;background:rgba(255,255,255,.15)}
+.arrow-head{width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-top:6px solid rgba(255,255,255,.15)}
+.arrow-label{font-size:9px;color:rgba(255,255,255,.28);text-align:center;line-height:1.4;max-width:110px;margin-bottom:3px}
+
+/* ── INFO PANEL ── */
+.info-panel{
+  margin-top:16px;padding:16px 18px;border-radius:10px;
+  background:#152130;border:0.5px solid rgba(255,255,255,.08);
+  font-size:12px;line-height:1.7;color:rgba(255,255,255,.55);
+  min-height:64px;
+}
+.info-panel strong{color:#fff;font-weight:600}
+
+/* ── PRINT ── */
+@media print{
+  nav{display:none}
+  body,main{background:#fff;color:#000;padding-top:0}
+  .node{background:#f5f5f5;border-color:#ddd}
+  .node-label{color:#000}
+  .info-panel{background:#f5f5f5;border-color:#ddd;color:#333}
+  @page{size:letter landscape;margin:.6in}
+}
+
+@media(max-width:640px){
+  .row{flex-direction:column}
+  .connector-row{flex-direction:column;gap:4px}
+  .connector{flex-direction:row;gap:6px;align-items:center}
+  .arrow-line{width:18px;height:1px}
+  .arrow-head{border-left:6px solid rgba(255,255,255,.15);border-top:4px solid transparent;border-bottom:4px solid transparent;border-right:none}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">
+    <div class="nav-seal">P</div>
+    <div class="nav-name">Command Insight Center<span>Petersburg City Public Schools</span></div>
+  </div>
+  <span class="nav-pill">System Data Flow</span>
+  <div class="nav-links">
+    <a href="index.html">Overview</a>
+    <a href="pcps_dashboard_preview.html">Dashboard</a>
+  </div>
+</nav>
+
+<main>
+
+<div class="page-header">
+  <div class="eyebrow">Petersburg City Public Schools · SY 2025–26</div>
+  <h1 class="page-title">How the system works together</h1>
+  <p class="page-sub">Taskade, Google Sheets, Google Sign-In, and GitHub Pages each do one job. Click any block to see exactly what happens at that step.</p>
+</div>
+
+<div class="legend">
+  <div class="leg-item"><div class="leg-dot" style="background:#E07B39"></div>Taskade workspace — where work happens</div>
+  <div class="leg-item"><div class="leg-dot" style="background:#2EB87A"></div>Google Sheets — single source of truth</div>
+  <div class="leg-item"><div class="leg-dot" style="background:#5BA3FF"></div>Google Sign-In — protects display pages</div>
+  <div class="leg-item"><div class="leg-dot" style="background:rgba(255,255,255,.35)"></div>GitHub Pages — display layer</div>
+</div>
+
+<!-- STEP 1 -->
+<div class="divider">Step 1 — Action taken in Taskade</div>
+<div class="row">
+  <div class="node" id="n-principal" data-key="principal">
+    <div class="step-badge">1</div>
+    <div class="node-label">Principal</div>
+    <div class="node-sub">Logs into Taskade. Sees Grade Band Confirmation board for their school only. Clicks Approve or Flag.</div>
+    <span class="node-tag tag-taskade">Taskade workspace</span>
+  </div>
+  <div class="node" id="n-readinglead" data-key="readinglead">
+    <div class="step-badge">1</div>
+    <div class="node-label">Reading Lead</div>
+    <div class="node-sub">Logs into Taskade. Sees their caseload — Student IDs and 5 VLA fields. Updates parent responses and monitoring dates.</div>
+    <span class="node-tag tag-taskade">Taskade workspace</span>
+  </div>
+  <div class="node" id="n-eboni" data-key="eboni">
+    <div class="step-badge">1</div>
+    <div class="node-label">Director of C&amp;I</div>
+    <div class="node-sub">Logs into Taskade. Sees Approval Panel and Compliance Summary for all five schools. Receives Monday 7am AI summary.</div>
+    <span class="node-tag tag-taskade">Taskade workspace</span>
+  </div>
+</div>
+
+<div class="connector-row">
+  <div class="connector">
+    <div class="arrow-label">Principal approves grade band</div>
+    <div class="arrow-line"></div>
+    <div class="arrow-head"></div>
+  </div>
+  <div class="connector">
+    <div class="arrow-label">Reading lead logs parent response</div>
+    <div class="arrow-line"></div>
+    <div class="arrow-head"></div>
+  </div>
+  <div class="connector">
+    <div class="arrow-label">Director approves mid-year add</div>
+    <div class="arrow-line"></div>
+    <div class="arrow-head"></div>
+  </div>
+</div>
+
+<!-- STEP 2 -->
+<div class="divider">Step 2 — Taskade automation writes to Google Sheets</div>
+<div class="row">
+  <div class="node" id="n-sheets" data-key="sheets">
+    <div class="step-badge">2</div>
+    <div class="node-label">Google Sheets backbone</div>
+    <div class="node-sub">Single source of truth. Lives inside Petersburg Google Workspace. EJC never accesses this. All five VLA audit fields update automatically when Taskade automations fire. The COMPLIANCE_SUMMARY tab is published as a CSV that the HTML school pages read on load.</div>
+    <span class="node-tag tag-sheets">CONFIRMATION_STATUS · STUDENTS · COMPLIANCE_SUMMARY</span>
+  </div>
+</div>
+
+<div class="connector-row">
+  <div class="connector">
+    <div class="arrow-label">Sheets publishes COMPLIANCE_SUMMARY as CSV — HTML pages read this on load</div>
+    <div class="arrow-line"></div>
+    <div class="arrow-head"></div>
+  </div>
+</div>
+
+<!-- STEP 3 -->
+<div class="divider">Step 3 — HTML school page reads the data and displays it</div>
+<div class="row">
+  <div class="node" id="n-login" data-key="login">
+    <div class="step-badge">3a</div>
+    <div class="node-label">Google Sign-In gate</div>
+    <div class="node-sub">Staff opens their school's URL. Google checks their identity. Only authorized emails on the school's list pass through. Wrong account gets an access denied screen.</div>
+    <span class="node-tag tag-google"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="107378797576506479756275747a6563647973757e7f673e737f7d">[email&#160;protected]</a> → authorized</span>
+  </div>
+  <div class="node" id="n-schoolpage" data-key="schoolpage">
+    <div class="step-badge">3b</div>
+    <div class="node-label">School dashboard page</div>
+    <div class="node-sub">After sign-in passes, the HTML page loads and displays compliance data from the Sheets CSV. Principal sees grade bands. Reading lead sees their caseload. No data entry here — display only.</div>
+    <span class="node-tag tag-html">pcps_coolspring.html · GitHub Pages</span>
+  </div>
+</div>
+
+<div class="connector-row">
+  <div class="connector">
+    <div class="arrow-label" style="color:#2EB87A">When Sheets updates, the next page load shows the new data</div>
+    <div class="arrow-line" style="background:rgba(46,184,122,.3)"></div>
+    <div class="arrow-head" style="border-top-color:rgba(46,184,122,.3)"></div>
+  </div>
+</div>
+
+<!-- RESULT -->
+<div class="divider">Result — what the staff member sees</div>
+<div class="row">
+  <div class="node" id="n-result" data-key="result" style="border-color:rgba(201,168,76,.2)">
+    <div class="node-label">Polished school dashboard</div>
+    <div class="node-sub">Their school's data only — grade band compliance, alert flags, caseload status with VLA field pills. Same dark navy aesthetic as the district dashboard. No raw data. No other schools visible. No additional system to learn.</div>
+    <span class="node-tag tag-html">GitHub Pages · Google Sign-In protected · District Technology Lead maintains</span>
+  </div>
+</div>
+
+<!-- INFO PANEL -->
+<div class="info-panel" id="info-panel">
+  Click any block above to see exactly what happens at that step.
+</div>
+
+</main>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+const info = {
+  principal: "<strong>Principal's Taskade experience:</strong> They log into Taskade with their own account — the same way they'd log into any tool. Taskade's workspace membership means they can only see their school's App. Inside it they see the Grade Band Confirmation board. They click Approve or Flag next to each grade band. That single click is the action that starts the entire data flow — Automation 1 fires immediately and writes the confirmation to Google Sheets.",
+  readinglead: "<strong>Reading Lead's Taskade experience:</strong> They see their caseload table — rows of Student IDs, each with the five VLA compliance fields as columns. When a parent responds, they update Field 4 (Parent Response Status). When they complete a monitoring check, they update the Last Monitoring Date. Every update fires an automation that writes to the STUDENTS tab in Google Sheets instantly. No spreadsheet to manage separately. No email to send. One field update does everything.",
+  eboni: "<strong>Director of C&I's Taskade experience:</strong> She sees the Approval Panel — flagged grade bands and mid-year add requests waiting for her decision — and the Compliance Summary showing one row per school. Every Monday at 7am, a Taskade AI Agent reads the Sheets data and posts a plain-language compliance summary directly into her workspace so she gets the district picture without logging in anywhere to pull a report.",
+  sheets: "<strong>Google Sheets backbone — the hub connecting everything:</strong> This is what makes Taskade and the HTML pages work together without ever talking directly to each other. When a principal approves in Taskade, Automation 1 writes to CONFIRMATION_STATUS. When a reading lead logs a response, Automation 3 writes to STUDENTS. The COMPLIANCE_SUMMARY tab is formula-only — it calculates percentages from the other tabs automatically. That tab is published as a public CSV that the HTML school pages fetch on load. Petersburg owns this file completely. EJC never accesses it after handoff.",
+  login: "<strong>Google Sign-In gate — completely separate from Taskade:</strong> This protects the HTML school pages on GitHub Pages. When a principal navigates to pcps_coolspring.html, they see a Sign in with Google button before any data appears. They click it, Google verifies their identity using the OAuth Client ID created in your Google Cloud project, and the page checks their email against the AUTHORIZED_EMAILS list in the file. Match — the dashboard loads. No match — they see an access denied screen with their email displayed. This is a different login from Taskade and is maintained by the District Technology Lead by editing the email list in each school file.",
+  schoolpage: "<strong>The HTML school page — display only, never writes data:</strong> Once Google Sign-In passes, the page reads the COMPLIANCE_SUMMARY CSV from Google Sheets and renders it in the full dark navy dashboard aesthetic. The principal sees their grade bands, compliance percentages, and alert flags. The reading lead sees their caseload with the five VLA fields as colored pills. This page does not write any data — it only displays what Taskade and Google Sheets already contain. Think of it as the wall screen in the principal's office showing the current picture.",
+  result: "<strong>Why two separate logins — and why that's the right design:</strong> Taskade is where work happens — approving, logging, updating. The HTML school page is where data is displayed beautifully for a different moment (a staff meeting, a quick check on a phone). They serve different purposes at different times, so they have different access systems. A principal might use Taskade on their laptop to approve grade bands in the morning, then pull up the school page on a projector screen during their weekly data meeting. The two logins are independent because the two purposes are independent — and that's what keeps the system low-maintenance for the District Technology Lead."
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.body.addEventListener('click', function(e) {
+    const node = e.target.closest('[data-key]');
+    if (!node) return;
+    const key = node.dataset.key;
+    document

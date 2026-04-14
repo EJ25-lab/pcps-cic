@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Walnut Hill Elementary — Command Insight Center</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<!-- Google Identity Services — handles the Sign In With Google button -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+<style>
+/* ── DESIGN SYSTEM ── */
+:root {
+  --navy:#0D1B2A; --navy-mid:#111F2E; --navy-card:#152130; --navy-hover:#1A2D3F;
+  --gold:#C9A84C; --gold-light:#E8C96A; --gold-pale:rgba(201,168,76,.08);
+  --teal:#1ABCB0; --teal-pale:rgba(26,188,176,.10);
+  --green:#2EB87A; --green-pale:rgba(46,184,122,.12);
+  --orange:#E07B39; --orange-pale:rgba(224,123,57,.12);
+  --red:#D94F4F; --red-pale:rgba(217,79,79,.12);
+  --purple:#8B7CF6; --purple-pale:rgba(139,124,246,.12);
+  --border:rgba(255,255,255,.07); --border-hover:rgba(201,168,76,.30);
+  --text-on:#fff; --text-mid:rgba(255,255,255,.6); --text-dim:rgba(255,255,255,.38);
+  --font:'Inter',sans-serif; --nav-h:54px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:var(--font);background:var(--navy);color:var(--text-on);-webkit-font-smoothing:antialiased;line-height:1.5}
+
+/* ── LOGIN WALL — shown before Google auth ── */
+#login-wall {
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:100vh;padding:40px 20px;text-align:center;
+  background:var(--navy);
+  position:fixed;top:0;left:0;right:0;bottom:0;z-index:1000;
+}
+.login-seal {
+  width:64px;height:64px;border-radius:50%;background:var(--gold);
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;font-weight:900;color:var(--navy);margin-bottom:20px;
+}
+.login-school {
+  font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--teal);margin-bottom:8px;
+}
+.login-title {
+  font-size:clamp(1.4rem,4vw,2rem);font-weight:800;color:var(--text-on);
+  margin-bottom:8px;line-height:1.15;
+}
+.login-sub {
+  font-size:13px;color:var(--text-dim);margin-bottom:36px;max-width:400px;line-height:1.7;
+}
+.login-card {
+  background:var(--navy-card);border:1px solid var(--border);border-radius:16px;
+  padding:32px 36px;max-width:420px;width:100%;
+}
+.login-card-label {
+  font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--text-dim);margin-bottom:16px;
+}
+/* Google's own button renders here — we just style the container */
+#g_id_signin { display:flex;justify-content:center;margin-bottom:16px; }
+.login-note {
+  font-size:10px;color:var(--text-dim);line-height:1.6;
+}
+.login-note strong { color:var(--text-mid); }
+
+/* ── ACCESS DENIED — shown if wrong account ── */
+#access-denied {
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+  min-height:100vh;padding:40px 20px;text-align:center;
+  position:fixed;top:0;left:0;right:0;bottom:0;z-index:1000;background:var(--navy);
+}
+.denied-icon { font-size:3rem;margin-bottom:16px; }
+.denied-title { font-size:1.4rem;font-weight:800;color:var(--red);margin-bottom:8px; }
+.denied-sub { font-size:13px;color:var(--text-dim);max-width:380px;line-height:1.75;margin-bottom:24px; }
+.denied-email { 
+  background:var(--red-pale);border:1px solid rgba(217,79,79,.2);border-radius:8px;
+  padding:10px 16px;font-size:11px;color:var(--red);font-weight:600;margin-bottom:24px;
+}
+.btn-retry {
+  display:inline-flex;align-items:center;gap:6px;font-family:var(--font);
+  font-size:11px;font-weight:700;padding:10px 20px;border-radius:8px;border:none;
+  cursor:pointer;background:var(--navy-card);color:var(--text-mid);
+  border:1px solid var(--border);transition:all .15s;
+}
+.btn-retry:hover{border-color:var(--border-hover);color:var(--gold);}
+
+/* ── MAIN DASHBOARD — hidden until auth passes ── */
+#dashboard { display:none; }
+
+/* ── NAV ── */
+nav {
+  position:fixed;top:0;left:0;right:0;height:var(--nav-h);
+  background:rgba(11,23,36,.97);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);z-index:200;
+  display:flex;align-items:center;justify-content:space-between;padding:0 20px;gap:12px;
+}
+.nav-brand{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.nav-seal{width:28px;height:28px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:var(--navy)}
+.nav-name{font-size:11px;font-weight:700;color:var(--text-on);line-height:1.2}
+.nav-name span{display:block;font-size:9px;font-weight:400;color:var(--text-dim);letter-spacing:.04em}
+.school-pill{background:var(--teal-pale);border:1px solid rgba(26,188,176,.25);color:var(--teal);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:100px;flex-shrink:0}
+.nav-user{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.nav-user-email{font-size:10px;color:var(--text-dim)}
+.nav-user-avatar{width:26px;height:26px;border-radius:50%;background:var(--gold-pale);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--gold)}
+.nav-links{display:flex;gap:3px}
+.nav-links a{font-size:10px;font-weight:600;color:var(--text-dim);text-decoration:none;padding:5px 11px;border-radius:7px;transition:all .15s}
+.nav-links a:hover{color:var(--text-on);background:rgba(255,255,255,.06)}
+@media(max-width:680px){.nav-links{display:none}}
+
+/* ── ROLE SWITCHER ── */
+.role-bar{
+  position:fixed;top:var(--nav-h);left:0;right:0;height:44px;
+  background:#0A1520;border-bottom:1px solid var(--border);z-index:190;
+  display:flex;align-items:center;padding:0 20px;gap:6px;overflow-x:auto;scrollbar-width:none;
+}
+.role-bar::-webkit-scrollbar{display:none}
+.role-bar-label{font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);margin-right:6px;flex-shrink:0}
+.rbtn{font-size:10px;font-weight:600;padding:5px 14px;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--text-mid);cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0;font-family:var(--font)}
+.rbtn:hover{border-color:var(--border-hover);color:var(--gold)}
+.rbtn.active{background:var(--gold-pale);border-color:rgba(201,168,76,.4);color:var(--gold)}
+
+/* ── SHELL ── */
+.shell{padding-top:calc(var(--nav-h) + 44px);min-height:100vh}
+.view{display:none;padding:24px 20px;max-width:1100px;margin:0 auto}
+.view.active{display:block}
+
+/* ── VIEWING-AS BANNER ── */
+.viewing-as{
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--gold-pale);border:1px solid rgba(201,168,76,.2);
+  border-radius:10px;padding:10px 16px;margin-bottom:22px;flex-wrap:wrap;gap:8px;
+}
+.va-left{display:flex;align-items:center;gap:10px}
+.va-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0}
+.va-text{font-size:11px;color:var(--text-mid)}
+.va-text strong{color:var(--gold);font-weight:700}
+.va-right{font-size:10px;color:var(--text-dim);font-style:italic}
+
+/* ── PAGE HEADER ── */
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:12px}
+.page-title{font-size:20px;font-weight:800;color:var(--text-on);line-height:1.1}
+.page-title span{display:block;font-size:11px;font-weight:400;color:var(--text-dim);margin-top:3px}
+.header-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:6px;font-family:var(--font);font-size:11px;font-weight:700;padding:9px 16px;border-radius:8px;border:none;cursor:pointer;transition:all .15s;text-decoration:none;white-space:nowrap}
+.btn-gold{background:var(--gold);color:var(--navy)}
+.btn-gold:hover{background:var(--gold-light)}
+.btn-ghost{background:transparent;color:var(--text-mid);border:1px solid var(--border)}
+.btn-ghost:hover{border-color:var(--border-hover);color:var(--gold)}
+.btn-teal{background:rgba(26,188,176,.15);color:var(--teal);border:1px solid rgba(26,188,176,.25)}
+.btn-sm{padding:6px 12px;font-size:10px}
+
+/* ── KPI CARDS ── */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.kpi{background:var(--navy-card);border:1px solid var(--border);border-radius:12px;padding:18px 16px;transition:border-color .15s}
+.kpi:hover{border-color:var(--border-hover)}
+.kpi-label{font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px}
+.kpi-value{font-size:2rem;font-weight:900;line-height:1;margin-bottom:4px}
+.kpi-sub{font-size:10px;color:var(--text-dim)}
+.kpi-teal .kpi-value{color:var(--teal)}
+.kpi-green .kpi-value{color:var(--green)}
+.kpi-gold .kpi-value{color:var(--gold)}
+.kpi-alert .kpi-value{color:var(--red)}
+@media(max-width:700px){.kpi-row{grid-template-columns:repeat(2,1fr)}}
+
+/* ── ALERT PANEL ── */
+.alert-panel{background:var(--red-pale);border:1px solid rgba(217,79,79,.2);border-radius:12px;padding:16px 18px;margin-bottom:22px}
+.alert-header{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.alert-header h4{font-size:12px;font-weight:700;color:var(--red)}
+.pdot{width:6px;height:6px;border-radius:50%;flex-shrink:0;animation:pulse 1.5s ease-in-out infinite}
+.pdot-red{background:var(--red)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.2}}
+.alert-items{display:flex;flex-direction:column;gap:8px}
+.alert-item{display:flex;align-items:flex-start;gap:10px;font-size:11px;color:var(--text-mid);line-height:1.5}
+.alert-item::before{content:'!';background:var(--red);color:#fff;font-size:8px;font-weight:900;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+
+/* ── SECTION HEADER ── */
+.sec-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.sec-title{font-size:12px;font-weight:700;color:var(--text-on);display:flex;align-items:center;gap:8px}
+.dot{width:6px;height:6px;border-radius:50%}
+
+/* ── TABLE ── */
+.table-wrap{background:var(--navy-card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:22px}
+table{width:100%;border-collapse:collapse}
+thead th{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);padding:12px 14px;text-align:left;border-bottom:1px solid var(--border);background:#0E1E2E;white-space:nowrap}
+tbody tr{border-bottom:1px solid var(--border);transition:background .12s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:var(--navy-hover)}
+tbody td{padding:13px 14px;font-size:11px;color:var(--text-mid);vertical-align:middle}
+td.strong{font-weight:700;color:var(--text-on);font-size:12px}
+
+/* ── STATUS PILLS ── */
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;padding:3px 9px;border-radius:100px;letter-spacing:.04em;white-space:nowrap}
+.pill-green{background:var(--green-pale);color:var(--green)}
+.pill-orange{background:var(--orange-pale);color:var(--orange)}
+.pill-red{background:var(--red-pale);color:var(--red)}
+.pill-teal{background:var(--teal-pale);color:var(--teal)}
+.pill-gold{background:var(--gold-pale);color:var(--gold)}
+.pill-dim{background:rgba(255,255,255,.06);color:var(--text-dim)}
+
+/* ── PROGRESS BAR ── */
+.pbar-wrap{display:flex;align-items:center;gap:8px}
+.pbar{height:6px;border-radius:100px;background:rgba(255,255,255,.08);flex:1;overflow:hidden;min-width:60px}
+.pbar-fill{height:100%;border-radius:100px}
+.pbar-num{font-size:10px;font-weight:700;min-width:34px;text-align:right}
+
+/* ── CASELOAD TABLE ── */
+.caseload-info{background:var(--navy-card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:18px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.ci-icon{width:36px;height:36px;border-radius:10px;background:var(--purple-pale);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.ci-info h4{font-size:13px;font-weight:700;color:var(--text-on)}
+.ci-info p{font-size:10px;color:var(--text-dim)}
+.ci-stats{display:flex;gap:16px;margin-left:auto;flex-wrap:wrap}
+.ci-stat{text-align:center}
+.ci-stat .n{font-size:1.3rem;font-weight:900;color:var(--teal);line-height:1}
+.ci-stat .l{font-size:8px;color:var(--text-dim);letter-spacing:.08em;text-transform:uppercase}
+
+/* ── SIGN OUT ── */
+.signout-btn{background:transparent;border:1px solid var(--border);color:var(--text-dim);font-size:10px;font-weight:600;padding:4px 10px;border-radius:6px;cursor:pointer;font-family:var(--font);transition:all .15s}
+.signout-btn:hover{border-color:var(--border-hover);color:var(--gold)}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════
+     LOGIN WALL — shown before auth
+════════════════════════════════════ -->
+<div id="login-wall">
+  <div class="login-seal">P</div>
+  <div class="login-school">Petersburg City Public Schools</div>
+  <h1 class="login-title">Walnut Hill Elementary<br>Command Insight Center</h1>
+  <p class="login-sub">This dashboard is restricted to authorized Walnut Hill Elementary staff. Sign in with your school Google account to continue.</p>
+  <div class="login-card">
+    <div class="login-card-label">Sign in to access your school dashboard</div>
+    <!-- Google renders its own button here -->
+    <div id="g_id_signin"></div>
+    <p class="login-note">Only <strong>authorized Walnut Hill Elementary staff</strong> can access this page. Contact your District Technology Lead if you need access.</p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     ACCESS DENIED — wrong account
+════════════════════════════════════ -->
+<div id="access-denied">
+  <div class="denied-icon">🔒</div>
+  <div class="denied-title">Access Not Authorized</div>
+  <p class="denied-sub">Your Google account is not authorized to view the Walnut Hill Elementary dashboard. This page is restricted to approved staff only.</p>
+  <div class="denied-email" id="denied-email-display"></div>
+  <p class="denied-sub">If you believe this is an error, contact your District Technology Lead.</p>
+  <button class="btn-retry" data-action="retry">← Try a different account</button>
+</div>
+
+<!-- ════════════════════════════════════
+     MAIN DASHBOARD — shown after auth
+════════════════════════════════════ -->
+<div id="dashboard">
+
+<nav>
+  <div class="nav-brand">
+    <div class="nav-seal">P</div>
+    <div class="nav-name">Command Insight Center<span>Petersburg City Public Schools</span></div>
+  </div>
+  <span class="school-pill">Walnut Hill Elementary</span>
+  <div class="nav-links">
+    <a href="index.html">Overview</a>
+    <a href="pcps_dashboard_preview.html">District View</a>
+  </div>
+  <div class="nav-user">
+    <span class="nav-user-email" id="user-email-display"></span>
+    <div class="nav-user-avatar" id="user-avatar"></div>
+    <button class="signout-btn" data-action="signout">Sign out</button>
+  </div>
+</nav>
+
+<div class="role-bar">
+  <span class="role-bar-label">View as:</span>
+  <button class="rbtn active" data-action="role" data-value="principal">Principal</button>
+  <button class="rbtn" data-action="role" data-value="readinglead">Reading Lead</button>
+</div>
+
+<div class="shell">
+
+<!-- ════ PRINCIPAL VIEW ════ -->
+<div class="view active" id="view-principal">
+  <div class="viewing-as">
+    <div class="va-left"><div class="va-dot"></div>
+    <div class="va-text">Viewing as: <strong>Principal — Walnut Hill Elementary</strong> · Your school only</div></div>
+    <div class="va-right">Sample data · SY 2025–26 · April 2026</div>
+  </div>
+
+  <div class="page-header">
+    <div class="page-title">Walnut Hill Elementary
+      <span>Reading Plan Compliance · K–5 · Virginia Literacy Act SY 2025–26</span>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-ghost btn-sm" data-action="print">⬇ Export School Report</button>
+    </div>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi kpi-teal">
+      <div class="kpi-label">Students Identified</div>
+      <div class="kpi-value">112</div>
+      <div class="kpi-sub">K–5 · this school</div>
+    </div>
+    <div class="kpi kpi-green">
+      <div class="kpi-label">Plans Created</div>
+      <div class="kpi-value">100</div>
+      <div class="kpi-sub">89% complete</div>
+    </div>
+    <div class="kpi kpi-gold">
+      <div class="kpi-label">Letters Sent Home</div>
+      <div class="kpi-value">100</div>
+      <div class="kpi-sub">100% of plans</div>
+    </div>
+    <div class="kpi kpi-green">
+      <div class="kpi-label">Alerts</div>
+      <div class="kpi-value" style="color:var(--green)">0</div>
+      <div class="kpi-sub">All specialists assigned</div>
+    </div>
+  </div>
+
+  <div class="sec-header">
+    <div class="sec-title"><div class="dot" style="background:var(--teal)"></div>Grade band compliance · click a row to confirm or flag</div>
+    <span style="font-size:10px;color:var(--text-dim)">Updated April 13, 2026</span>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th>Grade Band</th><th>Students Identified</th><th>Plans Created</th><th>Letters Sent</th><th>Parent Response</th><th>Specialist</th><th>Status</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td class="strong">K–2</td><td>58</td>
+          <td><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill" style="width:100%;background:var(--green)"></div></div><span class="pbar-num" style="color:var(--green)">58</span></div></td>
+          <td><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill" style="width:100%;background:var(--teal)"></div></div><span class="pbar-num" style="color:var(--teal)">58</span></div></td>
+          <td>74%</td>
+          <td><span class="pill pill-green">✓ Assigned</span></td>
+          <td><span class="pill pill-green">On track</span></td>
+        </tr>
+        <tr>
+          <td class="strong">Grade 3</td><td>19</td>
+          <td><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill" style="width:100%;background:var(--green)"></div></div><span class="pbar-num" style="color:var(--green)">19</span></div></td>
+          <td><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill" style="width:100%;background:var(--teal)"></div></div><span class="pbar-num" style="color:var(--teal)">19</span></div></td>
+          <td>74%</td>
+          <td><span class="pill pill-green">✓ Assigned</span></td>
+          <td><span class="pill pill-green">On track</span></td>
+        </tr>
+        <tr>
+          <td class="strong">Grades 4–5</td><td>35</td>
+          <td><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill" style="width:66%;background:var(--orange)"></div></div><span class="pbar-num" style="color:var(--orange)">23</span></div></td>
+          <td><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill" style="width:66%;background:var(--orange)"></div></div><span class="pbar-num" style="color:var(--orange)">23</span></div></td>
+          <td>57%</td>
+          <td><span class="pill pill-green">✓ Assigned</span></td>
+          <td><span class="pill pill-orange">In progress</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px;align-items:center">
+    <span style="font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);margin-right:4px">VLA audit fields tracked per student:</span>
+    <span class="pill pill-teal">Plan created</span>
+    <span class="pill pill-teal">Specialist assigned</span>
+    <span class="pill pill-teal">Letter sent home</span>
+    <span class="pill pill-teal">Parent response documented</span>
+    <span class="pill pill-teal">Refusal on file (if applicable)</span>
+  </div>
+</div><!-- end principal view -->
+
+
+<!-- ════ READING LEAD VIEW ════ -->
+<div class="view" id="view-readinglead">
+  <div class="viewing-as">
+    <div class="va-left"><div class="va-dot" style="background:var(--purple)"></div>
+    <div class="va-text">Viewing as: <strong>Reading Specialist — Walnut Hill Elementary</strong> · Your caseload only · VLA co-ownership required on every plan</div></div>
+    <div class="va-right">Sample data · April 2026</div>
+  </div>
+
+  <div class="page-header">
+    <div class="page-title">My Caseload
+      <span>Walnut Hill Elementary · K–5 · Co-ownership &amp; monitoring status</span>
+    </div>
+    <div class="header-actions">
+      <a href="pcps_teacher_form.html" class="btn btn-teal btn-sm">+ Submit a Reading Plan</a>
+    </div>
+  </div>
+
+  <div class="caseload-info">
+    <div class="ci-icon">📚</div>
+    <div class="ci-info">
+      <h4>Elementary Reading Specialist</h4>
+      <p>Walnut Hill Elementary · K–5 · All grade bands</p>
+    </div>
+    <div class="ci-stats">
+      <div class="ci-stat"><div class="n">112</div><div class="l">Students</div></div>
+      <div class="ci-stat"><div class="n">100</div><div class="l">Plans active</div></div>
+      <div class="ci-stat"><div class="n" style="color:var(--orange)">12</div><div class="l">Pending</div></div>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th>Student ID</th><th>Grade</th><th>Plan Created</th><th>Specialist Assigned</th><th>Parent Offered</th><th>Parent Response</th><th>Refusal Documented</th><th>Status</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="strong">STU-0wh1</td><td>K</td><td><span class="pill pill-teal">Yes</span></td><td><span class="pill pill-teal">Confirmed</span></td><td><span class="pill pill-teal">Yes</span></td><td><span class="pill pill-green">Accepted</span></td><td><span class="pill pill-dim">N/A</span></td><td><span class="pill pill-green">On track</span></td></tr>
+        <tr><td class="strong">STU-0wh2</td><td>1</td><td><span class="pill pill-teal">Yes</span></td><td><span class="pill pill-teal">Confirmed</span></td><td><span class="pill pill-teal">Yes</span></td><td><span class="pill pill-green">Accepted</span></td><td><span class="pill pill-dim">N/A</span></td><td><span class="pill pill-green">On track</span></td></tr>
+        <tr><td class="strong">STU-0wh3</td><td>2</td><td><span class="pill pill-teal">Yes</span></td><td><span class="pill pill-teal">Confirmed</span></td><td><span class="pill pill-teal">Yes</span></td><td><span class="pill pill-orange">Declined</span></td><td><span class="pill pill-red">Required — Not Yet Filed</span></td><td><span class="pill pill-red">Action needed</span></td></tr>
+        <tr><td class="strong">STU-0wh4</td><td>3</td><td><span class="pill pill-teal">Yes</span></td><td><span class="pill pill-teal">Confirmed</span></td><td><span class="pill pill-teal">Yes</span></td><td><span class="pill pill-dim">Pending Response</span></td><td><span class="pill pill-dim">N/A</span></td><td><span class="pill pill-orange">Pending</span></td></tr>
+        <tr><td class="strong">STU-0wh5</td><td>4</td><td><span class="pill pill-orange">Not Yet Assigned</span></td><td><span class="pill pill-orange">Not Yet Assigned</span></td><td><span class="pill pill-orange">Pending</span></td><td><span class="pill pill-dim">Pending Response</span></td><td><span class="pill pill-dim">N/A</span></td><td><span class="pill pill-orange">In progress</span></td></tr>
+        <tr><td class="strong">STU-0wh6</td><td>5</td><td><span class="pill pill-orange">Not Yet Assigned</span></td><td><span class="pill pill-orange">Not Yet Assigned</span></td><td><span class="pill pill-orange">Pending</span></td><td><span class="pill pill-dim">Pending Response</span></td><td><span class="pill pill-dim">N/A</span></td><td><span class="pill pill-orange">In progress</span></td></tr>
+      </tbody>
+    </table>
+    <div style="padding:10px 14px;font-size:10px;color:var(--text-dim);border-top:1px solid var(--border)">Showing 6 of 112 students · Student names are never displayed · IDs reference your intake records</div>
+  </div>
+</div><!-- end reading lead view -->
+
+</div><!-- end shell -->
+</div><!-- end dashboard -->
+
+<script>
+// ════════════════════════════════════
+// AUTHORIZATION CONFIG
+// ════════════════════════════════════
+
+// Your Google OAuth Client ID
+const CLIENT_ID = '14971058385-uk418giaag3j37n6l15mi8miu8jnhsh0.apps.googleusercontent.com';
+
+// SCHOOL-SPECIFIC ACCESS LIST
+// Add authorized email addresses for Walnut Hill Elementary staff here.
+// District Technology Lead updates this list at handoff by adding Petersburg staff emails.
+// Format: lowercase email addresses only.
+const AUTHORIZED_EMAILS = [
+  'chief@tieredjusticenow.com',  // EJC test account — remove at handoff
+  // Add Cool Spring principal email here
+  // Add Cool Spring reading specialist email here
+  // Example: 'principal.coolspring@petersburg.k12.va.us'
+];
+
+// Role mapping — which email sees which view on first load
+// If email not listed here, defaults to principal view
+const ROLE_MAP = {
+  'chief@tieredjusticenow.com': 'principal',
+  // 'readingspecialist@petersburg.k12.va.us': 'readinglead',
+};
+
+// ════════════════════════════════════
+// GOOGLE SIGN-IN INITIALIZATION
+// ════════════════════════════════════
+
+// This runs when the Google Identity Services script loads
+function initGoogleSignIn() {
+  google.accounts.id.initialize({
+    client_id: CLIENT_ID,
+    callback: handleCredentialResponse,
+    auto_select: false,
+    cancel_on_tap_outside: false,
+  });
+
+  // Render the sign-in button inside #g_id_signin
+  google.accounts.id.renderButton(
+    document.getElementById('g_id_signin'),
+    {
+      theme: 'outline',
+      size: 'large',
+      width: 280,
+      text: 'sign_in_with',
+      shape: 'rectangular',
+      logo_alignment: 'left',
+    }
+  );
+
+  // Also show One Tap if user was previously signed in
+  google.accounts.id.prompt();
+}
+
+// Called by Google when sign-in completes
+// credential is a JWT token containing the user's info
+function handleCredentialResponse(response) {
+  // Decode the JWT payload (base64 middle section)
+  const payload = JSON.parse(atob(response.credential.split('.')[1]));
+  const email = payload.email.toLowerCase();
+  const name = payload.name;
+  const initial = name ? name[0].toUpperCase() : email[0].toUpperCase();
+
+  // Check if this email is on the authorized list
+  if (AUTHORIZED_EMAILS.includes(email)) {
+    // ✅ Authorized — show the dashboard
+    document.getElementById('login-wall').style.display = 'none';
+    document.getElementById('access-denied').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+
+    // Show their email and initial in the nav
+    document.getElementById('user-email-display').textContent = email;
+    document.getElementById('user-avatar').textContent = initial;
+
+    // Route to their role-specific view
+    const role = ROLE_MAP[email] || 'principal';
+    switchRole(role);
+
+  } else {
+    // ❌ Not authorized — show access denied
+    document.getElementById('login-wall').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('access-denied').style.display = 'flex';
+    document.getElementById('denied-email-display').textContent = email;
+  }
+}
+
+// ════════════════════════════════════
+// DASHBOARD INTERACTIONS
+// ════════════════════════════════════
+
+function switchRole(role) {
+  // Hide all views
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  // Deactivate all role buttons
+  document.querySelectorAll('.rbtn').forEach(b => b.classList.remove('active'));
+  // Show the correct view
+  const view = document.getElementById('view-' + role);
+  if (view) view.classList.add('active');
+  // Activate the correct button
+  const btn = document.querySelector('[data-value="' + role + '"]');
+  if (btn) btn.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function signOut() {
+  // Revoke Google's session and return to login wall
+  google.accounts.id.disableAutoSelect();
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('access-denied').style.display = 'none';
+  document.getElementById('login-wall').style.display = 'flex';
+  // Re-render the sign-in button
+  google.accounts.id.renderButton(
+    document.getElementById('g_id_signin'),
+    { theme: 'outline', size: 'large', width: 280 }
+  );
+}
+
+// ════════════════════════════════════
+// EVENT DELEGATION
+// No onclick attributes anywhere — all clicks handled here
+// ════════════════════════════════════
+
+document.addEventListener('DOMContentLoaded', function () {
+  // Initialize Google Sign-In once the page and scripts load
+  // The Google script loads async so we poll until it's ready
+  const waitForGoogle = setInterval(function () {
+    if (typeof google !== 'undefined' && google.accounts) {
+      clearInterval(waitForGoogle);
+      initGoogleSignIn();
+    }
+  }, 100);
+
+  // Handle all button clicks via delegation
+  document.body.addEventListener('click', function (e) {
+    const el = e.target.closest('[data-action]');
+    if (!el) return;
+    const action = el.dataset.action;
+    const value = el.dataset.value;
+
+    if (action === 'role') switchRole(value);
+    if (action === 'signout') signOut();
+    if (action === 'retry') signOut();
+    if (action === 'print') window.print();
+  });
+});
+</script>
+</body>
+</html>
