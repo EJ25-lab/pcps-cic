@@ -82,13 +82,7 @@ body{
 }
 
 /* ── TOP BAR ── */
-.topbar{
-  background:var(--maroon);
-  height:54px;
-  display:flex;align-items:center;padding:0 22px;gap:14px;
-  position:sticky;top:0;z-index:100;
-  box-shadow:0 1px 4px rgba(0,0,0,.18);
-}
+/* topbar — see layout section below */
 .topbar-logo{
   height:30px;object-fit:contain;
   /* invert the black-bg logo to work on maroon */
@@ -146,8 +140,7 @@ body{
 }
 
 /* ── VIEWS ── */
-.view{display:none;padding:18px 22px 28px;}
-.view.active{display:block;}
+/* view rules — see below */
 
 /* ── VIEWING-AS BANNER ── */
 .vbanner{
@@ -407,6 +400,7 @@ body{
   background:var(--surface);border-top:1px solid var(--border);
   padding:10px 22px;display:flex;align-items:center;justify-content:space-between;
   box-shadow:0 -1px 3px rgba(0,0,0,.04);
+  margin-left:180px;position:relative;z-index:50;
 }
 .updated{font-size:11px;color:var(--text-dim);}
 .export-btn{
@@ -437,6 +431,120 @@ body{
   .pill { border: 1px solid #ccc; }
   @page { size: letter landscape; margin: 0.5in; }
 }
+
+/* ══ LAYOUT — side nav + canvas + filter sidebar ══ */
+
+/* Fixed topbar — identity only */
+.topbar{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  background:var(--maroon);height:52px;
+  display:flex;align-items:center;padding:0 20px;gap:14px;
+  box-shadow:0 2px 8px rgba(0,0,0,.2);
+}
+.topbar-logo{height:28px;object-fit:contain;filter:brightness(0) invert(1);opacity:.9;}
+.topbar-div{width:1px;height:20px;background:rgba(255,255,255,.25);}
+.topbar-id{display:flex;flex-direction:column;}
+.topbar-name{font-size:13px;font-weight:700;color:#fff;letter-spacing:.01em;}
+.topbar-sub{font-size:9px;font-weight:400;color:rgba(255,255,255,.55);letter-spacing:.06em;text-transform:uppercase;margin-top:1px;}
+.topbar-links{display:flex;gap:2px;margin-left:auto;}
+.topbar-links a{font-size:10px;font-weight:600;color:rgba(255,255,255,.55);text-decoration:none;padding:5px 10px;border-radius:4px;transition:all .15s;}
+.topbar-links a:hover{color:#fff;background:rgba(255,255,255,.12);}
+.meeting-badge{display:flex;align-items:center;gap:7px;margin-left:10px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);padding:4px 11px;border-radius:4px;white-space:nowrap;}
+.badge-dot{width:5px;height:5px;border-radius:50%;background:#FFC971;animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.badge-txt{font-size:10px;font-weight:600;color:rgba(255,255,255,.85);}
+
+/* Side nav */
+.sidenav{
+  position:fixed;top:52px;left:0;bottom:0;width:180px;
+  background:var(--surface);border-right:1px solid var(--border);
+  z-index:100;display:flex;flex-direction:column;
+  box-shadow:1px 0 4px rgba(0,0,0,.06);
+  overflow-y:auto;
+}
+.sidenav-section{padding:14px 14px 8px;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:var(--text-dim);border-bottom:1px solid var(--border);}
+.nav-btn{
+  display:flex;align-items:center;gap:10px;width:100%;
+  background:none;border:none;border-left:3px solid transparent;
+  text-align:left;padding:12px 16px;cursor:pointer;
+  font-family:var(--font);font-size:13px;font-weight:600;
+  color:var(--text-mid);transition:all .15s;
+}
+.nav-btn:hover{background:var(--card-alt);color:var(--text);}
+.nav-btn.active{background:var(--maroon-pale);color:var(--maroon-text);border-left-color:var(--maroon-mid);font-weight:700;}
+.nav-btn-icon{font-size:15px;width:20px;text-align:center;flex-shrink:0;}
+.sidenav-bottom{margin-top:auto;border-top:1px solid var(--border);padding:12px 14px;}
+.sidenav-link{display:block;font-size:11px;font-weight:600;color:var(--text-dim);text-decoration:none;padding:5px 0;transition:color .15s;}
+.sidenav-link:hover{color:var(--maroon-text);}
+
+/* Collapsible filter sidebar */
+.filtersidebar{
+  position:fixed;top:52px;right:0;bottom:0;width:220px;
+  background:var(--surface);border-left:1px solid var(--border);
+  z-index:100;display:flex;flex-direction:column;
+  transform:translateX(100%);transition:transform .22s ease;
+  box-shadow:-2px 0 8px rgba(0,0,0,.08);
+  overflow-y:auto;
+}
+.filtersidebar.open{transform:translateX(0);}
+.filter-toggle{
+  position:fixed;top:64px;right:0;z-index:101;
+  background:var(--surface);border:1px solid var(--border);
+  border-right:none;border-radius:6px 0 0 6px;
+  padding:8px 12px;cursor:pointer;
+  font-family:var(--font);font-size:11px;font-weight:700;
+  color:var(--text-mid);display:flex;align-items:center;gap:6px;
+  transition:all .15s;box-shadow:-2px 2px 6px rgba(0,0,0,.06);
+}
+.filter-toggle:hover{background:var(--card-alt);color:var(--text);}
+.filter-toggle.open{color:var(--maroon-text);background:var(--maroon-pale);}
+.filter-head{padding:14px 16px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--text-dim);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.filter-close{background:none;border:none;cursor:pointer;color:var(--text-dim);font-size:18px;font-family:var(--font);}
+.filter-group{padding:12px 16px;border-bottom:1px solid var(--border);}
+.filter-group-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--text-dim);margin-bottom:8px;}
+.filter-reset{margin:12px 16px 4px;display:block;font-size:11px;font-weight:700;color:var(--text-dim);background:none;border:none;cursor:pointer;font-family:var(--font);text-align:left;padding:0;}
+.filter-reset:hover{color:var(--maroon-text);}
+
+/* Main canvas */
+.canvas{
+  margin-left:180px;
+  margin-top:52px;
+  padding:20px 22px 32px;
+  min-height:calc(100vh - 52px);
+  transition:margin-right .22s ease;
+}
+.canvas.filters-open{margin-right:220px;}
+
+/* Action column — right side, alerts only */
+.col-action{display:flex;flex-direction:column;gap:12px;}
+.action-header{
+  background:var(--maroon);border-radius:7px;
+  padding:11px 14px;
+  font-size:10px;font-weight:800;text-transform:uppercase;
+  letter-spacing:.1em;color:rgba(255,255,255,.8);
+}
+.action-header span{color:#FFC971;}
+
+/* Chip — now used inside filter sidebar */
+.chip{
+  display:inline-block;
+  background:none;border:1px solid var(--border);color:var(--text-mid);
+  padding:4px 11px;border-radius:3px;cursor:pointer;margin:0 5px 5px 0;
+  font-family:var(--font);font-size:11px;font-weight:600;
+  letter-spacing:.04em;transition:all .12s;
+}
+.chip:hover{color:var(--text);border-color:var(--border-mid);background:var(--card-alt);}
+.chip.active{border-color:var(--maroon-border);color:var(--maroon-text);background:var(--maroon-pale);}
+
+/* Bottom bar offset */
+.bottombar{margin-left:180px;}
+
+/* Views — hidden by default */
+/* view rules — see below */
+
+/* ══ VIEW SWITCHING — definitive rules (must be last) ══ */
+.view { display: none !important; }
+.view.active { display: block !important; width: 100%; }
 </style>
 </head>
 <body>
@@ -447,52 +555,91 @@ body{
   <div class="topbar-div"></div>
   <div class="topbar-id">
     <div class="topbar-name">Command Insight Center — Graduation</div>
-    <div class="topbar-sub">Petersburg City Public Schools · Class of 2026</div>
-  </div>
-  <div class="topbar-nav">
-    <button class="nav-btn active" onclick="switchView('director',this)">Director</button>
-    <button class="nav-btn" onclick="switchView('counselor',this)">Counselor</button>
-    <button class="nav-btn" onclick="switchView('coach',this)">Grad Coach</button>
-    <button class="nav-btn" onclick="switchView('career',this)">3E Readiness</button>
-    <button class="nav-btn" onclick="switchView('support',this)">Student Support</button>
-  </div>
-  <div style="display:flex;gap:2px;margin-left:12px;padding-left:12px;border-left:1px solid rgba(255,255,255,.2);">
-    <a href="index.html" style="font-size:10px;font-weight:600;color:rgba(255,255,255,.55);text-decoration:none;padding:5px 10px;border-radius:4px;transition:all .15s;" onmouseover="this.style.color='#fff';this.style.background='rgba(255,255,255,.12)'" onmouseout="this.style.color='rgba(255,255,255,.55)';this.style.background='none'">Overview</a>
-    <a href="pcps_leadership_board.html" style="font-size:10px;font-weight:600;color:rgba(255,255,255,.55);text-decoration:none;padding:5px 10px;border-radius:4px;transition:all .15s;" onmouseover="this.style.color='#fff';this.style.background='rgba(255,255,255,.12)'" onmouseout="this.style.color='rgba(255,255,255,.55)';this.style.background='none'">Policy</a>
-    <a href="pcps_operations_board.html" style="font-size:10px;font-weight:600;color:rgba(255,255,255,.55);text-decoration:none;padding:5px 10px;border-radius:4px;transition:all .15s;" onmouseover="this.style.color='#fff';this.style.background='rgba(255,255,255,.12)'" onmouseout="this.style.color='rgba(255,255,255,.55)';this.style.background='none'">Operations</a>
-    <a href="pcps_dashboard_preview.html" style="font-size:10px;font-weight:600;color:rgba(255,255,255,.55);text-decoration:none;padding:5px 10px;border-radius:4px;transition:all .15s;" onmouseover="this.style.color='#fff';this.style.background='rgba(255,255,255,.12)'" onmouseout="this.style.color='rgba(255,255,255,.55)';this.style.background='none'">Reading CIC</a>
+    <div class="topbar-sub">Petersburg City Public Schools</div>
   </div>
   <div class="meeting-badge">
     <div class="badge-dot"></div>
     <div class="badge-txt">Next accountability meeting — May 6 · 9:00am</div>
   </div>
+  <div class="topbar-links" style="margin-left:auto;">
+    <a href="index.html">Overview</a>
+    <a href="pcps_leadership_board.html">Policy</a>
+    <a href="pcps_operations_board.html">Operations</a>
+    <a href="pcps_dashboard_preview.html">Reading CIC</a>
+  </div>
 </nav>
+<!-- ══ SIDE NAV ══ -->
+<aside class="sidenav">
+  <div class="sidenav-section">Views</div>
+  <button class="nav-btn active" onclick="switchView('director',this)">
+    <span class="nav-btn-icon">📊</span> Director
+  </button>
+  <button class="nav-btn" onclick="switchView('counselor',this)">
+    <span class="nav-btn-icon">👩‍🏫</span> Counselor
+  </button>
+  <button class="nav-btn" onclick="switchView('coach',this)">
+    <span class="nav-btn-icon">🎓</span> Grad Coach
+  </button>
+  <button class="nav-btn" onclick="switchView('career',this)">
+    <span class="nav-btn-icon">🏆</span> 3E Readiness
+  </button>
+  <button class="nav-btn" onclick="switchView('support',this)">
+    <span class="nav-btn-icon">👤</span> Student Support
+  </button>
+  <div class="sidenav-bottom">
+    <div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--text-dim);margin-bottom:8px;">Boards</div>
+    <a href="index.html" class="sidenav-link">System Overview</a>
+    <a href="pcps_leadership_board.html" class="sidenav-link">Policy Board</a>
+    <a href="pcps_operations_board.html" class="sidenav-link">Operations Board</a>
+    <a href="pcps_dashboard_preview.html" class="sidenav-link">Reading CIC</a>
+    <div style="margin-top:12px;font-size:9px;color:var(--text-dim);line-height:1.5;">Data: Richelle Hines<br>Updated Mar 20, 2026</div>
+  </div>
+</aside>
 
-<!-- ══ TOOLBAR ══ -->
-<div class="toolbar">
-  <span class="t-label">Cohort</span>
-  <button class="chip active" data-group="cohort" onclick="chipGroup(this)">All</button>
-  <button class="chip" data-group="cohort" onclick="chipGroup(this)">Class of 2026</button>
-  <button class="chip" data-group="cohort" onclick="chipGroup(this)">Class of 2027</button>
-  <button class="chip" data-group="cohort" onclick="chipGroup(this)">Class of 2028</button>
-  <button class="chip" data-group="cohort" onclick="chipGroup(this)">Class of 2029</button>
-  <div class="t-sep"></div>
-  <span class="t-label">Diploma</span>
-  <button class="chip active" data-group="diploma" onclick="chipGroup(this)">All</button>
-  <button class="chip" data-group="diploma" onclick="chipGroup(this)">Advanced</button>
-  <button class="chip" data-group="diploma" onclick="chipGroup(this)">Standard</button>
-  <div class="t-sep"></div>
-  <span class="t-label">Placement</span>
-  <button class="chip active" data-group="placement" onclick="chipGroup(this)">All</button>
-  <button class="chip" data-group="placement" onclick="chipGroup(this)">PHS</button>
-  <button class="chip" data-group="placement" onclick="chipGroup(this)">Pittman</button>
-  <button class="chip" data-group="placement" onclick="chipGroup(this)">Homebound</button>
-  <div class="t-sep"></div>
-  <span class="t-label">Flag</span>
-  <button class="chip" data-group="flag" onclick="chipGroup(this)">Sliders (60)</button>
-  <button class="chip" data-group="flag" onclick="chipGroup(this)">SOL gap</button>
-  <button class="chip" data-group="flag" onclick="chipGroup(this)">No 3E path</button>
+<!-- ══ MAIN CANVAS ══ -->
+
+<!-- ══ FILTER TOGGLE ══ -->
+<button class="filter-toggle" id="filter-toggle" onclick="toggleFilters()">
+  <span>⚙</span> Filters
+</button>
+
+<!-- ══ FILTER SIDEBAR ══ -->
+<div class="filtersidebar" id="filtersidebar">
+  <div class="filter-head">
+    <span>Filters</span>
+    <button class="filter-close" onclick="toggleFilters()">✕</button>
+  </div>
+  <div class="filter-group">
+    <div class="filter-group-label">Cohort year</div>
+    <button class="chip active" data-group="cohort" onclick="chipGroup(this)">All</button>
+    <button class="chip" data-group="cohort" onclick="chipGroup(this)">Class of 2026</button>
+    <button class="chip" data-group="cohort" onclick="chipGroup(this)">Class of 2027</button>
+    <button class="chip" data-group="cohort" onclick="chipGroup(this)">Class of 2028</button>
+    <button class="chip" data-group="cohort" onclick="chipGroup(this)">Class of 2029</button>
+  </div>
+  <div class="filter-group">
+    <div class="filter-group-label">Diploma type</div>
+    <button class="chip active" data-group="diploma" onclick="chipGroup(this)">All</button>
+    <button class="chip" data-group="diploma" onclick="chipGroup(this)">Advanced</button>
+    <button class="chip" data-group="diploma" onclick="chipGroup(this)">Standard</button>
+  </div>
+  <div class="filter-group">
+    <div class="filter-group-label">Placement</div>
+    <button class="chip active" data-group="placement" onclick="chipGroup(this)">All</button>
+    <button class="chip" data-group="placement" onclick="chipGroup(this)">PHS</button>
+    <button class="chip" data-group="placement" onclick="chipGroup(this)">Pittman</button>
+    <button class="chip" data-group="placement" onclick="chipGroup(this)">Homebound</button>
+  </div>
+  <div class="filter-group">
+    <div class="filter-group-label">Special flags</div>
+    <button class="chip" data-group="flag" onclick="chipGroup(this)">Sliders (60)</button>
+    <button class="chip" data-group="flag" onclick="chipGroup(this)">SOL gap</button>
+    <button class="chip" data-group="flag" onclick="chipGroup(this)">No 3E path</button>
+  </div>
+  <button class="filter-reset" onclick="resetFilters()">↺ Reset all filters</button>
 </div>
+
+<div class="canvas" id="canvas">
 
 <!-- ══════════ DIRECTOR VIEW ══════════ -->
 <div id="view-director" class="view active">
@@ -724,8 +871,9 @@ body{
 
     </div>
 
-    <!-- RIGHT COLUMN -->
-    <div class="col-side">
+    <!-- ACTION COLUMN — alerts + next actions only, no metric duplication -->
+    <div class="col-action">
+      <div class="action-header">Action required · <span>May 6 meeting</span></div>
 
       <div class="sc">
         <div class="sc-head">
@@ -774,58 +922,10 @@ body{
         </div>
       </div>
 
-      <div class="sc">
-        <div class="sc-head">
-          <div class="sc-title">Cohort status categories</div>
-          <div class="sc-meta">Richelle Hines · GCI Rate taxonomy</div>
-        </div>
-        <div class="stat-row">
-          <span class="dot d-green" style="flex-shrink:0;"></span>
-          <div class="stat-name">4-yr grad rate</div>
-          <div class="stat-bar"><div class="bar-bg"><div class="bar-fill" style="background:var(--green);width:87%;"></div></div></div>
-          <div class="stat-n" style="color:var(--green-text);">87%</div>
-          <div class="stat-pct">SPSF APR</div>
-        </div>
-        <div class="stat-row">
-          <span class="dot" style="background:var(--gold);flex-shrink:0;"></span>
-          <div class="stat-name">Sliders</div>
-          <div class="stat-bar"><div class="bar-bg"><div class="bar-fill" style="background:var(--gold);width:20%;"></div></div></div>
-          <div class="stat-n" style="color:var(--gold-text);">60</div>
-          <div class="stat-pct">GCI impact</div>
-        </div>
-        <div class="stat-row">
-          <span class="dot d-blue" style="flex-shrink:0;"></span>
-          <div class="stat-name">Transfer out</div>
-          <div class="stat-bar"><div class="bar-bg"><div class="bar-fill" style="background:var(--blue);width:0%;"></div></div></div>
-          <div class="stat-n" style="color:var(--blue-text);">—</div>
-          <div class="stat-pct">Confirm w/ Richelle</div>
-        </div>
-        <div class="stat-row">
-          <span class="dot d-amber" style="flex-shrink:0;"></span>
-          <div class="stat-name">Dropout / LTS</div>
-          <div class="stat-bar"><div class="bar-bg"><div class="bar-fill" style="background:var(--amber);width:0%;"></div></div></div>
-          <div class="stat-n" style="color:var(--amber-text);">0</div>
-          <div class="stat-pct">Current coding</div>
-        </div>
-        <div class="stat-row">
-          <span class="dot d-red" style="flex-shrink:0;"></span>
-          <div class="stat-name">Incarcerated</div>
-          <div class="stat-bar"><div class="bar-bg"><div class="bar-fill" style="background:var(--red);width:0%;"></div></div></div>
-          <div class="stat-n" style="color:var(--text-dim);">—</div>
-          <div class="stat-pct">Verify w/ coach</div>
-        </div>
-        <div class="stat-row">
-          <span class="dot" style="background:var(--border-mid);flex-shrink:0;"></span>
-          <div class="stat-name">GED / Green / Deceased</div>
-          <div class="stat-bar"><div class="bar-bg"><div class="bar-fill" style="background:var(--border-mid);width:0%;"></div></div></div>
-          <div class="stat-n" style="color:var(--text-dim);">—</div>
-          <div class="stat-pct">Track separately</div>
-        </div>
-      </div>
 
-    </div>
-  </div>
-</div>
+    </div><!-- /col-action -->
+  </div><!-- /main-grid -->
+</div><!-- /view-director -->
 
 <!-- ══════════ COUNSELOR VIEW ══════════ -->
 <div id="view-counselor" class="view">
@@ -1324,6 +1424,8 @@ body{
 </div>
 
 
+</div><!-- /canvas -->
+
 <!-- ══ BOTTOM BAR ══ -->
 <div class="bottombar">
   <div class="updated">FGI Working Sheet · Mar 20, 2026 · Richelle Hines · VDOE Office of School Improvement attends all accountability meetings · Graduation Correction Plan alignment verified<br><span style="font-size:9px;opacity:.7;">All student records de-identified · Data governed by FERPA (20 U.S.C. § 1232g) · Petersburg City Public Schools · Graduation CIC · EJC-PCPS-2026</span></div>
@@ -1340,11 +1442,40 @@ function switchView(v,btn){
     if(el) el.classList.remove('active');
   });
   document.getElementById('view-'+v).classList.add('active');
+  // Update ALL nav-btn elements (sidenav)
   document.querySelectorAll('.nav-btn').forEach(function(b){b.classList.remove('active');});
   btn.classList.add('active');
   closePSP();
-  // Re-init resource picker when entering support view
   if(v === 'support') populateResourceSelect(currentRole);
+  // Close filters on view switch
+  var fs = document.getElementById('filtersidebar');
+  var ft = document.getElementById('filter-toggle');
+  var canvas = document.getElementById('canvas');
+  if(fs) fs.classList.remove('open');
+  if(ft) ft.classList.remove('open');
+  if(canvas) canvas.classList.remove('filters-open');
+}
+
+function toggleFilters(){
+  var fs = document.getElementById('filtersidebar');
+  var ft = document.getElementById('filter-toggle');
+  var canvas = document.getElementById('canvas');
+  if(!fs) return;
+  var isOpen = fs.classList.contains('open');
+  fs.classList.toggle('open');
+  ft.classList.toggle('open');
+  canvas.classList.toggle('filters-open');
+  // Reposition toggle button
+  ft.style.right = isOpen ? '0' : '220px';
+}
+
+function resetFilters(){
+  document.querySelectorAll('.chip[data-group]').forEach(function(chip){
+    var grp = chip.getAttribute('data-group');
+    // Only activate "All" chips, deactivate others
+    var isAll = chip.textContent.trim() === 'All';
+    chip.classList.toggle('active', isAll);
+  });
 }
 function chipGroup(btn){
   // Use data-group to scope active state to only same-group chips
@@ -1477,10 +1608,10 @@ var resourceLibrary = [
    desc:'Develop and document written attendance improvement plan with student and parent.',
    owner:'attendance', urgency:'high'},
   {role:'attendance', label:'Truancy monthly summary report',
-   desc:'Sonya Bland provides monthly truancy summary report for this student's cohort.',
+   desc:'Sonya Bland provides monthly truancy summary report for this student\'s cohort.',
    owner:'attendance', urgency:'medium'},
   {role:'attendance', label:'Take 5 Mentor Program referral',
-   desc:'Refer student to Dr. Manson's Take 5 Mentor Program for attendance and behavior support.',
+   desc:'Refer student to Dr. Manson\'s Take 5 Mentor Program for attendance and behavior support.',
    owner:'attendance', urgency:'medium'},
   {role:'attendance', label:'McKinney-Vento / residency check',
    desc:'Flag student for McKinney-Vento and residency review if homelessness is a barrier.',
