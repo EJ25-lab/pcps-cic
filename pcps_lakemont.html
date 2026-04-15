@@ -3,202 +3,152 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Lakemont Elementary — Command Insight Center</title>
+<title>Lakemont Elementary — Petersburg CIC</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-
-<!-- Google Identity Services — handles the Sign In With Google button -->
 <script src="https://accounts.google.com/gsi/client" async defer></script>
-
 <style>
-/* ── DESIGN SYSTEM ── */
 :root {
-  --navy:#0D1B2A; --navy-mid:#111F2E; --navy-card:#152130; --navy-hover:#1A2D3F;
-  --gold:#C9A84C; --gold-light:#E8C96A; --gold-pale:rgba(201,168,76,.08);
-  --teal:#1ABCB0; --teal-pale:rgba(26,188,176,.10);
-  --green:#2EB87A; --green-pale:rgba(46,184,122,.12);
-  --orange:#E07B39; --orange-pale:rgba(224,123,57,.12);
-  --red:#D94F4F; --red-pale:rgba(217,79,79,.12);
-  --purple:#8B7CF6; --purple-pale:rgba(139,124,246,.12);
-  --border:rgba(255,255,255,.07); --border-hover:rgba(201,168,76,.30);
-  --text-on:#fff; --text-mid:rgba(255,255,255,.6); --text-dim:rgba(255,255,255,.38);
-  --font:'Inter',sans-serif; --nav-h:54px;
+  --maroon:#8B1A1A;--maroon-mid:#A52020;--maroon-light:#C4393939;
+  --maroon-pale:rgba(139,26,26,.08);--maroon-border:rgba(139,26,26,.25);
+  --navy:#0D1B2A;--navy-card:#152130;--navy-hover:#1A2D3F;
+  --teal:#1ABCB0;--teal-pale:rgba(26,188,176,.10);
+  --green:#2EB87A;--green-pale:rgba(46,184,122,.12);
+  --orange:#E07B39;--orange-pale:rgba(224,123,57,.12);
+  --red:#D94F4F;--red-pale:rgba(217,79,79,.12);
+  --purple:#8B7CF6;--purple-pale:rgba(139,124,246,.12);
+  --border:rgba(255,255,255,.07);--border-hover:rgba(139,26,26,.5);
+  --text-on:#fff;--text-mid:rgba(255,255,255,.6);--text-dim:rgba(255,255,255,.38);
+  --font:'Inter',sans-serif;--nav-h:60px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;font-family:var(--font);background:var(--navy);color:var(--text-on);-webkit-font-smoothing:antialiased;line-height:1.5}
 
-/* ── LOGIN WALL — shown before Google auth ── */
-#login-wall {
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  min-height:100vh;padding:40px 20px;text-align:center;
-  background:var(--navy);
-  position:fixed;top:0;left:0;right:0;bottom:0;z-index:1000;
-}
-.login-seal {
-  width:64px;height:64px;border-radius:50%;background:var(--gold);
-  display:flex;align-items:center;justify-content:center;
-  font-size:24px;font-weight:900;color:var(--navy);margin-bottom:20px;
-}
-.login-school {
-  font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
-  color:var(--teal);margin-bottom:8px;
-}
-.login-title {
-  font-size:clamp(1.4rem,4vw,2rem);font-weight:800;color:var(--text-on);
-  margin-bottom:8px;line-height:1.15;
-}
-.login-sub {
-  font-size:13px;color:var(--text-dim);margin-bottom:36px;max-width:400px;line-height:1.7;
-}
-.login-card {
-  background:var(--navy-card);border:1px solid var(--border);border-radius:16px;
-  padding:32px 36px;max-width:420px;width:100%;
-}
-.login-card-label {
-  font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
-  color:var(--text-dim);margin-bottom:16px;
-}
-/* Google's own button renders here — we just style the container */
-#g_id_signin { display:flex;justify-content:center;margin-bottom:16px; }
-.login-note {
-  font-size:10px;color:var(--text-dim);line-height:1.6;
-}
-.login-note strong { color:var(--text-mid); }
+/* ── PCPS DIAMOND LOGO ── */
+.pcps-diamond{width:44px;height:44px;position:relative;flex-shrink:0}
+.pcps-diamond svg{width:100%;height:100%}
 
-/* ── ACCESS DENIED — shown if wrong account ── */
-#access-denied {
-  display:none;flex-direction:column;align-items:center;justify-content:center;
-  min-height:100vh;padding:40px 20px;text-align:center;
-  position:fixed;top:0;left:0;right:0;bottom:0;z-index:1000;background:var(--navy);
-}
-.denied-icon { font-size:3rem;margin-bottom:16px; }
-.denied-title { font-size:1.4rem;font-weight:800;color:var(--red);margin-bottom:8px; }
-.denied-sub { font-size:13px;color:var(--text-dim);max-width:380px;line-height:1.75;margin-bottom:24px; }
-.denied-email { 
-  background:var(--red-pale);border:1px solid rgba(217,79,79,.2);border-radius:8px;
-  padding:10px 16px;font-size:11px;color:var(--red);font-weight:600;margin-bottom:24px;
-}
-.btn-retry {
-  display:inline-flex;align-items:center;gap:6px;font-family:var(--font);
-  font-size:11px;font-weight:700;padding:10px 20px;border-radius:8px;border:none;
-  cursor:pointer;background:var(--navy-card);color:var(--text-mid);
-  border:1px solid var(--border);transition:all .15s;
-}
-.btn-retry:hover{border-color:var(--border-hover);color:var(--gold);}
+/* ── LOGIN WALL ── */
+#login-wall{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:40px 20px;text-align:center;background:var(--navy);position:fixed;top:0;left:0;right:0;bottom:0;z-index:1000}
+.login-logo{display:flex;align-items:center;gap:14px;margin-bottom:28px;justify-content:center}
+.login-logo-text{text-align:left}
+.login-logo-text .district{font-size:18px;font-weight:900;color:var(--maroon);letter-spacing:.02em;line-height:1}
+.login-logo-text .sub{font-size:11px;color:rgba(255,255,255,.45);font-weight:500;letter-spacing:.04em}
+.login-divider{width:1px;height:40px;background:rgba(255,255,255,.1);margin:0 4px}
+.login-school-name{font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--teal);margin-bottom:10px}
+.login-title{font-size:clamp(1.5rem,4vw,2.2rem);font-weight:800;color:var(--text-on);margin-bottom:8px;line-height:1.1}
+.login-sub{font-size:13px;color:var(--text-dim);margin-bottom:36px;max-width:420px;line-height:1.75}
+.login-card{background:var(--navy-card);border:1px solid var(--border);border-radius:16px;padding:32px 36px;max-width:420px;width:100%;border-top:3px solid var(--maroon)}
+.login-card-label{font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);margin-bottom:16px}
+#g_id_signin{display:flex;justify-content:center;margin-bottom:16px}
+.login-note{font-size:10px;color:var(--text-dim);line-height:1.6}
+.login-note strong{color:rgba(255,255,255,.5)}
 
-/* ── MAIN DASHBOARD — hidden until auth passes ── */
-#dashboard { display:none; }
+/* ── ACCESS DENIED ── */
+#access-denied{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:40px 20px;text-align:center;position:fixed;top:0;left:0;right:0;bottom:0;z-index:1000;background:var(--navy)}
+.denied-icon{font-size:3rem;margin-bottom:16px}
+.denied-title{font-size:1.4rem;font-weight:800;color:var(--red);margin-bottom:8px}
+.denied-sub{font-size:13px;color:var(--text-dim);max-width:380px;line-height:1.75;margin-bottom:24px}
+.denied-email{background:var(--red-pale);border:1px solid rgba(217,79,79,.2);border-radius:8px;padding:10px 16px;font-size:11px;color:var(--red);font-weight:600;margin-bottom:24px}
+.btn-retry{display:inline-flex;align-items:center;gap:6px;font-family:var(--font);font-size:11px;font-weight:700;padding:10px 20px;border-radius:8px;border:1px solid var(--border);cursor:pointer;background:var(--navy-card);color:var(--text-mid);transition:all .15s}
+.btn-retry:hover{border-color:var(--maroon);color:#fff}
+
+/* ── DASHBOARD ── */
+#dashboard{display:none}
 
 /* ── NAV ── */
-nav {
-  position:fixed;top:0;left:0;right:0;height:var(--nav-h);
-  background:rgba(11,23,36,.97);backdrop-filter:blur(14px);
-  border-bottom:1px solid var(--border);z-index:200;
-  display:flex;align-items:center;justify-content:space-between;padding:0 20px;gap:12px;
-}
+nav{position:fixed;top:0;left:0;right:0;height:var(--nav-h);background:rgba(8,15,22,.98);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 20px;gap:12px}
 .nav-brand{display:flex;align-items:center;gap:10px;flex-shrink:0}
-.nav-seal{width:28px;height:28px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:var(--navy)}
-.nav-name{font-size:11px;font-weight:700;color:var(--text-on);line-height:1.2}
-.nav-name span{display:block;font-size:9px;font-weight:400;color:var(--text-dim);letter-spacing:.04em}
-.school-pill{background:var(--teal-pale);border:1px solid rgba(26,188,176,.25);color:var(--teal);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:100px;flex-shrink:0}
-.nav-user{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.nav-brand-text{line-height:1.2}
+.nav-brand-text .n1{font-size:13px;font-weight:800;color:var(--maroon);letter-spacing:.02em}
+.nav-brand-text .n2{font-size:9px;font-weight:400;color:var(--text-dim);letter-spacing:.04em}
+.nav-divider{width:1px;height:28px;background:rgba(255,255,255,.08)}
+.school-pill{background:rgba(139,26,26,.15);border:1px solid var(--maroon-border);color:#E8A0A0;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:100px;flex-shrink:0}
+.nav-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.nav-role-badge{font-size:9px;font-weight:700;padding:3px 10px;border-radius:100px;letter-spacing:.08em;text-transform:uppercase}
+.role-badge-principal{background:rgba(26,188,176,.12);color:var(--teal);border:1px solid rgba(26,188,176,.2)}
+.role-badge-readinglead{background:var(--purple-pale);color:#B8A8FF;border:1px solid rgba(139,124,246,.2)}
+.role-badge-teacher{background:rgba(224,123,57,.12);color:#F4A261;border:1px solid rgba(224,123,57,.2)}
 .nav-user-email{font-size:10px;color:var(--text-dim)}
-.nav-user-avatar{width:26px;height:26px;border-radius:50%;background:var(--gold-pale);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--gold)}
-.nav-links{display:flex;gap:3px}
-.nav-links a{font-size:10px;font-weight:600;color:var(--text-dim);text-decoration:none;padding:5px 11px;border-radius:7px;transition:all .15s}
-.nav-links a:hover{color:var(--text-on);background:rgba(255,255,255,.06)}
-@media(max-width:680px){.nav-links{display:none}}
+.nav-avatar{width:26px;height:26px;border-radius:50%;background:var(--maroon-pale);border:1px solid var(--maroon-border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#E8A0A0}
+.signout-btn{background:transparent;border:1px solid var(--border);color:var(--text-dim);font-size:10px;font-weight:600;padding:4px 10px;border-radius:6px;cursor:pointer;font-family:var(--font);transition:all .15s}
+.signout-btn:hover{border-color:var(--maroon-border);color:#fff}
+.taskade-btn{background:rgba(139,26,26,.15);border:1px solid var(--maroon-border);color:#E8A0A0;font-size:10px;font-weight:700;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:var(--font);transition:all .15s;text-decoration:none;display:inline-flex;align-items:center;gap:5px}
+.taskade-btn:hover{background:rgba(139,26,26,.25)}
 
-/* ── ROLE SWITCHER ── */
-.role-bar{
-  position:fixed;top:var(--nav-h);left:0;right:0;height:44px;
-  background:#0A1520;border-bottom:1px solid var(--border);z-index:190;
-  display:flex;align-items:center;padding:0 20px;gap:6px;overflow-x:auto;scrollbar-width:none;
-}
-.role-bar::-webkit-scrollbar{display:none}
-.role-bar-label{font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);margin-right:6px;flex-shrink:0}
-.rbtn{font-size:10px;font-weight:600;padding:5px 14px;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--text-mid);cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0;font-family:var(--font)}
-.rbtn:hover{border-color:var(--border-hover);color:var(--gold)}
-.rbtn.active{background:var(--gold-pale);border-color:rgba(201,168,76,.4);color:var(--gold)}
+/* ── MAROON TOP ACCENT BAR ── */
+.accent-bar{position:fixed;top:var(--nav-h);left:0;right:0;height:3px;background:linear-gradient(90deg,var(--maroon),#C4393A,var(--maroon));z-index:190}
 
 /* ── SHELL ── */
-.shell{padding-top:calc(var(--nav-h) + 44px);min-height:100vh}
-.view{display:none;padding:24px 20px;max-width:1100px;margin:0 auto}
+.shell{padding-top:calc(var(--nav-h) + 3px);min-height:100vh}
+.view{display:none;padding:28px 20px;max-width:1100px;margin:0 auto}
 .view.active{display:block}
 
-/* ── VIEWING-AS BANNER ── */
-.viewing-as{
-  display:flex;align-items:center;justify-content:space-between;
-  background:var(--gold-pale);border:1px solid rgba(201,168,76,.2);
-  border-radius:10px;padding:10px 16px;margin-bottom:22px;flex-wrap:wrap;gap:8px;
-}
+/* ── VIEWING AS BANNER ── */
+.viewing-as{display:flex;align-items:center;justify-content:space-between;background:rgba(139,26,26,.08);border:1px solid rgba(139,26,26,.18);border-left:3px solid var(--maroon);border-radius:8px;padding:10px 16px;margin-bottom:24px;flex-wrap:wrap;gap:8px}
 .va-left{display:flex;align-items:center;gap:10px}
-.va-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0}
+.va-dot{width:7px;height:7px;border-radius:50%;background:var(--maroon);flex-shrink:0}
 .va-text{font-size:11px;color:var(--text-mid)}
-.va-text strong{color:var(--gold);font-weight:700}
+.va-text strong{color:#E8A0A0;font-weight:700}
 .va-right{font-size:10px;color:var(--text-dim);font-style:italic}
 
 /* ── PAGE HEADER ── */
-.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:12px}
-.page-title{font-size:20px;font-weight:800;color:var(--text-on);line-height:1.1}
-.page-title span{display:block;font-size:11px;font-weight:400;color:var(--text-dim);margin-top:3px}
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+.page-title{font-size:22px;font-weight:800;color:var(--text-on);line-height:1.1}
+.page-title span{display:block;font-size:11px;font-weight:400;color:var(--text-dim);margin-top:4px;letter-spacing:.02em}
 .header-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 
 /* ── BUTTONS ── */
 .btn{display:inline-flex;align-items:center;gap:6px;font-family:var(--font);font-size:11px;font-weight:700;padding:9px 16px;border-radius:8px;border:none;cursor:pointer;transition:all .15s;text-decoration:none;white-space:nowrap}
-.btn-gold{background:var(--gold);color:var(--navy)}
-.btn-gold:hover{background:var(--gold-light)}
+.btn-maroon{background:var(--maroon);color:#fff}
+.btn-maroon:hover{background:var(--maroon-mid)}
 .btn-ghost{background:transparent;color:var(--text-mid);border:1px solid var(--border)}
-.btn-ghost:hover{border-color:var(--border-hover);color:var(--gold)}
-.btn-teal{background:rgba(26,188,176,.15);color:var(--teal);border:1px solid rgba(26,188,176,.25)}
+.btn-ghost:hover{border-color:var(--maroon-border);color:#fff}
+.btn-teal{background:rgba(26,188,176,.12);color:var(--teal);border:1px solid rgba(26,188,176,.2)}
+.btn-orange{background:rgba(224,123,57,.12);color:#F4A261;border:1px solid rgba(224,123,57,.2)}
 .btn-sm{padding:6px 12px;font-size:10px}
 
 /* ── KPI CARDS ── */
-.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
-.kpi{background:var(--navy-card);border:1px solid var(--border);border-radius:12px;padding:18px 16px;transition:border-color .15s}
-.kpi:hover{border-color:var(--border-hover)}
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+.kpi{background:var(--navy-card);border:1px solid var(--border);border-radius:12px;padding:18px 16px;transition:border-color .15s;border-top:2px solid transparent}
+.kpi:hover{border-color:var(--maroon-border)}
+.kpi-teal{border-top-color:var(--teal)}
+.kpi-green{border-top-color:var(--green)}
+.kpi-maroon{border-top-color:var(--maroon)}
+.kpi-alert{border-top-color:var(--red)}
 .kpi-label{font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px}
 .kpi-value{font-size:2rem;font-weight:900;line-height:1;margin-bottom:4px}
-.kpi-sub{font-size:10px;color:var(--text-dim)}
 .kpi-teal .kpi-value{color:var(--teal)}
 .kpi-green .kpi-value{color:var(--green)}
-.kpi-gold .kpi-value{color:var(--gold)}
+.kpi-maroon .kpi-value{color:#E8A0A0}
 .kpi-alert .kpi-value{color:var(--red)}
+.kpi-sub{font-size:10px;color:var(--text-dim)}
 @media(max-width:700px){.kpi-row{grid-template-columns:repeat(2,1fr)}}
-
-/* ── ALERT PANEL ── */
-.alert-panel{background:var(--red-pale);border:1px solid rgba(217,79,79,.2);border-radius:12px;padding:16px 18px;margin-bottom:22px}
-.alert-header{display:flex;align-items:center;gap:8px;margin-bottom:12px}
-.alert-header h4{font-size:12px;font-weight:700;color:var(--red)}
-.pdot{width:6px;height:6px;border-radius:50%;flex-shrink:0;animation:pulse 1.5s ease-in-out infinite}
-.pdot-red{background:var(--red)}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.2}}
-.alert-items{display:flex;flex-direction:column;gap:8px}
-.alert-item{display:flex;align-items:flex-start;gap:10px;font-size:11px;color:var(--text-mid);line-height:1.5}
-.alert-item::before{content:'!';background:var(--red);color:#fff;font-size:8px;font-weight:900;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
 
 /* ── SECTION HEADER ── */
 .sec-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.sec-title{font-size:12px;font-weight:700;color:var(--text-on);display:flex;align-items:center;gap:8px}
-.dot{width:6px;height:6px;border-radius:50%}
+.sec-title{font-size:12px;font-weight:700;color:var(--text-on);display:flex;align-items:center;gap:8px;letter-spacing:.02em}
+.sec-dot{width:6px;height:6px;border-radius:50%;background:var(--maroon)}
 
 /* ── TABLE ── */
 .table-wrap{background:var(--navy-card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:22px}
 table{width:100%;border-collapse:collapse}
-thead th{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);padding:12px 14px;text-align:left;border-bottom:1px solid var(--border);background:#0E1E2E;white-space:nowrap}
+thead th{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);padding:12px 14px;text-align:left;border-bottom:1px solid var(--border);background:#0A1520;white-space:nowrap}
 tbody tr{border-bottom:1px solid var(--border);transition:background .12s}
 tbody tr:last-child{border-bottom:none}
 tbody tr:hover{background:var(--navy-hover)}
 tbody td{padding:13px 14px;font-size:11px;color:var(--text-mid);vertical-align:middle}
 td.strong{font-weight:700;color:var(--text-on);font-size:12px}
+.table-footer{padding:10px 14px;font-size:10px;color:var(--text-dim);border-top:1px solid var(--border)}
 
-/* ── STATUS PILLS ── */
+/* ── PILLS ── */
 .pill{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;padding:3px 9px;border-radius:100px;letter-spacing:.04em;white-space:nowrap}
 .pill-green{background:var(--green-pale);color:var(--green)}
 .pill-orange{background:var(--orange-pale);color:var(--orange)}
 .pill-red{background:var(--red-pale);color:var(--red)}
 .pill-teal{background:var(--teal-pale);color:var(--teal)}
-.pill-gold{background:var(--gold-pale);color:var(--gold)}
+.pill-maroon{background:rgba(139,26,26,.15);color:#E8A0A0}
 .pill-dim{background:rgba(255,255,255,.06);color:var(--text-dim)}
+.pill-purple{background:var(--purple-pale);color:var(--purple)}
 
 /* ── PROGRESS BAR ── */
 .pbar-wrap{display:flex;align-items:center;gap:8px}
@@ -206,9 +156,22 @@ td.strong{font-weight:700;color:var(--text-on);font-size:12px}
 .pbar-fill{height:100%;border-radius:100px}
 .pbar-num{font-size:10px;font-weight:700;min-width:34px;text-align:right}
 
-/* ── CASELOAD TABLE ── */
+/* ── GRADE FILTER ── */
+.grade-filter{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.gfbtn{font-size:10px;font-weight:600;padding:5px 12px;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .15s;font-family:var(--font)}
+.gfbtn:hover{border-color:var(--maroon-border);color:#fff}
+.gfbtn.active{background:rgba(139,26,26,.15);border-color:var(--maroon-border);color:#E8A0A0}
+
+/* ── TASKADE PANEL ── */
+.taskade-panel{background:rgba(139,26,26,.06);border:1px solid rgba(139,26,26,.15);border-left:3px solid var(--maroon);border-radius:10px;padding:16px 18px;margin-bottom:22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.tp-icon{font-size:20px;flex-shrink:0}
+.tp-text h4{font-size:12px;font-weight:700;color:var(--text-on);margin-bottom:2px}
+.tp-text p{font-size:10px;color:var(--text-dim);line-height:1.5}
+.tp-actions{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+
+/* ── CASELOAD INFO ── */
 .caseload-info{background:var(--navy-card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:18px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.ci-icon{width:36px;height:36px;border-radius:10px;background:var(--purple-pale);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.ci-icon{width:36px;height:36px;border-radius:10px;background:rgba(139,26,26,.15);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
 .ci-info h4{font-size:13px;font-weight:700;color:var(--text-on)}
 .ci-info p{font-size:10px;color:var(--text-dim)}
 .ci-stats{display:flex;gap:16px;margin-left:auto;flex-wrap:wrap}
@@ -216,243 +179,302 @@ td.strong{font-weight:700;color:var(--text-on);font-size:12px}
 .ci-stat .n{font-size:1.3rem;font-weight:900;color:var(--teal);line-height:1}
 .ci-stat .l{font-size:8px;color:var(--text-dim);letter-spacing:.08em;text-transform:uppercase}
 
-/* ── SIGN OUT ── */
-.signout-btn{background:transparent;border:1px solid var(--border);color:var(--text-dim);font-size:10px;font-weight:600;padding:4px 10px;border-radius:6px;cursor:pointer;font-family:var(--font);transition:all .15s}
-.signout-btn:hover{border-color:var(--border-hover);color:var(--gold)}
+/* ── TEACHER BANNER ── */
+.teacher-banner{background:rgba(224,123,57,.08);border:1px solid rgba(224,123,57,.2);border-left:3px solid var(--orange);border-radius:10px;padding:12px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.tb-text{font-size:11px;color:var(--text-mid)}
+.tb-text strong{color:#F4A261;font-weight:700}
+
+/* ── EMPTY STATE ── */
+.empty-state{text-align:center;padding:48px 20px;color:var(--text-dim)}
+.empty-state .icon{font-size:2.5rem;margin-bottom:14px}
+.empty-state h4{font-size:14px;font-weight:700;color:var(--text-mid);margin-bottom:6px}
+.empty-state p{font-size:11px;line-height:1.7}
+
+/* ── VLA PILLS ROW ── */
+.vla-pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:22px;align-items:center}
+.vla-label{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);margin-right:4px}
 </style>
 </head>
 <body>
 
-<!-- ════════════════════════════════════
-     LOGIN WALL — shown before auth
-════════════════════════════════════ -->
+<!-- ════ LOGIN WALL ════ -->
 <div id="login-wall">
-  <div class="login-seal">P</div>
-  <div class="login-school">Petersburg City Public Schools</div>
-  <h1 class="login-title">Lakemont Elementary<br>Command Insight Center</h1>
-  <p class="login-sub">This dashboard is restricted to authorized Lakemont Elementary staff. Sign in with your school Google account to continue.</p>
+  <div class="login-logo">
+    <svg class="pcps-diamond" width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="26" y="2" width="33" height="33" rx="3" transform="rotate(45 26 2)" fill="#8B1A1A"/>
+      <text x="26" y="12" text-anchor="middle" fill="white" font-size="5" font-family="Arial" font-weight="700" letter-spacing="0.5">REACHING</text>
+      <text x="40" y="27" text-anchor="middle" fill="white" font-size="5" font-family="Arial" font-weight="700" letter-spacing="0.5" transform="rotate(90 40 27)">PEOPLE</text>
+      <text x="26" y="44" text-anchor="middle" fill="white" font-size="5" font-family="Arial" font-weight="700" letter-spacing="0.5">TEACHING</text>
+      <text x="12" y="27" text-anchor="middle" fill="white" font-size="5" font-family="Arial" font-weight="700" letter-spacing="0.5" transform="rotate(-90 12 27)">PEOPLE</text>
+    </svg>
+    <div class="login-divider"></div>
+    <div class="login-logo-text">
+      <div class="district">PETERSBURG</div>
+      <div class="sub">City Public Schools</div>
+    </div>
+  </div>
+  <div class="login-school-name">Lakemont Elementary</div>
+  <h1 class="login-title">Command Insight Center</h1>
+  <p class="login-sub">Sign in with your Petersburg City Public Schools Google account. Your role and school view load automatically.</p>
   <div class="login-card">
-    <div class="login-card-label">Sign in to access your school dashboard</div>
-    <!-- Google renders its own button here -->
+    <div class="login-card-label">Sign in to access your dashboard</div>
     <div id="g_id_signin"></div>
-    <p class="login-note">Only <strong>authorized Lakemont Elementary staff</strong> can access this page. Contact your District Technology Lead if you need access.</p>
+    <p class="login-note">Access is limited to <strong>authorized Lakemont Elementary staff</strong>. Contact your District Technology Lead if you need access.</p>
   </div>
 </div>
 
-<!-- ════════════════════════════════════
-     ACCESS DENIED — wrong account
-════════════════════════════════════ -->
+<!-- ════ ACCESS DENIED ════ -->
 <div id="access-denied">
   <div class="denied-icon">🔒</div>
   <div class="denied-title">Access Not Authorized</div>
   <p class="denied-sub">Your Google account is not authorized to view the Lakemont Elementary dashboard. This page is restricted to approved staff only.</p>
   <div class="denied-email" id="denied-email-display"></div>
-  <p class="denied-sub">If you believe this is an error, contact your District Technology Lead.</p>
+  <p class="denied-sub">Contact your District Technology Lead if you believe this is an error.</p>
   <button class="btn-retry" data-action="retry">← Try a different account</button>
 </div>
 
-<!-- ════════════════════════════════════
-     MAIN DASHBOARD — shown after auth
-════════════════════════════════════ -->
+<!-- ════ DASHBOARD ════ -->
 <div id="dashboard">
 
 <nav>
   <div class="nav-brand">
-    <div class="nav-seal">P</div>
-    <div class="nav-name">Command Insight Center<span>Petersburg City Public Schools</span></div>
+    <svg width="32" height="32" viewBox="0 0 52 52" fill="none">
+      <rect x="26" y="2" width="33" height="33" rx="2" transform="rotate(45 26 2)" fill="#8B1A1A"/>
+    </svg>
+    <div class="nav-brand-text">
+      <div class="n1">PETERSBURG</div>
+      <div class="n2">Command Insight Center</div>
+    </div>
   </div>
+  <div class="nav-divider"></div>
   <span class="school-pill">Lakemont Elementary</span>
-  <div class="nav-links">
-    <a href="index.html">Overview</a>
-    <a href="pcps_dashboard_preview.html">District View</a>
-  </div>
-  <div class="nav-user">
+  <div class="nav-right">
+    <span class="nav-role-badge" id="nav-role-badge"></span>
     <span class="nav-user-email" id="user-email-display"></span>
-    <div class="nav-user-avatar" id="user-avatar"></div>
+    <div class="nav-avatar" id="user-avatar"></div>
+    <a href="https://reading-compliance-tracker-1511.taskade.app/" target="_blank" class="taskade-btn">↗ Taskade</a>
     <button class="signout-btn" data-action="signout">Sign out</button>
   </div>
 </nav>
 
-<div class="role-bar">
-  <span class="role-bar-label">View as:</span>
-  <button class="rbtn active" data-action="role" data-value="principal">Principal</button>
-  <button class="rbtn" data-action="role" data-value="readinglead">Reading Lead</button>
-</div>
+<div class="accent-bar"></div>
 
 <div class="shell">
 
 <!-- ════ PRINCIPAL VIEW ════ -->
-<div class="view active" id="view-principal">
+<div class="view" id="view-principal">
   <div class="viewing-as">
     <div class="va-left"><div class="va-dot"></div>
-    <div class="va-text">Viewing as: <strong>Principal — Lakemont Elementary</strong> · Your school only</div></div>
+    <div class="va-text">Viewing as: <strong>Principal — Lakemont Elementary</strong> · School-wide compliance · All grade bands</div></div>
     <div class="va-right">Sample data · SY 2025–26 · April 2026</div>
   </div>
-
   <div class="page-header">
     <div class="page-title">Lakemont Elementary
       <span>Reading Plan Compliance · K–5 · Virginia Literacy Act SY 2025–26</span>
     </div>
     <div class="header-actions">
-      <button class="btn btn-ghost btn-sm" data-action="print">⬇ Export School Report</button>
+      <a href="https://reading-compliance-tracker-1511.taskade.app/" target="_blank" class="btn btn-maroon btn-sm">↗ Open Taskade</a>
+      <button class="btn btn-ghost btn-sm" data-action="print">⬇ Export Report</button>
     </div>
   </div>
-
   <div class="kpi-row">
-    <div class="kpi kpi-teal">
-      <div class="kpi-label">Students Identified</div>
-      <div class="kpi-value">112</div>
-      <div class="kpi-sub">K–5 · this school</div>
-    </div>
-    <div class="kpi kpi-green">
-      <div class="kpi-label">Plans Created</div>
-      <div class="kpi-value">100</div>
-      <div class="kpi-sub">89% complete</div>
-    </div>
-    <div class="kpi kpi-gold">
-      <div class="kpi-label">Letters Sent Home</div>
-      <div class="kpi-value">100</div>
-      <div class="kpi-sub">100% of plans</div>
-    </div>
-    <div class="kpi kpi-green">
-      <div class="kpi-label">Alerts</div>
-      <div class="kpi-value" style="color:var(--green)">0</div>
-      <div class="kpi-sub">All specialists assigned</div>
-    </div>
+    <div class="kpi kpi-teal"><div class="kpi-label">Students Identified</div><div class="kpi-value">112</div><div class="kpi-sub">K–5 · this school</div></div>
+    <div class="kpi kpi-green"><div class="kpi-label">Plans Created</div><div class="kpi-value">100</div><div class="kpi-sub">89% complete</div></div>
+    <div class="kpi kpi-maroon"><div class="kpi-label">Letters Sent Home</div><div class="kpi-value">100</div><div class="kpi-sub">100% of plans</div></div>
+    <div class="kpi"><div class="kpi-label">Alerts</div><div class="kpi-value" style="color:var(--green)">0</div><div class="kpi-sub">All specialists assigned</div></div>
   </div>
-
+  <div class="grade-filter">
+    <button class="gfbtn active" data-action="grade" data-value="all">All grades</button>
+    <button class="gfbtn" data-action="grade" data-value="k2">K–2</button>
+    <button class="gfbtn" data-action="grade" data-value="g3">Grade 3</button>
+    <button class="gfbtn" data-action="grade" data-value="g45">Grades 4–5</button>
+  </div>
   <div class="sec-header">
-    <div class="sec-title"><div class="dot" style="background:var(--teal)"></div>Grade band compliance · click a row to confirm or flag</div>
-    <span style="font-size:10px;color:var(--text-dim)">Updated April 13, 2026</span>
+    <div class="sec-title"><div class="sec-dot"></div>Grade band compliance</div>
+    <span style="font-size:10px;color:var(--text-dim)">Updated April 14, 2026</span>
   </div>
-
   <div class="table-wrap">
     <table>
       <thead><tr>
-        <th>Grade Band</th><th>Students Identified</th><th>Plans Created</th><th>Letters Sent</th><th>Parent Response</th><th>Specialist</th><th>Status</th>
+        <th>Grade Band</th><th>Identified</th><th>Plans Created</th><th>Letters Sent</th><th>Parent Response</th><th>Specialist</th><th>Status</th>
       </tr></thead>
-      <tbody>
-        <tr>
-          <td class="strong">K–2</td><td>58</td>
+      <tbody id="principal-table-body">
+        <tr data-grade="k2"><td class="strong">K–2</td><td>58</td>
           <td><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill" style="width:100%;background:var(--green)"></div></div><span class="pbar-num" style="color:var(--green)">58</span></div></td>
           <td><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill" style="width:100%;background:var(--teal)"></div></div><span class="pbar-num" style="color:var(--teal)">58</span></div></td>
-          <td>74%</td>
-          <td><span class="pill pill-green">✓ Assigned</span></td>
-          <td><span class="pill pill-green">On track</span></td>
-        </tr>
-        <tr>
-          <td class="strong">Grade 3</td><td>19</td>
+          <td>74%</td><td><span class="pill pill-green">✓ Assigned</span></td><td><span class="pill pill-green">On track</span></td></tr>
+        <tr data-grade="g3"><td class="strong">Grade 3</td><td>19</td>
           <td><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill" style="width:100%;background:var(--green)"></div></div><span class="pbar-num" style="color:var(--green)">19</span></div></td>
           <td><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill" style="width:100%;background:var(--teal)"></div></div><span class="pbar-num" style="color:var(--teal)">19</span></div></td>
-          <td>74%</td>
-          <td><span class="pill pill-green">✓ Assigned</span></td>
-          <td><span class="pill pill-green">On track</span></td>
-        </tr>
-        <tr>
-          <td class="strong">Grades 4–5</td><td>35</td>
+          <td>74%</td><td><span class="pill pill-green">✓ Assigned</span></td><td><span class="pill pill-green">On track</span></td></tr>
+        <tr data-grade="g45"><td class="strong">Grades 4–5</td><td>35</td>
           <td><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill" style="width:66%;background:var(--orange)"></div></div><span class="pbar-num" style="color:var(--orange)">23</span></div></td>
           <td><div class="pbar-wrap"><div class="pbar"><div class="pbar-fill" style="width:66%;background:var(--orange)"></div></div><span class="pbar-num" style="color:var(--orange)">23</span></div></td>
-          <td>57%</td>
-          <td><span class="pill pill-green">✓ Assigned</span></td>
-          <td><span class="pill pill-orange">In progress</span></td>
-        </tr>
+          <td>57%</td><td><span class="pill pill-green">✓ Assigned</span></td><td><span class="pill pill-orange">In progress</span></td></tr>
       </tbody>
     </table>
+    <div class="table-footer">Click a row to drill into grade band detail · All student records use Student IDs only</div>
   </div>
-
-  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px;align-items:center">
-    <span style="font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);margin-right:4px">VLA audit fields tracked per student:</span>
+  <div class="vla-pills">
+    <span class="vla-label">VLA audit fields:</span>
     <span class="pill pill-teal">Plan created</span>
     <span class="pill pill-teal">Specialist assigned</span>
     <span class="pill pill-teal">Letter sent home</span>
     <span class="pill pill-teal">Parent response documented</span>
     <span class="pill pill-teal">Refusal on file (if applicable)</span>
   </div>
-</div><!-- end principal view -->
-
+  <div class="taskade-panel">
+    <div class="tp-icon">✅</div>
+    <div class="tp-text">
+      <h4>Confirm grade bands in Taskade</h4>
+      <p>Review and approve or flag each grade band count. Your confirmation is required before plans push district-wide.</p>
+    </div>
+    <div class="tp-actions">
+      <a href="https://reading-compliance-tracker-1511.taskade.app/" target="_blank" class="btn btn-maroon btn-sm">Confirm in Taskade →</a>
+    </div>
+  </div>
+</div>
 
 <!-- ════ READING LEAD VIEW ════ -->
 <div class="view" id="view-readinglead">
   <div class="viewing-as">
-    <div class="va-left"><div class="va-dot" style="background:var(--purple)"></div>
-    <div class="va-text">Viewing as: <strong>Reading Specialist — Lakemont Elementary</strong> · Your caseload only · VLA co-ownership required on every plan</div></div>
+    <div class="va-left"><div class="va-dot"></div>
+    <div class="va-text">Viewing as: <strong>Reading Specialist — Lakemont Elementary</strong> · Full school caseload · VLA co-ownership required on every plan</div></div>
     <div class="va-right">Sample data · April 2026</div>
   </div>
-
   <div class="page-header">
-    <div class="page-title">My Caseload
-      <span>Lakemont Elementary · K–5 · Co-ownership &amp; monitoring status</span>
+    <div class="page-title">My Caseload — Lakemont Elementary
+      <span>All grade bands · K–5 · Co-ownership and monitoring status</span>
     </div>
     <div class="header-actions">
-      <a href="pcps_teacher_form.html" class="btn btn-teal btn-sm">+ Submit a Reading Plan</a>
+      <a href="https://reading-compliance-tracker-1511.taskade.app/" target="_blank" class="btn btn-maroon btn-sm">↗ Open Taskade</a>
     </div>
   </div>
-
   <div class="caseload-info">
     <div class="ci-icon">📚</div>
-    <div class="ci-info">
-      <h4>Elementary Reading Specialist</h4>
-      <p>Lakemont Elementary · K–5 · All grade bands</p>
-    </div>
+    <div class="ci-info"><h4>Elementary Reading Specialist</h4><p>Lakemont Elementary · K–5 · Full caseload</p></div>
     <div class="ci-stats">
       <div class="ci-stat"><div class="n">112</div><div class="l">Students</div></div>
       <div class="ci-stat"><div class="n">100</div><div class="l">Plans active</div></div>
       <div class="ci-stat"><div class="n" style="color:var(--orange)">12</div><div class="l">Pending</div></div>
     </div>
   </div>
-
+  <div class="grade-filter">
+    <button class="gfbtn active" data-action="rlgrade" data-value="all">All grades</button>
+    <button class="gfbtn" data-action="rlgrade" data-value="K">K</button>
+    <button class="gfbtn" data-action="rlgrade" data-value="1">1</button>
+    <button class="gfbtn" data-action="rlgrade" data-value="2">2</button>
+    <button class="gfbtn" data-action="rlgrade" data-value="3">3</button>
+    <button class="gfbtn" data-action="rlgrade" data-value="4">4</button>
+    <button class="gfbtn" data-action="rlgrade" data-value="5">5</button>
+  </div>
   <div class="table-wrap">
     <table>
       <thead><tr>
         <th>Student ID</th><th>Grade</th><th>Plan Created</th><th>Specialist Assigned</th><th>Parent Offered</th><th>Parent Response</th><th>Refusal Documented</th><th>Status</th>
       </tr></thead>
-      <tbody>
-        <tr><td class="strong">STU-0lk1</td><td>K</td><td><span class="pill pill-teal">Yes</span></td><td><span class="pill pill-teal">Confirmed</span></td><td><span class="pill pill-teal">Yes</span></td><td><span class="pill pill-green">Accepted</span></td><td><span class="pill pill-dim">N/A</span></td><td><span class="pill pill-green">On track</span></td></tr>
-        <tr><td class="strong">STU-0lk2</td><td>1</td><td><span class="pill pill-teal">Yes</span></td><td><span class="pill pill-teal">Confirmed</span></td><td><span class="pill pill-teal">Yes</span></td><td><span class="pill pill-green">Accepted</span></td><td><span class="pill pill-dim">N/A</span></td><td><span class="pill pill-green">On track</span></td></tr>
-        <tr><td class="strong">STU-0lk3</td><td>2</td><td><span class="pill pill-teal">Yes</span></td><td><span class="pill pill-teal">Confirmed</span></td><td><span class="pill pill-teal">Yes</span></td><td><span class="pill pill-orange">Declined</span></td><td><span class="pill pill-red">Required — Not Yet Filed</span></td><td><span class="pill pill-red">Action needed</span></td></tr>
-        <tr><td class="strong">STU-0lk4</td><td>3</td><td><span class="pill pill-teal">Yes</span></td><td><span class="pill pill-teal">Confirmed</span></td><td><span class="pill pill-teal">Yes</span></td><td><span class="pill pill-dim">Pending Response</span></td><td><span class="pill pill-dim">N/A</span></td><td><span class="pill pill-orange">Pending</span></td></tr>
-        <tr><td class="strong">STU-0lk5</td><td>4</td><td><span class="pill pill-orange">Not Yet Assigned</span></td><td><span class="pill pill-orange">Not Yet Assigned</span></td><td><span class="pill pill-orange">Pending</span></td><td><span class="pill pill-dim">Pending Response</span></td><td><span class="pill pill-dim">N/A</span></td><td><span class="pill pill-orange">In progress</span></td></tr>
-        <tr><td class="strong">STU-0lk6</td><td>5</td><td><span class="pill pill-orange">Not Yet Assigned</span></td><td><span class="pill pill-orange">Not Yet Assigned</span></td><td><span class="pill pill-orange">Pending</span></td><td><span class="pill pill-dim">Pending Response</span></td><td><span class="pill pill-dim">N/A</span></td><td><span class="pill pill-orange">In progress</span></td></tr>
+      <tbody id="rl-table-body">
+        <tr data-rlgrade="K"><td class="strong">STU-0lk1</td><td>K</td><td><span class="pill pill-teal">Yes</span></td><td><span class="pill pill-teal">Confirmed</span></td><td><span class="pill pill-teal">Yes</span></td><td><span class="pill pill-green">Accepted</span></td><td><span class="pill pill-dim">N/A</span></td><td><span class="pill pill-green">On track</span></td></tr>
+        <tr data-rlgrade="1"><td class="strong">STU-0lk2</td><td>1</td><td><span class="pill pill-teal">Yes</span></td><td><span class="pill pill-teal">Confirmed</span></td><td><span class="pill pill-teal">Yes</span></td><td><span class="pill pill-green">Accepted</span></td><td><span class="pill pill-dim">N/A</span></td><td><span class="pill pill-green">On track</span></td></tr>
+        <tr data-rlgrade="2"><td class="strong">STU-0lk3</td><td>2</td><td><span class="pill pill-teal">Yes</span></td><td><span class="pill pill-teal">Confirmed</span></td><td><span class="pill pill-teal">Yes</span></td><td><span class="pill pill-orange">Declined</span></td><td><span class="pill pill-red">Required — Not Yet Filed</span></td><td><span class="pill pill-red">Action needed</span></td></tr>
+        <tr data-rlgrade="3"><td class="strong">STU-0lk4</td><td>3</td><td><span class="pill pill-teal">Yes</span></td><td><span class="pill pill-teal">Confirmed</span></td><td><span class="pill pill-teal">Yes</span></td><td><span class="pill pill-dim">Pending</span></td><td><span class="pill pill-dim">N/A</span></td><td><span class="pill pill-orange">Pending</span></td></tr>
+        <tr data-rlgrade="4"><td class="strong">STU-0lk5</td><td>4</td><td><span class="pill pill-orange">Not Yet Assigned</span></td><td><span class="pill pill-orange">Not Yet Assigned</span></td><td><span class="pill pill-orange">Pending</span></td><td><span class="pill pill-dim">Pending</span></td><td><span class="pill pill-dim">N/A</span></td><td><span class="pill pill-orange">In progress</span></td></tr>
+        <tr data-rlgrade="5"><td class="strong">STU-0lk6</td><td>5</td><td><span class="pill pill-orange">Not Yet Assigned</span></td><td><span class="pill pill-orange">Not Yet Assigned</span></td><td><span class="pill pill-orange">Pending</span></td><td><span class="pill pill-dim">Pending</span></td><td><span class="pill pill-dim">N/A</span></td><td><span class="pill pill-orange">In progress</span></td></tr>
       </tbody>
     </table>
-    <div style="padding:10px 14px;font-size:10px;color:var(--text-dim);border-top:1px solid var(--border)">Showing 6 of 112 students · Student names are never displayed · IDs reference your intake records</div>
+    <div class="table-footer" id="rl-footer">Showing all students · Names never displayed · IDs reference intake records</div>
   </div>
-</div><!-- end reading lead view -->
+</div>
 
-</div><!-- end shell -->
-</div><!-- end dashboard -->
+<!-- ════ TEACHER VIEW ════ -->
+<div class="view" id="view-teacher">
+  <div class="teacher-banner">
+    <div class="tb-text">Viewing as: <strong>Teacher — My Students Only</strong> · You can only see students assigned to you</div>
+    <div style="margin-left:auto">
+      <a href="https://reading-compliance-tracker-1511.taskade.app/" target="_blank" class="btn btn-maroon btn-sm">+ Submit a Reading Plan</a>
+    </div>
+  </div>
+  <div class="page-header">
+    <div class="page-title">My Students
+      <span id="teacher-email-label">Lakemont Elementary · Reading plan status</span>
+    </div>
+    <div class="header-actions">
+      <a href="https://reading-compliance-tracker-1511.taskade.app/" target="_blank" class="btn btn-maroon btn-sm">+ Submit a Reading Plan</a>
+    </div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th>Student ID</th><th>Grade</th><th>Plan Created</th><th>Letter Sent</th><th>Parent Response</th><th>Status</th><th>Action</th>
+      </tr></thead>
+      <tbody id="teacher-table-body"></tbody>
+    </table>
+    <div class="table-footer" id="teacher-footer"></div>
+  </div>
+  <div class="taskade-panel">
+    <div class="tp-icon">📋</div>
+    <div class="tp-text">
+      <h4>Submit a reading plan</h4>
+      <p>Open the plan form in Taskade. Your student's data pre-populates. The parent letter generates automatically on submission.</p>
+    </div>
+    <div class="tp-actions">
+      <a href="https://reading-compliance-tracker-1511.taskade.app/" target="_blank" class="btn btn-maroon btn-sm">Open Plan Form →</a>
+    </div>
+  </div>
+</div>
+
+</div><!-- shell -->
+</div><!-- dashboard -->
 
 <script>
-// ════════════════════════════════════
-// AUTHORIZATION CONFIG
-// ════════════════════════════════════
-
-// Your Google OAuth Client ID
 const CLIENT_ID = '14971058385-uk418giaag3j37n6l15mi8miu8jnhsh0.apps.googleusercontent.com';
+const TASKADE_URL = 'https://reading-compliance-tracker-1511.taskade.app/';
 
-// SCHOOL-SPECIFIC ACCESS LIST
-// Add authorized email addresses for Lakemont Elementary staff here.
-// District Technology Lead updates this list at handoff by adding Petersburg staff emails.
-// Format: lowercase email addresses only.
-const AUTHORIZED_EMAILS = [
-  'chief@tieredjusticenow.com',  // EJC test account — remove at handoff
-  // Add Cool Spring principal email here
-  // Add Cool Spring reading specialist email here
-  // Example: 'principal.coolspring@petersburg.k12.va.us'
-];
+// ════════════════════════════════════
+// ACCESS CONFIG
+// District Technology Lead updates this list at handoff
+// Each email maps to: role + filter + label
+// role: 'principal' | 'readinglead' | 'teacher'
+// filter: 'all' = sees everything | email = teacher sees only their students
+// ════════════════════════════════════
+const ACCESS = {
+  'chief@tieredjusticenow.com': { role: 'principal', filter: 'all', label: 'Principal' },
 
-// Role mapping — which email sees which view on first load
-// If email not listed here, defaults to principal view
-const ROLE_MAP = {
-  'chief@tieredjusticenow.com': 'principal',
-  // 'readingspecialist@petersburg.k12.va.us': 'readinglead',
+  // ── ADD COOL SPRING STAFF BELOW ──
+  // Principal:
+  // 'principal.coolspring@petersburg.k12.va.us': { role: 'principal', filter: 'all', label: 'Principal' },
+
+  // Reading Specialist:
+  // 'readingspecialist.cs@petersburg.k12.va.us': { role: 'readinglead', filter: 'all', label: 'Reading Specialist' },
+
+  // Teachers (each sees only their own students):
+  // 'teacher.smith@petersburg.k12.va.us': { role: 'teacher', filter: 'teacher.smith@petersburg.k12.va.us', label: 'Teacher' },
+};
+
+// Sample teacher data — replaced by live Sheets data once endpoint connected
+const SAMPLE_TEACHER_DATA = {
+  'chief@tieredjusticenow.com': [
+    { id:'STU-0lk1', grade:'K', plan:'Yes', letter:'Yes', response:'Accepted', status:'On track' },
+    { id:'STU-0lk3', grade:'2', plan:'Yes', letter:'Yes', response:'Declined', status:'Action needed' },
+  ],
+};
+
+const ROLE_BADGE_CLASS = {
+  principal:   'role-badge-principal',
+  readinglead: 'role-badge-readinglead',
+  teacher:     'role-badge-teacher',
+};
+
+const ROLE_BADGE_LABEL = {
+  principal:   'Principal',
+  readinglead: 'Reading Specialist',
+  teacher:     'Teacher',
 };
 
 // ════════════════════════════════════
-// GOOGLE SIGN-IN INITIALIZATION
+// GOOGLE SIGN-IN
 // ════════════════════════════════════
 
-// This runs when the Google Identity Services script loads
 function initGoogleSignIn() {
   google.accounts.id.initialize({
     client_id: CLIENT_ID,
@@ -460,50 +482,38 @@ function initGoogleSignIn() {
     auto_select: false,
     cancel_on_tap_outside: false,
   });
-
-  // Render the sign-in button inside #g_id_signin
   google.accounts.id.renderButton(
     document.getElementById('g_id_signin'),
-    {
-      theme: 'outline',
-      size: 'large',
-      width: 280,
-      text: 'sign_in_with',
-      shape: 'rectangular',
-      logo_alignment: 'left',
-    }
+    { theme: 'outline', size: 'large', width: 300, text: 'sign_in_with', shape: 'rectangular' }
   );
-
-  // Also show One Tap if user was previously signed in
   google.accounts.id.prompt();
 }
 
-// Called by Google when sign-in completes
-// credential is a JWT token containing the user's info
 function handleCredentialResponse(response) {
-  // Decode the JWT payload (base64 middle section)
   const payload = JSON.parse(atob(response.credential.split('.')[1]));
   const email = payload.email.toLowerCase();
-  const name = payload.name;
-  const initial = name ? name[0].toUpperCase() : email[0].toUpperCase();
+  const initial = (payload.name || email)[0].toUpperCase();
+  const access = ACCESS[email];
 
-  // Check if this email is on the authorized list
-  if (AUTHORIZED_EMAILS.includes(email)) {
-    // ✅ Authorized — show the dashboard
+  if (access) {
     document.getElementById('login-wall').style.display = 'none';
     document.getElementById('access-denied').style.display = 'none';
     document.getElementById('dashboard').style.display = 'block';
-
-    // Show their email and initial in the nav
     document.getElementById('user-email-display').textContent = email;
     document.getElementById('user-avatar').textContent = initial;
 
-    // Route to their role-specific view
-    const role = ROLE_MAP[email] || 'principal';
-    switchRole(role);
+    // Set role badge
+    const badge = document.getElementById('nav-role-badge');
+    badge.textContent = ROLE_BADGE_LABEL[access.role] || access.role;
+    badge.className = 'nav-role-badge ' + (ROLE_BADGE_CLASS[access.role] || '');
+
+    // Load teacher data if teacher role
+    if (access.role === 'teacher') loadTeacherView(email);
+
+    // Show their view — no switcher, role is determined by login
+    showView('view-' + access.role);
 
   } else {
-    // ❌ Not authorized — show access denied
     document.getElementById('login-wall').style.display = 'none';
     document.getElementById('dashboard').style.display = 'none';
     document.getElementById('access-denied').style.display = 'flex';
@@ -511,63 +521,127 @@ function handleCredentialResponse(response) {
   }
 }
 
-// ════════════════════════════════════
-// DASHBOARD INTERACTIONS
-// ════════════════════════════════════
-
-function switchRole(role) {
-  // Hide all views
+function showView(viewId) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  // Deactivate all role buttons
-  document.querySelectorAll('.rbtn').forEach(b => b.classList.remove('active'));
-  // Show the correct view
-  const view = document.getElementById('view-' + role);
+  const view = document.getElementById(viewId);
   if (view) view.classList.add('active');
-  // Activate the correct button
-  const btn = document.querySelector('[data-value="' + role + '"]');
-  if (btn) btn.classList.add('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+// ════════════════════════════════════
+// TEACHER VIEW — filtered to their students
+// ════════════════════════════════════
+
+function loadTeacherView(email) {
+  document.getElementById('teacher-email-label').textContent =
+    'Lakemont Elementary · Your students only · ' + email;
+
+  const students = SAMPLE_TEACHER_DATA[email] || [];
+  const tbody = document.getElementById('teacher-table-body');
+  const footer = document.getElementById('teacher-footer');
+
+  if (!students.length) {
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state">
+      <div class="icon">📋</div>
+      <h4>No plans submitted yet</h4>
+      <p>Submit a reading plan for each of your identified students.<br>Plans appear here after submission.</p>
+    </div></td></tr>`;
+    footer.textContent = 'No plans on file · Submit your first plan using the button above';
+    return;
+  }
+
+  const yesNo = v => v === 'Yes'
+    ? '<span class="pill pill-teal">Yes</span>'
+    : '<span class="pill pill-orange">Not yet</span>';
+
+  const responseMap = {
+    'Accepted':  '<span class="pill pill-green">Accepted</span>',
+    'Declined':  '<span class="pill pill-red">Declined</span>',
+    'Pending Response': '<span class="pill pill-dim">Pending</span>',
+  };
+
+  const statusMap = {
+    'On track':     '<span class="pill pill-green">On track</span>',
+    'Action needed':'<span class="pill pill-red">Action needed</span>',
+    'In progress':  '<span class="pill pill-orange">In progress</span>',
+  };
+
+  tbody.innerHTML = students.map(s => `
+    <tr>
+      <td class="strong">${s.id}</td>
+      <td>${s.grade}</td>
+      <td>${yesNo(s.plan)}</td>
+      <td>${yesNo(s.letter)}</td>
+      <td>${responseMap[s.response] || '<span class="pill pill-dim">Pending</span>'}</td>
+      <td>${statusMap[s.status] || '<span class="pill pill-dim">Unknown</span>'}</td>
+      <td><a href="${TASKADE_URL}" target="_blank" class="btn btn-maroon btn-sm">Update →</a></td>
+    </tr>`).join('');
+
+  footer.textContent = `${students.length} student${students.length !== 1 ? 's' : ''} · Your students only · Names never displayed`;
+}
+
+// ════════════════════════════════════
+// GRADE FILTERING
+// ════════════════════════════════════
+
+function filterGrade(value) {
+  document.querySelectorAll('#principal-table-body tr').forEach(row => {
+    row.style.display = (value === 'all' || row.dataset.grade === value) ? '' : 'none';
+  });
+}
+
+function filterRLGrade(value) {
+  let visible = 0;
+  document.querySelectorAll('#rl-table-body tr').forEach(row => {
+    const show = value === 'all' || row.dataset.rlgrade === value;
+    row.style.display = show ? '' : 'none';
+    if (show) visible++;
+  });
+  document.getElementById('rl-footer').textContent =
+    `Showing ${visible} student${visible !== 1 ? 's' : ''} · Names never displayed · IDs reference intake records`;
+}
+
 function signOut() {
-  // Revoke Google's session and return to login wall
   google.accounts.id.disableAutoSelect();
   document.getElementById('dashboard').style.display = 'none';
   document.getElementById('access-denied').style.display = 'none';
   document.getElementById('login-wall').style.display = 'flex';
-  // Re-render the sign-in button
   google.accounts.id.renderButton(
     document.getElementById('g_id_signin'),
-    { theme: 'outline', size: 'large', width: 280 }
+    { theme: 'outline', size: 'large', width: 300 }
   );
 }
 
 // ════════════════════════════════════
 // EVENT DELEGATION
-// No onclick attributes anywhere — all clicks handled here
 // ════════════════════════════════════
 
-document.addEventListener('DOMContentLoaded', function () {
-  // Initialize Google Sign-In once the page and scripts load
-  // The Google script loads async so we poll until it's ready
-  const waitForGoogle = setInterval(function () {
+document.addEventListener('DOMContentLoaded', function() {
+  const wait = setInterval(function() {
     if (typeof google !== 'undefined' && google.accounts) {
-      clearInterval(waitForGoogle);
+      clearInterval(wait);
       initGoogleSignIn();
     }
   }, 100);
 
-  // Handle all button clicks via delegation
-  document.body.addEventListener('click', function (e) {
+  document.body.addEventListener('click', function(e) {
     const el = e.target.closest('[data-action]');
     if (!el) return;
     const action = el.dataset.action;
     const value = el.dataset.value;
-
-    if (action === 'role') switchRole(value);
     if (action === 'signout') signOut();
     if (action === 'retry') signOut();
     if (action === 'print') window.print();
+    if (action === 'grade') {
+      document.querySelectorAll('[data-action="grade"]').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
+      filterGrade(value);
+    }
+    if (action === 'rlgrade') {
+      document.querySelectorAll('[data-action="rlgrade"]').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
+      filterRLGrade(value);
+    }
   });
 });
 </script>
