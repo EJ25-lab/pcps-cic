@@ -1,0 +1,2354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Graduation Command Insight Center · Petersburg City Public Schools</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ── RESET ── */
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+
+/* ── DESIGN TOKENS ── */
+:root{
+  /* Page */
+  --bg:#F2F4F6;
+  --surface:#FFFFFF;
+  --card:#FFFFFF;
+  --card-alt:#F8F9FA;
+
+  /* Borders */
+  --border:#E2E6EA;
+  --border-mid:#CDD3DA;
+  --border-strong:#B0BAC5;
+
+  /* PCPS maroon — used for brand, active states, key accents */
+  --maroon:#8C1C1C;
+  --maroon-mid:#A52828;
+  --maroon-pale:#FDF3F3;
+  --maroon-border:#E8C5C5;
+  --maroon-text:#6B1515;
+
+  /* Status — muted, readable on white */
+  --red:#C0392B;
+  --red-pale:#FEF0EF;
+  --red-border:#F5C6C2;
+  --red-text:#922B21;
+
+  --amber:#C06B1A;
+  --amber-pale:#FEF6ED;
+  --amber-border:#F8D9B4;
+  --amber-text:#964F12;
+
+  --green:#1E7E50;
+  --green-pale:#EDF7F2;
+  --green-border:#A8DCBF;
+  --green-text:#155A38;
+
+  --blue:#1A5FA8;
+  --blue-pale:#EEF4FC;
+  --blue-border:#B0CEED;
+  --blue-text:#124478;
+
+  --purple:#5B4BA8;
+  --purple-pale:#F2F0FC;
+  --purple-border:#C8C2EE;
+  --purple-text:#3E3280;
+
+  --gold:#8A6914;
+  --gold-pale:#FBF6E8;
+  --gold-border:#E8D490;
+  --gold-text:#6A5010;
+
+  /* Text scale */
+  --text:#1A2A35;
+  --text-mid:#4A5C6A;
+  --text-dim:#8090A0;
+  --text-hint:#B0BCC8;
+
+  /* Font */
+  --font:'Inter',sans-serif;
+}
+
+/* ── BASE ── */
+body{
+  font-family:var(--font);
+  background:var(--bg);
+  color:var(--text);
+  font-size:15px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ── TOP BAR ── */
+.topbar{
+  background:var(--maroon);
+  height:54px;
+  display:flex;align-items:center;padding:0 22px;gap:14px;
+  position:sticky;top:0;z-index:100;
+  box-shadow:0 1px 4px rgba(0,0,0,.18);
+}
+.topbar-logo{
+  height:30px;object-fit:contain;
+  /* invert the black-bg logo to work on maroon */
+  filter:brightness(0) invert(1);
+  opacity:.92;
+}
+.topbar-div{width:1px;height:22px;background:rgba(255,255,255,.25);}
+.topbar-id{display:flex;flex-direction:column;}
+.topbar-name{font-size:15px;font-weight:700;color:#fff;letter-spacing:.01em;}
+.topbar-sub{font-size:11px;font-weight:400;color:rgba(255,255,255,.6);letter-spacing:.05em;text-transform:uppercase;margin-top:1px;}
+.topbar-nav{display:flex;gap:2px;margin-left:auto;}
+.nav-btn{
+  background:none;border:1px solid transparent;
+  color:rgba(255,255,255,.65);
+  padding:5px 14px;border-radius:5px;
+  cursor:pointer;font-family:var(--font);
+  font-size:14px;font-weight:600;
+  letter-spacing:.04em;text-transform:uppercase;
+  transition:all .15s;
+}
+.nav-btn:hover{color:#fff;background:rgba(255,255,255,.12);}
+.nav-btn.active{
+  background:rgba(255,255,255,.18);
+  color:#fff;border-color:rgba(255,255,255,.3);
+}
+.meeting-badge{
+  display:flex;align-items:center;gap:7px;margin-left:14px;
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
+  padding:4px 11px;border-radius:4px;
+}
+.badge-dot{width:5px;height:5px;border-radius:50%;background:#FFC971;animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.badge-txt{font-size:11px;font-weight:600;color:rgba(255,255,255,.85);letter-spacing:.02em;}
+
+/* ── TOOLBAR ── */
+.toolbar{
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  height:40px;display:flex;align-items:center;padding:0 22px;gap:5px;
+  overflow-x:auto;
+  box-shadow:0 1px 3px rgba(0,0,0,.04);
+}
+.t-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);white-space:nowrap;margin-right:2px;}
+.t-sep{width:1px;height:16px;background:var(--border);margin:0 8px;flex-shrink:0;}
+.chip{
+  background:none;border:1px solid var(--border);color:var(--text-dim);
+  padding:3px 10px;border-radius:3px;cursor:pointer;
+  font-family:var(--font);font-size:11px;font-weight:600;
+  letter-spacing:.05em;text-transform:uppercase;transition:all .12s;white-space:nowrap;
+}
+.chip:hover{color:var(--text-mid);border-color:var(--border-mid);background:var(--card-alt);}
+.chip.active{
+  border-color:var(--maroon-border);color:var(--maroon-mid);
+  background:var(--maroon-pale);
+}
+
+/* ── VIEWS ── */
+.view{display:none;padding:18px 22px 28px;}
+.view.active{display:block;}
+
+/* ── VIEWING-AS BANNER ── */
+.vbanner{
+  background:var(--maroon-pale);border:1px solid var(--maroon-border);
+  border-radius:6px;padding:8px 14px;margin-bottom:16px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.vb-l{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text-mid);}
+.vb-dot{width:7px;height:7px;border-radius:50%;background:var(--maroon-mid);}
+.vb-role{color:var(--maroon-text);font-weight:700;}
+.vb-r{font-size:11px;color:var(--text-dim);font-style:italic;}
+
+/* ── INDEX SCORE CARD ── */
+.index-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-left:4px solid var(--red);
+  border-radius:7px;padding:16px 20px;margin-bottom:14px;
+  display:flex;align-items:center;gap:24px;
+  box-shadow:0 1px 3px rgba(0,0,0,.05);
+}
+.index-main{display:flex;align-items:baseline;gap:10px;}
+.index-score{font-size:38px;font-weight:900;color:var(--red-text);line-height:1;}
+.index-label-col{display:flex;flex-direction:column;gap:5px;}
+.index-label{font-size:11px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;}
+.off-track{
+  display:inline-block;
+  background:var(--red-pale);border:1px solid var(--red-border);
+  color:var(--red-text);font-size:11px;font-weight:800;
+  padding:3px 10px;border-radius:3px;letter-spacing:.06em;text-transform:uppercase;
+}
+.index-components{display:flex;gap:20px;margin-left:auto;}
+.ic{text-align:center;padding:0 12px;border-left:1px solid var(--border);}
+.ic:first-child{border-left:none;}
+.ic-val{font-size:17px;font-weight:800;}
+.ic-name{font-size:14px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:.07em;margin-top:2px;}
+.index-note{
+  font-size:14px;color:var(--text-mid);
+  max-width:220px;line-height:1.55;
+  border-left:2px solid var(--border-mid);
+  padding-left:14px;
+}
+
+/* ── KPI STRIP ── */
+.kpi-strip{display:grid;gap:10px;margin-bottom:14px;}
+.kpi-5{grid-template-columns:repeat(5,1fr);}
+.kpi-4{grid-template-columns:repeat(4,1fr);}
+.kpi{
+  background:var(--surface);border:1px solid var(--border);
+  border-top:3px solid var(--border);border-radius:7px;padding:13px 15px;
+  box-shadow:0 1px 2px rgba(0,0,0,.04);
+}
+.kpi.k-red{border-top-color:var(--red);}
+.kpi.k-amber{border-top-color:var(--amber);}
+.kpi.k-green{border-top-color:var(--green);}
+.kpi.k-maroon{border-top-color:var(--maroon-mid);}
+.kpi.k-blue{border-top-color:var(--blue);}
+.kpi.k-gold{border-top-color:var(--gold);}
+.kpi.k-purple{border-top-color:var(--purple);}
+.kpi-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px;}
+.kpi-value{font-size:26px;font-weight:900;line-height:1;margin-bottom:4px;}
+.kpi.k-red .kpi-value{color:var(--red-text);}
+.kpi.k-amber .kpi-value{color:var(--amber-text);}
+.kpi.k-green .kpi-value{color:var(--green-text);}
+.kpi.k-maroon .kpi-value{color:var(--maroon-text);}
+.kpi.k-blue .kpi-value{color:var(--blue-text);}
+.kpi.k-gold .kpi-value{color:var(--gold-text);}
+.kpi.k-purple .kpi-value{color:var(--purple-text);}
+.kpi-sub{font-size:14px;color:var(--text-mid);}
+.kpi-badge{display:inline-block;font-size:14px;font-weight:700;padding:2px 7px;border-radius:3px;margin-top:6px;letter-spacing:.03em;}
+.kb-alert{background:var(--red-pale);color:var(--red-text);border:1px solid var(--red-border);}
+.kb-warn{background:var(--amber-pale);color:var(--amber-text);border:1px solid var(--amber-border);}
+.kb-ok{background:var(--green-pale);color:var(--green-text);border:1px solid var(--green-border);}
+.kb-info{background:var(--blue-pale);color:var(--blue-text);border:1px solid var(--blue-border);}
+
+/* ── MAIN GRID ── */
+.main-grid{display:grid;grid-template-columns:1fr 290px;gap:13px;}
+.col-main{display:flex;flex-direction:column;gap:12px;}
+.col-side{display:flex;flex-direction:column;gap:12px;}
+
+/* ── SECTION CARD ── */
+.sc{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:7px;overflow:hidden;
+  box-shadow:0 1px 2px rgba(0,0,0,.04);
+}
+.sc-head{
+  padding:9px 14px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--border);
+  background:var(--card-alt);
+}
+.sc-title{font-size:14px;font-weight:700;letter-spacing:.02em;color:var(--text);}
+.sc-title.alert{color:var(--amber-text);}
+.sc-meta{font-size:11px;color:var(--text-dim);}
+.sc-foot{
+  padding:7px 14px;border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--card-alt);
+}
+
+/* ── DATA TABLE ── */
+.dt{width:100%;border-collapse:collapse;}
+.dt th{
+  font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;
+  color:var(--text-dim);padding:7px 10px;text-align:left;
+  border-bottom:1px solid var(--border);background:var(--card-alt);
+}
+.dt td{
+  padding:8px 10px;
+  border-bottom:1px solid var(--border);
+  font-size:14px;vertical-align:middle;
+  color:var(--text);
+}
+.dt tr:last-child td{border-bottom:none;}
+.dt tr.clickable{cursor:pointer;transition:background .1s;}
+.dt tr.clickable:hover td{background:#F5F8FA;}
+
+/* ── PILLS ── */
+.pill{
+  display:inline-flex;align-items:center;gap:3px;
+  padding:2px 7px;border-radius:3px;
+  font-size:14px;font-weight:700;letter-spacing:.04em;
+}
+.p-green{background:var(--green-pale);color:var(--green-text);border:1px solid var(--green-border);}
+.p-amber{background:var(--amber-pale);color:var(--amber-text);border:1px solid var(--amber-border);}
+.p-red{background:var(--red-pale);color:var(--red-text);border:1px solid var(--red-border);}
+.p-blue{background:var(--blue-pale);color:var(--blue-text);border:1px solid var(--blue-border);}
+.p-purple{background:var(--purple-pale);color:var(--purple-text);border:1px solid var(--purple-border);}
+.p-gray{background:#F1F3F5;color:var(--text-mid);border:1px solid var(--border);}
+.p-maroon{background:var(--maroon-pale);color:var(--maroon-text);border:1px solid var(--maroon-border);}
+.p-gold{background:var(--gold-pale);color:var(--gold-text);border:1px solid var(--gold-border);}
+.dot{width:5px;height:5px;border-radius:50%;display:inline-block;}
+.d-green{background:var(--green);}
+.d-amber{background:var(--amber);}
+.d-red{background:var(--red);}
+.d-blue{background:var(--blue);}
+.dtag{font-size:14px;font-weight:700;padding:1px 6px;border-radius:2px;letter-spacing:.04em;}
+.dt-adv{background:var(--purple-pale);color:var(--purple-text);border:1px solid var(--purple-border);}
+.dt-std{background:var(--blue-pale);color:var(--blue-text);border:1px solid var(--blue-border);}
+.rchip{
+  background:none;border:1px solid var(--border);color:var(--text-dim);
+  padding:3px 9px;border-radius:3px;cursor:pointer;
+  font-family:var(--font);font-size:10px;font-weight:700;
+  letter-spacing:.05em;text-transform:uppercase;transition:all .12s;
+}
+.rchip:hover{color:var(--text-mid);border-color:var(--border-mid);}
+.rchip.active{border-color:var(--maroon-border);color:var(--maroon-text);background:var(--maroon-pale);}
+.res-added{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  border-radius:5px;padding:9px 12px;
+  background:var(--maroon-pale);border-left:3px solid var(--maroon-mid);
+  gap:8px;
+}
+.res-added-new{
+  animation:slideIn .25s ease-out;
+}
+@keyframes slideIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.stu-id{font-family:'Inter',monospace;font-size:14px;font-weight:600;color:var(--text-mid);letter-spacing:.02em;}
+
+/* ── SOL GAP BARS ── */
+.sol-grid{padding:14px 16px;display:flex;flex-direction:column;gap:11px;}
+.sol-row{display:flex;align-items:center;gap:10px;}
+.sol-name{font-size:11px;font-weight:600;color:var(--text-mid);width:120px;flex-shrink:0;text-transform:uppercase;letter-spacing:.05em;}
+.sol-bar-bg{flex:1;height:7px;background:var(--bg);border:1px solid var(--border);border-radius:4px;overflow:hidden;}
+.sol-bar-fill{height:100%;border-radius:4px;}
+.sol-count{font-size:14px;font-weight:800;min-width:28px;text-align:right;}
+.sol-pct{font-size:11px;color:var(--text-dim);min-width:70px;text-align:right;}
+.sol-note{font-size:11px;color:var(--text-mid);padding:0 16px 12px;line-height:1.6;border-top:1px solid var(--border);margin-top:4px;padding-top:10px;}
+
+/* ── STATUS ROWS ── */
+.stat-row{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 14px;border-bottom:1px solid var(--border);
+}
+.stat-row:last-child{border-bottom:none;}
+.stat-name{flex:1;font-size:14px;color:var(--text-mid);}
+.stat-bar{width:72px;}
+.bar-bg{height:5px;background:var(--bg);border:1px solid var(--border);border-radius:3px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:3px;}
+.stat-n{font-size:14px;font-weight:800;min-width:30px;text-align:right;}
+.stat-pct{font-size:11px;color:var(--text-dim);min-width:34px;text-align:right;}
+
+/* ── ALERT ITEMS ── */
+.alert-item{
+  padding:10px 14px;border-bottom:1px solid var(--border);
+  display:flex;align-items:flex-start;gap:10px;
+}
+.alert-item:last-child{border-bottom:none;}
+.ai-icon{
+  width:22px;height:22px;border-radius:4px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:800;margin-top:1px;
+}
+.ai-red{background:var(--red-pale);color:var(--red-text);border:1px solid var(--red-border);}
+.ai-amber{background:var(--amber-pale);color:var(--amber-text);border:1px solid var(--amber-border);}
+.ai-green{background:var(--green-pale);color:var(--green-text);border:1px solid var(--green-border);}
+.ai-maroon{background:var(--maroon-pale);color:var(--maroon-text);border:1px solid var(--maroon-border);}
+.ai-body{flex:1;}
+.ai-who{font-size:14px;font-weight:700;color:var(--text);}
+.ai-desc{font-size:14px;color:var(--text-mid);margin-top:3px;line-height:1.5;}
+.ai-role{font-size:11px;color:var(--text-dim);margin-top:3px;}
+
+/* ── PSP DRAWER ── */
+.psp{
+  display:none;background:var(--surface);
+  border:1px solid var(--maroon-border);border-radius:7px;
+  overflow:hidden;margin-top:12px;
+  box-shadow:0 2px 8px rgba(140,28,28,.08);
+}
+.psp-head{
+  padding:10px 14px;display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--maroon-border);background:var(--maroon-pale);
+}
+.psp-title{font-size:14px;font-weight:800;color:var(--maroon-text);letter-spacing:.03em;}
+.psp-close{background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:15px;font-family:var(--font);}
+.psp-grid{padding:14px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+.psp-sec-label{font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--text-dim);margin-bottom:8px;}
+.cr-row{display:flex;justify-content:space-between;font-size:14px;padding:4px 0;border-bottom:1px solid var(--border);}
+.cr-row:last-child{border-bottom:none;}
+.cr-subj{color:var(--text-mid);}
+.iv-card{background:var(--card-alt);border:1px solid var(--border);border-radius:4px;padding:8px 10px;margin-bottom:6px;}
+.iv-name{font-size:14px;font-weight:700;color:var(--maroon-text);}
+.iv-meta{font-size:11px;color:var(--text-mid);margin-top:2px;line-height:1.45;}
+.iv-warn{border-left:3px solid var(--amber);}
+.iv-warn .iv-name{color:var(--amber-text);}
+.log-entry{font-size:14px;color:var(--text-mid);padding:5px 0;border-bottom:1px solid var(--border);line-height:1.45;}
+.log-entry:last-child{border-bottom:none;}
+.psp-foot{
+  padding:9px 14px;border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--card-alt);
+}
+
+/* ── COACH VIEW ── */
+.action-row{
+  display:flex;gap:8px;align-items:flex-start;
+  font-size:14px;color:var(--text);
+  padding:9px 14px;border-bottom:1px solid var(--border);line-height:1.5;
+}
+.action-row:last-child{border-bottom:none;}
+.action-mk{flex-shrink:0;font-weight:800;width:14px;font-size:11px;}
+.rec-row{
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:14px;padding:8px 10px;border-radius:5px;margin-bottom:6px;
+  border:1px solid transparent;
+}
+
+/* ── 3E BARS ── */
+.te-bar-row{display:flex;align-items:center;gap:10px;padding:6px 14px;}
+.te-bar-label{font-size:11px;color:var(--text-mid);width:280px;flex-shrink:0;line-height:1.4;}
+.te-bar-bg{flex:1;height:6px;background:var(--bg);border:1px solid var(--border);border-radius:3px;overflow:hidden;}
+.te-bar-fill{height:100%;border-radius:3px;}
+.te-bar-val{font-size:14px;font-weight:700;min-width:90px;text-align:right;color:var(--text-mid);}
+
+/* ── BOTTOM BAR ── */
+.bottombar{
+  background:var(--surface);border-top:1px solid var(--border);
+  padding:10px 22px;display:flex;align-items:center;justify-content:space-between;
+  box-shadow:0 -1px 3px rgba(0,0,0,.04);
+  margin-left:180px;position:relative;z-index:50;
+}
+.updated{font-size:11px;color:var(--text-dim);}
+.export-btn{
+  background:var(--maroon);color:#fff;border:none;
+  padding:6px 18px;border-radius:4px;cursor:pointer;
+  font-family:var(--font);font-size:14px;font-weight:700;
+  letter-spacing:.05em;text-transform:uppercase;
+  transition:background .15s;
+}
+.export-btn:hover{background:var(--maroon-mid);}
+
+/* ── GRADE BAR ── */
+.grade-bar{display:flex;align-items:center;gap:6px;margin-bottom:14px;flex-wrap:wrap;}
+
+/* ── TAKE 5 GRID ── */
+.t5-grid{padding:14px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.t5-cell{text-align:center;padding:10px;background:var(--card-alt);border-radius:5px;border:1px solid var(--border);}
+.t5-val{font-size:22px;font-weight:900;}
+.t5-label{font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);margin-top:3px;}
+
+@media print {
+  .topbar, .toolbar, .bottombar { display: none !important; }
+  .view { display: block !important; padding: 0; }
+  body { background: #fff; color: #000; }
+  .sc { border: 1px solid #ddd; box-shadow: none; break-inside: avoid; }
+  .sc-head { background: #f5f5f5; }
+  .kpi { border: 1px solid #ddd; box-shadow: none; }
+  .pill { border: 1px solid #ccc; }
+  @page { size: letter landscape; margin: 0.5in; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ TOP BAR ══ -->
+<nav class="topbar">
+  <img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAIYAhgDASIAAhEBAxEB/8QAHAABAAIDAQEBAAAAAAAAAAAAAAUGAgMEAQcI/8QAQhAAAgIBAgQDBAkDAgUBCQAAAAECAwQFEQYSIWExQVETInHRFDJCUoGRobHBI2LhFfAkM0NyslMWNGNzgpKiwvH/xAAaAQEAAwEBAQAAAAAAAAAAAAAAAwQFAgYB/8QANxEAAgIBAQYDBQcFAAMBAAAAAAECAwQRBRIhMUFRE2HwIjJxgbEGFEKRodHhFSNSwfEkM2Ki/9oADAMBAAIRAxEAPwD8ZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEloWk26lf5woi/fn/C7jQtJt1K/wA4URfvz/hdyx6xqWPo2JHDw4x9ty7RivCC9WVb72n4dfvfQ9BsvZdcq3mZj0qX/wCn2Xr+ITiLRZYEvb46lPGb+Lg/R9u5Clp4e1v6R/wGotTc+kZy+1v9lkZxJpT07JU6k/o9j9z+1+gptlGXh2c/qfNpYNFtX33D9zqusX+xEgAtGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAZ01WXWKuqEpzfhGK3ZgD7o9NQAAfAAAAAAAAAAAAAAAAAAAAAAAAAAAASWhaVbqV/nCiD9+f8LuRp2aZqOVp85Sx5raa2cZLdP0fxOLFJxe5zLeFLHjfF5Cbh10Lm8zTdMso09SjVutkl4R+L7kBxRo9tF086nmsqm+ae/VwfyIG2ydtkrLJOc5Pdt+LZdOG8iyPD7vzJuVcOblbW75F+/mUZVyxtJp69/M9VTm1bc38W2G6ktYtfhS4cSl1xlOcYQTlJvZJeLZcOKk1w9WsjZ3KUFv/AHbdf5PYalw7jN5FKqVj+5S1L9uhXdc1S3VMmL5XCqHSuHj+L7nes7rIvd0S7lRxx9l4lsFarJ2LRKPFJd2RwLbw9oUKKvpWoQi5yXSuXhFd+/7EZxHossGbyMdOWNJ/jB+j7dyaOTXKe4jOu2Fl04qyZLh1XVLu/XAhQAWDGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABsxqLcm+NNMHOyT2SRgur2Lxo2n06Zp8r6o/Sb5Q5nKH2vPaPYgvuVUfNmtsjZctoWta6Rjxb66eS7mrFow+HdPd97U8iS2bXjJ/dj2Kjm5DysuzIlCMHZLflitkjbqmbkZ+VK29tPwjDyivQndC0OqrHlm6pGKjytqufhFer7kUdKFv2PWTNC1z2tYsXEju1Q7/AFb8yrg3ZnsFlWfRXJ083uc3jsaS2nqjzc47snHXXQAA+nIAAAAAAAAAAAAAAAAAAAAAAAAAAALZl3018GQjRYpKUY1vbyk3vJfuVMyU5qt18z5G03Hfpv6/qRW1eI15PU0MHPeJGxJa78XHXtqeJNvZdWW7hrQ1jqOZmQ3u8YQf2O77/sa+EdLodUdQtlC2e/uRXVQ+Pc5OIdcyZ5nsMWU6IUz8fCUpL17ditbZK6Tqr+bNvZ+JRs2mOdmLVv3Y/wC/XL4mzjLNy/brDcJVY+26f/qf/wA9DZw5rUbILT9QakpLlhOXg191nXg5WJxBgPFyoqN8Vu0vFP70Sr6rgX6dkum5bp9YTXhJHNcYTj4Mlo161Js7IycbIW0aJ79c/p/i108v359/EeiywJvIx05Y0n+MH6Pt3IU7MnU8zJw68W25yrh+cvTf12OMuVKajpN8Tzm0LMay9zxouMX0fR9dPIAAkKIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB7CLlNRTSbe3V7IndT4cuxsGF9M3dOMd7YpfquxHO2MGlJ8y3j4N+TCc6o6qPMgSa4c1qWBNY+Q3LGk/xg/VduxCg+2VxsjuyOcTLtxLVbU9GvWjPoH+mafdnR1JQUpNcy26xk/KW3qVjiLWLM+10Vc0MeD8H0cn6v5HvDmtSwJrHyG5Y0n+MH6rt2J3UNDw9Rya8uFnJGXWzk8LF6rv3M+KVFn93iujPZ2zltbCawNIyb9uPJvXrr2+v6Fe4f0ezUbfaWbwxov3pfe7I28VrToZMKcOCjbWuWzk+r2XxJHX9Yrwqf8ATtO5YyiuWUo+EF6LuVN9XuyxVv2S8SXBdEYm0Hi4VDw6UpT/ABS810Xr+AALZ54AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA7tG1O7Tcnnh71cvrw36SXzLJqmBja5hxzsGUfbbdH4c39r7lNO7RtTu03J54e9XL68N+kl8ytdS29+HCX1NzZm04Qg8XKW9VL84vuvX880JX4eUpRcqrq5fBpmefmZGdkO/InzS8El4JeiJfVVZr2bGzTsKXLFcsrWtuZ9/Lp+Z14HCsVtLNv5v7K/D82fHfXFKU+D/AFOobJy75ypxW5V68+UX58efy1KtGMpSUYxcm/BJdWS+Bw9qGTtKyCx4Pzs8fy8SdyszStC/o1YzVrjvtGPVrvJ/5OLA1fP1bVK8evbHoT5pqHV8q9X+nTbxI5X2zjvQWi7suVbIwce5VZFm/Y3pux7+b/4yO13RLdNjG2NntaX0cttmn8CILLxxl811OFF9ILnn8X4fpv8AmVonx5SlWnLmZW2qcejNnXjr2V9eoABOZQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPYRlOSjCLlJ9Ekt2zPGotyb400wc7JPZJFvxcXB4ewvpOS1PIa25l4t+kSG65V8ObfQ1Nm7LnmNzb3a485Pkv5K09I1NV+0eFdy/wDb1/LxJXhrXHQ44WbL+l4Qm/sdn2/Y2U8VyeQva4sVS39mW8kv5MuLsCizFjqmPyrfbnaXSafgytKTm1XdHTXkbNFFWNGWXs21ycPeTWmq/Th65mPE2h7c2dgw6eNlcf3XyKwWPhnXPYcuHmT/AKXhXY/sdn2/Y787hzHyNQjkVz9nTJ72wXn8PTc+wudD3Lfkz5k7Mr2rFZWAtG37Uez7/D15EBo+jZOpRnZBquuKe05LpKXoKdS1DTqb9PU+Xq4+rg/PZkzxBrFeFV/p2ncsZRXLKUfCC9F3Km+r3ZLVvXJua4dEUM5U7OlGrFm/EWqlJPhx6L4euPI+r3YALJhAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHZpepZWnWSnjyTUltKMusX3Nk9Z1KeTHIllT5ovdRXSP5EeDh1wb1a4lqGdkwgq4zaiuKWpdISwuJNO5ZbV5EF+MH6r1THDemy0yrJvy+WM92t9+nIuu/4/wVXS7MmvUKXiScbnJRj6Pf17Fs4vy/o+l+xT9+98v4efy/Ez7a5QkqovhL9D2Oz82nIqltC+H9ypaa9JarRfPp8/yqGoZEsvNtyZeNkm9vReS/I1V12WPauEpv+1bk5wzosc1fS8pP2Ce0Y/ffyJjL1zTNOf0amHO49OWlJRj23LEsjdfh1x1aMXH2O7q/veZaq4y4rXi38ilzhKD5ZxcX6NbGJc6NZ0nVNsbKq5HLwVqW2/Z+X6ELxHoz0+auo3ljze3Xxg/RnVeRrLcmtGQ5mxlXS8jGsVkFz05r4ohgAWTEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMoQlOahCLlJvZJLdslKeHtUshzewjBPynNJnErIw956FijEvyP/VBy+C1O/gvJwq5zonFQyZv3Zt/WXovT+TDjHCy1k/TJTlbQ+i/+H2/yRebpeoYK9pdRKMU/rxe6X4rwLDw9rNedV9BzuV2tcqcvCxej7lOxbk/GhxXU9Nhzjk4/9Ly065L3Xppq/Netfjzq2HjXZeTCiiPNOT/Lu+xaeJrK8HQKtPU1KcoxgvXaO27/AEOt04OgYV2TVVOTb+L6+C38kU3UMu7OypZF8t5S8EvBL0R9i3kTUl7q+pHdXHYuLOmT1usWj05KP8+vPnJTG1zOo06WHCfaFj+tBei/30IsFyUIz95HnKMm7HblVJptacOwfV7sAHRAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAdWl5f0HPqyvZqzkfg+/T8zp4j1COo56sqb9lCCUN1t3f6/sRgOHXFz3+pajmWxx3jJ+y3r8/X0Lxqlj03hpRofLJQjXFrv4v4+JRy7VqOtcMquEkrORRfacdv3/kpltc6rJV2wlCcXs4tbNFXD0Sknz1N77Tb05U2Q/wDW4rTt65GBc9Jk9T4XnTc+aUYyr3fqusX+xTDJOW3Im9m/BE91XiJcdNDJ2ZtD7lOTcd5STTWunP8AMxBbdA0OrHpeZqMY8zi2oT8IL1ff9itaj9F+m2/Q+b2HN7nN/vwEL42ScY9D7l7LuxKIW2tJy6ddO/rkc4AJjMAAAAAAAAAAAAAAAAAAAAAAAAAAAB7CMpyUYpuTeyS82eEnwxXGzXMZSW6TcvxSbX6nM5bsXLsT4tPj3Qq/yaX5ssOHj4fD+nfSchc18ltJrq2/uoib+Kc6Vm9VVNcN+iabf4sz45sm8+ip78kauZfFt7/sivFSimNkfEnxbPRbW2pbiXPExHuQhw4c2+7ZctE1+GdYsXLqjXbPpFr6su3XwIjijTI6flQvx0402Pol9iXoQsZSjJSi2pJ7pryZc+Ldp6DGc1tLng0vR/73OXBUXR3OT6EteTLauzrVkcZ1cVLr8P09aGrh7Wa86r6Dncrta5U5eFi9H3K/r2LjYmozpxbeeC8V9x/d38zhTaaabTXg0ePq92WIUKublF8H0MfK2tPLxY03R1lHlLrp29fXiAATmSAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAd+janfpt7nX79cvrwb6P8AyWN5+gapGLy1CM0vCxOLX/1L5lNBBZjxm97k/I18HbN+LX4LSnDtJao35sao510MfrUrJKvZ77rfp8S0cNaGsdRzMyO93jCD+x3ff9jVwppuNDHWp32Vza3cVv0r2833OTWeIb7cuKwZuumqW6f3337diCyc7X4VfTmzWwcfG2fBZ2YuMuMYr6/Lp2+Jnxhn5Usl4PJKqhdf/md/gV0ulNmFxHpzrsSryILdpeMH6r1RWMjTMynUFhOpytk/c28JL1XY7xpxjHca0a9alXbmLdbasqEvEhPk+3/zp09dTi2bBdsPBwdE02y3LcJylHayTW/N/akUy+Vcrpyqg663JuMW99l6bktVytb0XBdShtDZcsCEPEkt6XOPVevWpgACYywAAAAAAAAAAAAAAAAAAAAAbMai3JvjTTBzsk9kkMai3JvjTTBzsk9kkXDFow+HdPd97U8iS2bXjJ/dj2ILrvD4Li3yRq7M2Y8xuc3u1x96X+l5nHm6Rp2naJL6XPfIl1jOPjzeiXoQGl5P0PUKcnq1CXXb08H+h7qedfqGS7rn2jFeEV6I7/8AQMlaTLNslGuaXN7OXT3e78n2OYrw46Wy4ss3SeXkKWBVpGtarvw46vz/AFJziPTf9UxK8nEcZ2xW8OvScX5FNtqtpsddtc4ST22ktmSWja3k6cvZbK6jf6jfh8H5E7HinT3FOdOQpLy5U/5IYeNR7KW8i/kf03azV8rfCs6prVP4cvr8iG0DRb8vIhbkVShjRe75ujn2R1caZ8LbYYNUk1W+axr73kvw/k81Pie66Drwq3Sn0c5PeX4ehXm2222234tkldc5z8SzhpyRUy8zFxcV4mG97e96XLXTovX56ngALZ50AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA2QuthVOqNko1z25op9Ht6msAaH1yb0TfI6dLllxzqnhc3t9/d28/j2L9k5NWJiLKzHCMox2fL16vxSInQo6bpukfT3dGcpL35+e/3EiuazqV2pZPtLPdrj9SG/SK+Znzh95s5aJdT2WLkLYeHq5b1lnFR5peb9ceXTUazqV2pZPtLPdrj9SG/SK+ZMcN6EpRWZnwXK1vCuXn3fyPeGtD6Rzs6HTxrrl+7+Rq4l1z27lh4c/wCl4WWL7fZdv3OpTc34NPLqyCjHjjx/qO0uMn7sXzb7vy+n5IiNWhiV59sMKbnSn0b/AGT80chI6HpVupX7LeFEX78/4Xc28SaXDTciDqnvVbu4p+Mdtt1+pYjbFSVevExbMHIsplmqGkNfr28uhEgAmM0AAAAAAAAAAAAAAAA2Y1FuTfGmmDnZJ7JItmLpmmaPirI1GVdlj85Ldb+kV5/EhtujXw5vsaez9l25usk1GC5yfJFWwMu7CyY5FEtpx/Jr0ZcoSweItN5ZLlsj4r7Vcvl+5hTfoutKWOq48+3RShyy+KZXsurK0DVt6ZvbxhJ+E4+jKsmr3y3Zo3qYy2XXq5K3HnwenR/D18noTGjaFXgTnmahOt+ybcOvupL7TIriHWZ6hY6aW440X0XnN+r+RYq7cTiDSpV80oS6c0U+sJeXxRB4HDeTPUJV5S5KK31mvt/A5qnHec7n7SJ9oYtvgV42zY61T5tc2/8A6fRf88jm0HRrdSm5ybrx49HPbq36I4c/GeJmWY8pxm4Pbmi+jLLr+sV4VP8Ap2ncsZRXLKUfCC9F3Km+r3ZaolZNucuC6IwNqU4mLGOPV7U170unwXw9eQAFgxgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD3d8vLu9t99ix8KaRVdFZ+S4zjF+5DffqvN/IrZupyb6arKqrZwhatpxT6MiuhKcdIvQv7Oyace9W3Q3kuS8+hOcS657dyw8Of9LwssX2+y7fuR2h6VbqV+y3hRF+/P+F3Gh6VbqV+y3hRF+/P+F3LJq2o42i4ccTEhH23L7kPu92VpSVS8KrmblNMtoSe0NoPStcl38l5fX82dtNuJh30aZRFKTTfLH7KS33fxK9xzZzahRV92rf82/kODfaZGsX5NsnOSrbcn47tr/Jx8V2e01y9eUFGK/JEdNW5fpz0Rb2ntB5OyN/TdjKWiXZL/hFAnuG9EeW45WVFrHX1Y/f/AMEfrlGLjajZViWc9a8V91+a38y7G6MpuC5o8zbs2+rFjkzWkZPh3+Onb1yOEAEpngAAAAAAAAAAAF34ZwsXH05ZGPKN91kfen4dfu9iq61k5eTn2PMThZF8qr8oL0RnouqXabkc0d51S+vD17ruWbU8DF13CjlYs4q3b3J+v9sv99DP40WuU+KfXsex9na2z404vsyr5w6S8/P9+fRlX0Cu63V8ZU780bFJteUU+pL8dzg78WtfXjGTfwbW37M76q8LhzTnObVmRNfjN+i9EVHNybcvJnkXS3nN7/DsSQfjW+IuS/Uq5cVszZ7w5vWyxptf4pf79fHLAy78LJjfRLlkvFeTXoye1TiX2uFGvDjKu6a/qSf2Oy+ZWQTzohOSlJcjIxdqZWLVKqqWil+nw7B9XuwASmeAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAdmmalladZKWPJbSWzjLqn6M5rrLLrZW2zc5ye8pPxZgDlRSeunEllfZKtVuT3VyXQtfAle1WVb6yjFfhu/5MMDSHqGqZGflRax3dJwi/t9en4HdwZBR0bmTTc7JN9vBfwcfEuuKtSwcGWz8LLI+XZGa3OV0lDm+vY91GrFo2Xj2ZXGMdWo/5N8V6/McSa2q4ywMCSTS5Zzj9n+1FZqovu/5VNln/bFsn+GNEhkVrNzI81e/9OD8Jd32JHM4iwMOXsMet3cvT+nsoLsmSxmqv7dUdX1M+/FnnxWZtC1Vxfurnw8l61KbZXZXLlshKD9JLYxLnja3pep/8Nl0+z5vBW7OLfZ+TIXiPRnp81dRvLGm9uvjB+hNXkay3JrRmZmbHUKXkY1isguenBr4ohgAWTDAAAAAAAAABIaLql2m5HNHedUvrw9e67keDmUVNaMmovsx7FZW9Gi76pg42u4MMnGsXtUv6cv/ANWUu2udVsqrI8s4NxkvRo34Wfl4cLIY9zgrFtJfyvRnK+r3ZDRVKrWLeq6GltXPozty2MN2z8XZ+vWoABYMcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA6MXNysWFkMe6VcbFtJI5wD4kk9TuVkpRUW+C5eRd+I7HgaAqqHy78tKa9Nuv6IpBdpxWucNpVyXteVfhOPivx/kpdkJ1zcJxcZRezTWzRTwtFFxfPXiek+0+9O2u2P/AK3FbvYxLno9v+q8OWUZEk5RTrcn2W8X+35FcxdHzcnAnmV1+5H6qfjNeexH+WxLbCNy0T4plDBybtmS37K24zi+D4Jr164gAFgxwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADv0bU79Nvc6/frl9eDfR/JlkWVoGrOMshVxt6dLPcl8N/MpgILMeM3vLg/I18HbN2LX4Mkpw7SWq+RY+JNbU4vAwGo1Jcs5x8+y7FcAO6qo1x3YlTOzrc6122v4Lol2QABIUwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD2LSkm1uvT1LhGjT9e0mEceMaLaltFLxrfo/VMpxbuFdJsxV9PyZSrk4+7DfbZesvkVMvSMVLXRrkei+zkZ23Sp3FKEl7WvRd9fX+yr5mNdiZEqL4OM4/r3RpLxmU6fr+LNUWxdtTajNLqn/KZTczGuxMiVF8HGcf17o7ov8RaPg0Vdq7KeHJTre9XLk19H5/U0gAsGOAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACW4WeAtRTzXtJf8py+rzd/4OJy3IuWhYxaPvF0at5R1fN8iU4b0RVKOdnRSkvehCX2e7OTiXW3luWJiSaoXSUl9v/A4l1t5bliYkmqF0lJfb/wQBWqqlOXiWc+i7G7tHaNWNV9xwfd/FLrJ/t65c+jT8y/ByY30S2kvFeUl6Mk1DO4kz5WbRqqgtk39WHbuzk0TS7tSyOWO8KYv35+nZdyzann4mhYcMXGri7dvdh6d5C+xKekFrP6DZWJOeM7Mqbjjp66f5Py9fxT8zGuxMiVF8HGcf17o0l0shhcR6dzwaryIL8YP0fqio5mNdiZEqL4OM4/r3RLTdv8Asy4NFDaezHiNW1Peqlyf+n5mkAE5kgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAzpqsutjVVBznJ7RivMcj6k5PRczAFh1DQqMLRvb35Cjkp79pP7q+ZXiOu2Ni1iWszBuw5KFy0bWv/QACQqAAAAAAAAAAAAAAAAkNE0u7UsjljvCmL9+fp2Xcjyz8J6vVCEdPyFGvr/Tmlsm35Pv3IciU4wbguJqbHoxr8uMMmWkfq+2vTUk8vP0/Q6acWMH5e5HxS85P/fU4tf0mvUaVqWntTnKO7S/6i7dyO4p0q/GyZ5kZTtpslu5Pq4v0fb0NGgavZp13JPeeNJ+9H07oqV0tRVlT1fXzPRZe0YyyJYOdXu18o6fh7NeXrucWBl34GUrqZOM49Gn4NejJriDVNO1DTapKt/St+i86/Xd+aOHiTJwsrUHZhw2W3vz8FN+uxFlpVqzdsa0Z5+WZZhxtxISU4Ph3XxXn67MAGdldlUuWyEoNrfaS26E5laPTUwAAPgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABnTVZdbGqqDnOT2jFeZcNPw8TQMGWXlyUr2tm1/4xK1ouoS07NV6rU4tcslt127P1LTquFRrun1341u84put79O6a8ijlSe8oy4RZ6v7P0V+DZdSlK+PKL6ea7v/nUqmrajfqOS7bXtFdIQXhFGyzR82vTVnSr9x9XH7Sj67ehMcP6F7JvM1KKgobuNcvBbebOPiPWpZ0njYzccZPq/Ox/I7jZrJQqXBcytbgqFEsraEnvz91dW+77L/XyIMEhpGk5OpObq2hCK6zl4b+SOK+qyi6dNseWcHtJejLKnFtxT4mJPGthVG2UWoy5PuYAA6IAAAAAAAAAAAAAAAC08O61C+C0/UGpcy5YTl4SX3WRfEmm16dmJVWJ12LmjDf3o/HsRRMaDdp1mVKWrJ2Wbbwssk3HovBoquvwpOceXVG9DN/qFMcS/TeT9mbemi7Pv5EdiYeVlz5caidj82l0XxfgiewOFrJbSzb1Bfcr6v8/D9zt/9pNNquhRTXL2O+znGPLGK7I84pxcvKxVk4eROynl3lVF9GvVbeJDO+2UlF+ymamPsrZ9VM7Yvx5Q5pPRfu1+fwNlEtD06+FGNCFuTKSiuX35bvv4I0ccOhYtKlBO+Uvdl5qK8f4OHgrD9rmzy5L3aVtH/uf+N/zOTijL+lavZyveFX9OP4eP67nyFX/kJJt6czvJ2g3siUpQjFTekUl0XN/Hz+BFAA0TxQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABnTXZdbGqqEpzk9lFLqzGUZRk4yTUk9mn4okeHtQr07O9pbWpQmuWUtvej3RP6/pFWo0rOwXF3OO/TwsXzK87/DmoyXB9TZxdk/e8SVtEtZx5x66eXf11KcSGiapdpuRzR3nTJ+/D17rucEoyjJxkmpJ7NPxR4TSiprR8jMovsxrFZW9JIvmpVR1rSP+DyNlL3ls+ktvsyKzpGiZOZmSruhKmuqW1smuu/ou5q0TU79MuU0nKib9+Hk+67k7rfEVUMaMNPnz22R3c/uL5lBQtpfhw4p8n2PWzyNnbSisvKe7KHvR/y7aevj3GuarTpeOtO05RjYls2vCtfMqUm5ScpNtt7tvzEm5ScpNtt7tvzPC5TSqlouZ53aW0rM6zelwiuCS5JAAEpnAAAAAAAAAAAAAAAAAAAmuHNalgzWPkNyxpP8YP1XbsQp2aJVTdquPXfOMa3Pd83g9vL8fAjujGUGpci9s6+6nJhKl6SbS8uPfyLpqFlGmaXkZFEI1uW8kl5zfRMo+FiZGdkKmiDnN9W/Jd2ye44y97KcKL6R/qT+Pgv5/MkNHqp0jQfpVq2lKCssfm9/BfqkUKpOmre5ykes2hRDae0HRru1VLjp+b9eTOXF4UpUF9JyrJS81Wkkvz3MMzhSPI3iZMuZeEbF4/ivkQepapmZ1rlbbJR8oRe0UjHT9RzMGxToulsvGDe8X+BOqsjTXf49jMln7H3vCWO93/LXj8dP5NOXjXYt8qcitwnHyZqLjqtdOtaAs2qG1tcXJeq2+tH/AH2KcTUW+IuPBrmZe1NnrDtW496ElrF+QABMZgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPYpykorbdvZbvYDmZU1WXWxqqg5zk9oxXmWjB4ew8XHV+qWxb81z8sI9t/M69K06nRsGzLui7b1Debit9l6L5lW1bUb9RyHZa9oL6kE+kV8+5S35Xy0g9IrqeoWJj7IqjZlw37Zcovkl3fr9yxZOgabmY7s02yMJeTjPni36P0IrRdUv0jKli5UZexUtpx84P1R5wfbdDWI11t+znF+0Xlsl0f57GXGagtZ3h4uqLn8ev8bHyMXvumb1TWpJbdD7tHaeLHw5xlutLk/l6/Qltf0irUaVnYLi7nHfp4WL5kFoej3ahkNTUq6a3tZJrZ7+i7/sZ8PazPT7PZWtzxpPqvOL9V8iZ1/XqqKfY4E4ztsW7nHwin/JyvGr/ALUePZk0v6XnL79a91r3o9300+P/AHTizm4pycCjEhpdFMJThts1/wBP/LKweyblJyk223u2/M8LdVarjoeb2jnSzbnY0kuSS6JcgACUogAAAAAAAAAAAAAAAAAAAAAAAGdtlls3O2cpyaSbk930Wxctc3yOFuerqvZwnsvTp/v8ClFn4U1apU/6dlySj4Vyl4NP7LKmVB6RnFe6eh2DkVuduPbLTxVpr5+mVgFm1Phez2rngWRcH15JvZr4PzK7kVTovnTYtpwk4yW+/UmruhYvZZm5uzcnBlpdHRd+j+ZJ6Trk9PwZ4qx42qUnLdy223S6bHPo+l5GpWyjVtCEfrWSXRdj3RNLu1LI5Y7wpi/fn6dl3LNqmfi6HhRxcWEfa7e5D0/ul/vqQWzUJONS9pmvg4s8qiN+dLSmvl3fkuvrReVPy8e7EyJ0Xw5ZxfVfyaTO+2y+2Vts3OcnvKT8zAtrXTiecs3N97nLprz0AAPpwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADOiqy62NVUHOc3tFLzHI+pOT0XMwBbsLQMDCx1fqdkZS8+aW0Iv07m+FnDVz9jGOHv4da+X9dio8yP4U2j0Vf2bt3V41kYSfJN8SO4Z1z2fLhZs/6fhXY/s9n2M+IOH5O36Rp9e6m/fqXk35rsNc4chCqWTp/NtFbyqb36dvkYcM657Llws2f9Pwrsf2ez7EPP8AvUfNGkk4pbO2ouH4J/z2+Pz6EhiUYnDunSvvkp3zXVrxk/ursVHNybcvKsyLnvOb3fbsWXi/TMi5/TqpyshCO0q/ur1Xb1KoS4iUk7NdWzN+0M7KrI4ihu1w5Lv5gAFw84AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAd+Hq+o4kFCnJlyLwjJKSX5m3TMDJ1nPnbJ8sHJyts26LfyXciyc0rX5YWmSxlRF2R/wCVJLZdfUgti4putcWa2BdVdZGGbY/Djx04v5eWv8E/k52naJXTiJbJ/Zj1cV95kdxJpCyYvUsF+0clzTinvzL1XyKxfbZfbK22bnOT3lJ+ZLcO6zPAsVF7csaT/GD9V27Ff7tOpb8HrLr5mx/WsfPk8bJju1P3Wvw9vXT4EMTOi6Ddn0Svsm6a2v6ba+s/kT12hYGXnQzoyXspLmlCP1ZvyZycSa2qIvBwZJTS5Zzj4Q7Lv+x9eTK3SNXPr5HENiU4ClfnvWC91L8Xr1w51fIqnRfOmzbmhJxez3W5rOvTMDI1HJ9lQvDrKb8IruaszGuxMiVF8HGcf17ouKS13deJ5udFih4yi1BvRP8A1qaQAdEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAM6arLrY1VQc5ye0YrzHI+pOT0XMwLRwPiRauzZLeSfs4dvN/uiD1TTsnTrIwyIraS3jKPVP1RZeCbIT0u2n7UbHuuzS+TKeXPWnWPJno/s9jbm01C6Oko68H309MruuahZqGbObk/ZRe1cd+iXr8WcBuzcezFyrMe1bShLb4+jNJagoqKUeRhZVltl0pXe9rx+JauC9Qss58C2Tkox56234Lomv1IbiPHji6xfXBbQbU0vTdb/uSPBGLOWXbluP9OEORP1k9v4/cj+Jr45GtXyg94xagn8Fs/13KlaSyZbvbiegy5ynsSp2+9vez304/p/BtxdfzMfTpYialLwrsfjBenfsRABajCMW2lzMC/LuvjGNkm1FaLyAAOyuAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACe4b0R5co5WVFrHT92P3/wDBAkvDX82Ol/Qk0pL3Vbv7yj6fHuQ3qxx0gaey54dd2/lJtJapd32fr4krxJraoi8HBklNLlnOPhDsu/7Fe0vAv1HJVNK2XjOb8IoaXgX6jkqmlbLxnN+EUW3JuwuHtOVVUVKx/Vj5zfq+xXbVC8OvjJmxXXZtex5mY92mPrRf7fpMm7C4e05VVRUrH9WPnN+r7FPyLsjPy3ZY5W22PZJL8kkMi7Iz8t2WOVttj2SS/JJFu4d0WGBBX5CUsmS/CHZd+49nGjvS4yZ9/vbduVNK3KYfkl+/ZfyynZWPdi3ypyK3CcfFM1Fm47lH2uLBJcyjJt7ddum38lZLNNjsgpMwtqYkcPKnRF6pftqAASlAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAzpqsutjVVBznJ7RivMuGn4eJoGDLLy5KV7Wza/8YnLwT9B5Z7f++efN93+3+Ti4wrzln+0yHzUPpS4/VS9PiUbJO2zwuS+p6vCojs7B/qCW/N8F2j5vz/4R+rajfqOS7bXtFdIQXhFGzSM67Ss72jhLla2sg1s2iW4c0WMYrUNQSjBLmhCXht95kfxNqNOoZqdFaUK1yqzbrP8Ax6EkZwm/CiuHUp24+Rj1raF1mljesV1fn5ftwLJfjaXr1CtjNOaX14Pacez/AMnJVwriQnzW5Ns4Lrt0X5sqkI3QgsiCsjFS5VNbpb+m57bk5FseWy+2a9JTbRwsayPCE+BZs21iXNWZOMnPvron6+ZaNX1jEwMV4Ol8nPttzQ+rD8fNlSALFVMalojH2htG3OmpT4JcElySAAJTPAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAJ3Q9cr0/AsoljpzXvQcenM/7iKyLsjPy3ZY5W22PZJL8kkc5N8KZeBi5M5Za5bNvcsfVL1XxIJQjVvWRWrNajItznViXWbsF+X/ei1JjRNLo0nGebmyirlHdt+Fa9F3NOm6nZqvEEOXeGNTGUox9em27/ADIbX9Xs1K7khvDHi/dj692SHAle+Rk3fdhGP5vf+CrOpquVlnvP9D0GNn12ZlODhrSqL1b6ya46v8jm40s59YUP/Tqiv3f8kXg4t2ZkxoohzTl+SXq+x36pTdqPEeRVRHmm58vZJdN326FiqrwuHdNc5vmsl4v7VkvRdiTxfCrjGPGTRR/p72hm3X2vdqjJ6v4PkvMpuZjXYmRKi+DjOP690aTp1LNvz8qV976vpGK8Ir0RzFuOui3uZ5y9VqyXha7uvDXnoAAdEQAAAAAAAAAAAAAAAAAAAAAAAAAM6arLrY1VQc5ye0YrzHI+pOT0XM8qrnbZGuuEpzk9lFLdssGJwrkWVqWRkwpk19WMeZr49USOn4eJoGDLLy5KV7Wza/8AGJX9Q1vPy73ON9lEE/dhXJrb8vEp+LZc9KuCXU9IsHD2bWpZycpy/AnpovNmzUdJztInHJrnzwi01bDpyvuiw6JqePq2P7HJhD28NnKElupbfaRq4Zzp6pg342YlY4JRk39qL38e/QqlvtMLULFVNxnTY1GSfXo9iPcd2sJ+8upc+8Q2X4eVi6um3nF9NOZYONcjNjKGPyuGLJb8yf136P5EVoWk26lfu94Y8X78/wCF3LHpWoYut4UsTLhH2u3vw+9/cv8AfQ59c1WnS8dadpyjGxLZteFa+ZzXZOMfBjHSXriT5mJi32/1K63eqfJddf8AH1/JhxHn4mHhPScSquT5dpLbdQXzKoeyblJyk223u2/M8LtNSrjoeW2jtCedbvtaJcEl0XYAAlKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALhwPXy6ddb5zt2/BJfMp5YOHtcpwcKePfW3y7yrcftP0fzK2XCU69Io3Ps7kU4+arLpaJJ8fMm7HhaHi25E3zW2ycm/tWSfXZdir7Z+v6i2lu/8A8a4nNqWdfn5Lvvl18IxXhFeiLdhRp0Th9XTj7/Kpz9ZSfgv4K+68eOvObNdXR2va617GPWtX5+b+Pric2PwriRhvkZFs5efLtFfya8zhWpwcsPJkpeUbNmn+K8Cu5+flZ1rsyLXL0iukV8EZafqGVg2qePa0vOD6xfxRL4N6Wu/xKb2jsiUvD+7ex314/H0zVl412JfKjIrcJx8n+5pLlqlVOt6EsymO1sIuUfVNfWj/AL7FNJqLfEXHmuZmbV2esK1bj3oSWsX5AAExlgAAAAAAAAAAAAAAAAAAAAA6NPy7sHKhkUtc0fJ+DXoc4PjSa0Z3XZKuSnB6NF5f0LiLTPuzj/8AdXL5fuVLI03Mp1BYTqcrW/d28JL1XYw07NvwcmN9EtmvFPwkvRl60rOxtRojkVJKcVtKL+tDt8DPlv4uu7xj9D2FCxvtBuq17ly56fiX7/T4cuCmFHDmjynY1O+fVr70vJLsimTlKc5Tk95Se7fckeI5Z0tSms5bSX1Evq8vYjSzj17q3m9WzG2zmK2xY9cd2FfBJ8/NvzZnVZZTZGyqcoTi91JPZoxk3KTlJttvdt+Z4CwY289NOgAAPgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALpxNvk8ORuq6x9yzp6f7ZSyz8LatV7D/AE3MaUXuq3Lwaf2WVcqL9ma6HoNg31/3cWx6K1aJ+fHT6lYBZNS4XuVrlgzjOtv6s3s4/j5o6svG03RtGlRkQjfdcuq+1J9vRI+/eoPTd4tnC+z+VBzd+kIxWur5Ptp319ceBD6Rrd2nYs6IUwsUpcycn4dNv4Ip+PoeAnjCMW2lzMq3KtthCuctVHl5AAHRXAAAAAAAAAAAAAAAAAAAAAAAAB06dm34OTG+iWzXin4SXozmB8aTWjO67JVSU4PRosPEOsYWfp9UK6d7n1bl/wBL1W/nuV4A4rrjXHdiWc7OtzbfFt010S4LTkAASFMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAkcHWtRxIqFd7nBeEJrmXzOXNyrszIlffPmnL8kvRdjQDhVxT3kuJYnl32Vqqc24ro3wAAOyuAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAf//Z" class="topbar-logo" alt="PCPS">
+  <div class="topbar-div"></div>
+  <div class="topbar-id">
+    <div class="topbar-name">Command Insight Center — Graduation</div>
+    <div class="topbar-sub">Petersburg City Public Schools</div>
+  </div>
+  <div class="meeting-badge">
+    <div class="badge-dot"></div>
+    <div class="badge-txt">Next accountability meeting — May 6 · 9:00am</div>
+  </div>
+  <div class="topbar-links" style="margin-left:auto;">
+    <a href="index.html">Overview</a>
+    <a href="pcps_leadership_board.html">Policy</a>
+    <a href="pcps_operations_board.html">Operations</a>
+    <a href="pcps_dashboard_preview.html">Reading CIC</a>
+  </div>
+</nav>
+<!-- ══ SIDE NAV ══ -->
+<aside class="sidenav">
+  <div class="sidenav-section">Views</div>
+  <button class="nav-btn active" onclick="switchView('director',this)">
+    <span class="nav-btn-icon">📊</span> Director
+  </button>
+  <button class="nav-btn" onclick="switchView('counselor',this)">
+    <span class="nav-btn-icon">👩‍🏫</span> Counselor
+  </button>
+  <button class="nav-btn" onclick="switchView('coach',this)">
+    <span class="nav-btn-icon">🎓</span> Grad Coach
+  </button>
+  <button class="nav-btn" onclick="switchView('career',this)">
+    <span class="nav-btn-icon">🏆</span> 3E Readiness
+  </button>
+  <button class="nav-btn" onclick="switchView('support',this)">
+    <span class="nav-btn-icon">👤</span> Student Support
+  </button>
+  <div class="sidenav-bottom">
+    <div style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--text-dim);margin-bottom:8px;">Boards</div>
+    <a href="index.html" class="sidenav-link">System Overview</a>
+    <a href="pcps_leadership_board.html" class="sidenav-link">Policy Board</a>
+    <a href="pcps_operations_board.html" class="sidenav-link">Operations Board</a>
+    <a href="pcps_dashboard_preview.html" class="sidenav-link">Reading CIC</a>
+    <div style="margin-top:12px;font-size:9px;color:var(--text-dim);line-height:1.5;">Data: Richelle Hines<br>Updated Mar 20, 2026</div>
+  </div>
+</aside>
+
+<!-- ══ MAIN CANVAS ══ -->
+<div class="canvas" id="canvas">
+
+
+
+<!-- ══ FILTER TOGGLE ══ -->
+<button class="filter-toggle" id="filter-toggle" onclick="toggleFilters()">
+  <span>⚙</span> Filters
+</button>
+
+<!-- ══ FILTER SIDEBAR ══ -->
+<div class="filtersidebar" id="filtersidebar">
+  <div class="filter-head">
+    <span>Filters</span>
+    <button class="filter-close" onclick="toggleFilters()">✕</button>
+  </div>
+  <div class="filter-group">
+    <div class="filter-group-label">Cohort year</div>
+    <button class="chip active" data-group="cohort" onclick="chipGroup(this)">All</button>
+    <button class="chip" data-group="cohort" onclick="chipGroup(this)">Class of 2026</button>
+    <button class="chip" data-group="cohort" onclick="chipGroup(this)">Class of 2027</button>
+    <button class="chip" data-group="cohort" onclick="chipGroup(this)">Class of 2028</button>
+    <button class="chip" data-group="cohort" onclick="chipGroup(this)">Class of 2029</button>
+  </div>
+  <div class="filter-group">
+    <div class="filter-group-label">Diploma type</div>
+    <button class="chip active" data-group="diploma" onclick="chipGroup(this)">All</button>
+    <button class="chip" data-group="diploma" onclick="chipGroup(this)">Advanced</button>
+    <button class="chip" data-group="diploma" onclick="chipGroup(this)">Standard</button>
+  </div>
+  <div class="filter-group">
+    <div class="filter-group-label">Placement</div>
+    <button class="chip active" data-group="placement" onclick="chipGroup(this)">All</button>
+    <button class="chip" data-group="placement" onclick="chipGroup(this)">PHS</button>
+    <button class="chip" data-group="placement" onclick="chipGroup(this)">Pittman</button>
+    <button class="chip" data-group="placement" onclick="chipGroup(this)">Homebound</button>
+  </div>
+  <div class="filter-group">
+    <div class="filter-group-label">Special flags</div>
+    <button class="chip" data-group="flag" onclick="chipGroup(this)">Sliders (60)</button>
+    <button class="chip" data-group="flag" onclick="chipGroup(this)">SOL gap</button>
+    <button class="chip" data-group="flag" onclick="chipGroup(this)">No 3E path</button>
+  </div>
+  <button class="filter-reset" onclick="resetFilters()">↺ Reset all filters</button>
+</div>
+
+<!-- ══════════ DIRECTOR VIEW ══════════ -->
+<div id="view-director" class="view active">
+
+  <div class="vbanner">
+    <div class="vb-l">
+      <div class="vb-dot"></div>
+      <span>Viewing as: <span class="vb-role">Dr. Decardra Jackson — Director, Data Assessment &amp; Accountability</span></span>
+    </div>
+    <div class="vb-r">Real data · FGI Working Sheet · Updated Mar 20, 2026</div>
+  </div>
+
+  <!-- WEIGHTED INDEX -->
+  <div class="index-card">
+    <div>
+      <div class="kpi-label" style="margin-bottom:7px;">VDOE Weighted Performance Index — Class of 2026</div>
+      <div class="index-main">
+        <div class="index-score">79.84</div>
+        <div class="index-label-col">
+          <div class="index-label">of 100 pts</div>
+          <div class="off-track">⚠ Off Track</div>
+        </div>
+      </div>
+    </div>
+    <div class="index-components">
+      <div class="ic"><div class="ic-val" style="color:var(--gold-text);">87.46%</div><div class="ic-name">4-yr grad rate</div></div>
+      <div class="ic"><div class="ic-val" style="color:var(--red-text);">63%</div><div class="ic-name">Chr. absenteeism</div></div>
+      <div class="ic"><div class="ic-val" style="color:var(--green-text);">82.38%</div><div class="ic-name">3E readiness</div></div>
+      <div class="ic"><div class="ic-val" style="color:var(--blue-text);">98.43%</div><div class="ic-name">Reading SOL</div></div>
+      <div class="ic"><div class="ic-val" style="color:var(--blue-text);">97.19%</div><div class="ic-name">Math SOL</div></div>
+      <div class="ic"><div class="ic-val" style="color:var(--amber-text);">92.87%</div><div class="ic-name">Science SOL</div></div>
+    </div>
+    <div class="index-note">Chronic absenteeism (63%) is the largest index suppressor. Science and History SOL mastery shortfalls create the VC deficit. 3E readiness at 82.38% is the strongest component and is holding the index up.</div>
+  </div>
+
+  <!-- KPI STRIP -->
+  <div class="kpi-strip kpi-5">
+    <div class="kpi k-maroon">
+      <div class="kpi-label">Cohort 2026</div>
+      <div class="kpi-value">298</div>
+      <div class="kpi-sub">Students in accountability calc</div>
+      <div class="kpi-badge kb-info">60 sliders tracked separately</div>
+    </div>
+    <div class="kpi k-red">
+      <div class="kpi-label">Chr. Absenteeism</div>
+      <div class="kpi-value">63%</div>
+      <div class="kpi-sub">Primary index suppressor</div>
+      <div class="kpi-badge kb-alert">Priority action target</div>
+    </div>
+    <div class="kpi k-red">
+      <div class="kpi-label">Science VC gap</div>
+      <div class="kpi-value">279</div>
+      <div class="kpi-sub">Students need Biology SOL</div>
+      <div class="kpi-badge kb-alert">93% of cohort</div>
+    </div>
+    <div class="kpi k-amber">
+      <div class="kpi-label">History VC gap</div>
+      <div class="kpi-value">264</div>
+      <div class="kpi-sub">Students need History SOL</div>
+      <div class="kpi-badge kb-warn">89% of cohort</div>
+    </div>
+    <div class="kpi k-green">
+      <div class="kpi-label">3E Readiness</div>
+      <div class="kpi-value">82%</div>
+      <div class="kpi-sub">Strongest index component</div>
+      <div class="kpi-badge kb-ok">Employment path dominant</div>
+    </div>
+  </div>
+
+  <div class="main-grid">
+    <div class="col-main">
+
+      <!-- SOL GAP BARS -->
+      <div class="sc">
+        <div class="sc-head">
+          <div class="sc-title">SOL verified credit gaps — Class of 2026</div>
+          <div class="sc-meta">Students need each SOL to earn a verified credit · remediation, not credit recovery</div>
+        </div>
+        <div class="sol-grid">
+          <div class="sol-row">
+            <div class="sol-name">Science</div>
+            <div class="sol-bar-bg"><div class="sol-bar-fill" style="width:93%;background:var(--red);"></div></div>
+            <div class="sol-count" style="color:var(--red-text);">279</div>
+            <div class="sol-pct">93% of cohort</div>
+          </div>
+          <div class="sol-row">
+            <div class="sol-name">History</div>
+            <div class="sol-bar-bg"><div class="sol-bar-fill" style="width:89%;background:var(--red);"></div></div>
+            <div class="sol-count" style="color:var(--red-text);">264</div>
+            <div class="sol-pct">89% of cohort</div>
+          </div>
+          <div class="sol-row">
+            <div class="sol-name">Math</div>
+            <div class="sol-bar-bg"><div class="sol-bar-fill" style="width:67%;background:var(--amber);"></div></div>
+            <div class="sol-count" style="color:var(--amber-text);">199</div>
+            <div class="sol-pct">67% of cohort</div>
+          </div>
+          <div class="sol-row">
+            <div class="sol-name">Hist SOL needed</div>
+            <div class="sol-bar-bg"><div class="sol-bar-fill" style="width:18%;background:var(--amber);"></div></div>
+            <div class="sol-count" style="color:var(--amber-text);">55</div>
+            <div class="sol-pct">Need Hist SOL test</div>
+          </div>
+          <div class="sol-row">
+            <div class="sol-name">Read SOL needed</div>
+            <div class="sol-bar-bg"><div class="sol-bar-fill" style="width:15%;background:var(--blue);"></div></div>
+            <div class="sol-count" style="color:var(--blue-text);">45</div>
+            <div class="sol-pct">Need Read SOL test</div>
+          </div>
+          <div class="sol-row">
+            <div class="sol-name">Write SOL needed</div>
+            <div class="sol-bar-bg"><div class="sol-bar-fill" style="width:13%;background:var(--blue);"></div></div>
+            <div class="sol-count" style="color:var(--blue-text);">40</div>
+            <div class="sol-pct">Need Wri SOL test</div>
+          </div>
+          <div class="sol-row">
+            <div class="sol-name">Math SOL needed</div>
+            <div class="sol-bar-bg"><div class="sol-bar-fill" style="width:10%;background:var(--green);"></div></div>
+            <div class="sol-count" style="color:var(--green-text);">30</div>
+            <div class="sol-pct">Need Math SOL test</div>
+          </div>
+        </div>
+        <div class="sol-note">Science and History VC gaps affect 89–93% of the cohort. These students completed the courses — they need SOL remediation and test prep, not Edgenuity enrollment. Math SOL gap (30 students) is the most actionable near-term target. SOL Academy and targeted test prep are the correct interventions across all subject areas.</div>
+      </div>
+
+      <!-- COHORT TABLE -->
+      <div class="sc">
+        <div class="sc-head">
+          <div class="sc-title">Cohort status — Petersburg HS + Pittman + Homebound</div>
+          <div class="sc-meta">Richelle Hines · master spreadsheet · De-identified · ⚑ = 4-absence threshold · ⚑⚑ = SAT escalated</div>
+        </div>
+        <table class="dt">
+          <thead><tr>
+            <th>Student ID</th><th>Cohort</th><th>Diploma</th><th>Placement</th>
+            <th>Status</th><th>SOL needed</th><th>VC gap</th>
+            <th>Slider</th><th>CTE credential</th><th>Absences</th><th>Tier</th>
+          </tr></thead>
+          <tbody>
+            <tr class="clickable">
+              <td><span class="stu-id">PHS-2026-0041</span></td>
+              <td style="font-size:11px;color:var(--text-dim);">2026</td>
+              <td><span class="dtag dt-adv">ADV</span></td>
+              <td style="font-size:14px;">PHS</td>
+              <td><span class="pill p-green"><span class="dot d-green"></span> Enrolled</span></td>
+              <td style="color:var(--green-text);font-size:11px;">None</td>
+              <td style="color:var(--green-text);font-size:11px;">Complete</td>
+              <td style="color:var(--text-dim);font-size:11px;">No</td>
+              <td style="color:var(--green-text);font-size:11px;">W!SE</td>
+              <td style="color:var(--green-text);font-size:11px;">0</td>
+              <td><span class="pill p-green">On Track</span></td>
+            </tr>
+            <tr class="clickable">
+              <td><span class="stu-id">PHS-2026-0078</span></td>
+              <td style="font-size:11px;color:var(--text-dim);">2026</td>
+              <td><span class="dtag dt-std">STD</span></td>
+              <td style="font-size:14px;">PHS</td>
+              <td><span class="pill p-green"><span class="dot d-green"></span> Enrolled</span></td>
+              <td style="color:var(--amber-text);font-size:11px;">Sci + Hist SOL</td>
+              <td style="color:var(--amber-text);font-size:11px;">2 VCs needed</td>
+              <td style="color:var(--text-dim);font-size:11px;">No</td>
+              <td style="color:var(--amber-text);font-size:11px;">WRS in progress</td>
+              <td style="color:var(--amber-text);font-size:11px;">4 ⚑</td>
+              <td><span class="pill p-amber">Watch</span></td>
+            </tr>
+            <tr class="clickable">
+              <td><span class="stu-id">PHS-2026-0112</span></td>
+              <td style="font-size:11px;color:var(--text-dim);">2026</td>
+              <td><span class="dtag dt-std">STD</span></td>
+              <td style="font-size:14px;">PHS</td>
+              <td><span class="pill p-green"><span class="dot d-green"></span> Enrolled</span></td>
+              <td style="color:var(--red-text);font-size:11px;">Math + Sci + Hist</td>
+              <td style="color:var(--red-text);font-size:11px;">3 VCs needed</td>
+              <td style="color:var(--text-dim);font-size:11px;">No</td>
+              <td style="color:var(--red-text);font-size:11px;">None</td>
+              <td style="color:var(--red-text);font-size:11px;">7 ⚑⚑</td>
+              <td><span class="pill p-red">Intervene</span></td>
+            </tr>
+            <tr class="clickable">
+              <td><span class="stu-id">PTM-2026-0009</span></td>
+              <td style="font-size:11px;color:var(--text-dim);">2026</td>
+              <td><span class="dtag dt-std">STD</span></td>
+              <td style="color:var(--blue-text);font-size:11px;font-weight:700;">Pittman</td>
+              <td><span class="pill p-blue"><span class="dot d-blue"></span> Alt program</span></td>
+              <td style="color:var(--amber-text);font-size:11px;">Hist SOL</td>
+              <td style="color:var(--amber-text);font-size:11px;">1 VC needed</td>
+              <td style="color:var(--gold-text);font-size:11px;font-weight:700;">Yes</td>
+              <td style="color:var(--green-text);font-size:11px;">WRS earned</td>
+              <td style="color:var(--green-text);font-size:11px;">1</td>
+              <td><span class="pill p-amber">Watch</span></td>
+            </tr>
+            <tr class="clickable">
+              <td><span class="stu-id">PHS-2026-0155</span></td>
+              <td style="font-size:11px;color:var(--text-dim);">2026</td>
+              <td><span class="dtag dt-std">STD</span></td>
+              <td style="font-size:14px;">PHS</td>
+              <td><span class="pill p-gray">Unconfirmed</span></td>
+              <td style="color:var(--text-dim);font-size:11px;">—</td>
+              <td style="color:var(--text-dim);font-size:11px;">—</td>
+              <td style="color:var(--text-dim);font-size:11px;">No</td>
+              <td style="color:var(--text-dim);font-size:11px;">None</td>
+              <td style="color:var(--red-text);font-size:11px;">LTS</td>
+              <td><span class="pill p-red">Recovery</span></td>
+            </tr>
+            <tr class="clickable">
+              <td><span class="stu-id">HB-2026-0003</span></td>
+              <td style="font-size:11px;color:var(--text-dim);">2026</td>
+              <td><span class="dtag dt-std">STD</span></td>
+              <td style="color:var(--purple-text);font-size:11px;font-weight:700;">Homebound</td>
+              <td><span class="pill p-purple">Homebound</span></td>
+              <td style="color:var(--amber-text);font-size:11px;">Sci SOL</td>
+              <td style="color:var(--amber-text);font-size:11px;">1 VC needed</td>
+              <td style="color:var(--text-dim);font-size:11px;">No</td>
+              <td style="color:var(--text-dim);font-size:11px;">None</td>
+              <td style="color:var(--blue-text);font-size:11px;">Angela Sykes</td>
+              <td><span class="pill p-amber">Watch</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="sc-foot">
+          <span style="font-size:14px;color:var(--text-dim);">SOL gaps drive VC deficits — not course completion · Slider flag affects GCI calculation · Click any row for support plan</span>
+          <div style="display:flex;gap:5px;">
+            <span class="pill p-green">On Track</span>
+            <span class="pill p-amber">Watch</span>
+            <span class="pill p-red">Intervene</span>
+            <span class="pill p-gray">Recovery</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ACTION COLUMN — alerts + next actions only, no metric duplication -->
+    <div class="col-action">
+      <div class="action-header">Action required · <span>May 6 meeting</span></div>
+
+      <div class="sc">
+        <div class="sc-head">
+          <div class="sc-title alert">Movement since last meeting</div>
+          <div class="sc-meta">Apr 15 → May 6</div>
+        </div>
+        <div class="alert-item">
+          <div class="ai-icon ai-red">!</div>
+          <div class="ai-body">
+            <div class="ai-who">Science VC — 279 students</div>
+            <div class="ai-desc">93% of cohort lacks Biology SOL. SOL Academy is the intervention — not Edgenuity. Coordinate with Thomas Midgette and science dept.</div>
+            <div class="ai-role">GCI Rate sheet · Largest single gap</div>
+          </div>
+        </div>
+        <div class="alert-item">
+          <div class="ai-icon ai-red">!</div>
+          <div class="ai-body">
+            <div class="ai-who">Chronic absenteeism — 63%</div>
+            <div class="ai-desc">Reducing the absenteeism component to 3.15 of 5 possible index points. SAT and home visit cadence must accelerate before May 30.</div>
+            <div class="ai-role">Sonya Bland · Dr. Manson · SAT protocol</div>
+          </div>
+        </div>
+        <div class="alert-item">
+          <div class="ai-icon ai-amber">i</div>
+          <div class="ai-body">
+            <div class="ai-who">CTE certification — 265 students</div>
+            <div class="ai-desc">265 students have no industry certification. Midgette remediation plan due May 3. Spring testing window closes May 30.</div>
+            <div class="ai-role">Thomas Midgette · College &amp; Career</div>
+          </div>
+        </div>
+        <div class="alert-item">
+          <div class="ai-icon ai-amber">⚑</div>
+          <div class="ai-body">
+            <div class="ai-who">60 slider students</div>
+            <div class="ai-desc">Slider coding affects GCI calculation. Richelle Hines to confirm all coding is accurate before VDOE submission window.</div>
+            <div class="ai-role">Richelle Hines · data coding verification</div>
+          </div>
+        </div>
+        <div class="alert-item">
+          <div class="ai-icon ai-green">✓</div>
+          <div class="ai-body">
+            <div class="ai-who">3E Employment — strongest pathway</div>
+            <div class="ai-desc">134 students at CTE comp + credential (0.75 pt). 19 at 1.0 pt. 2 at full 1.25. Employment track is holding the 3E index up at 82.38%.</div>
+            <div class="ai-role">Thomas Midgette · SPSF APR</div>
+          </div>
+        </div>
+      </div>
+
+
+    </div><!-- /col-action -->
+  </div><!-- /main-grid -->
+</div><!-- /view-director -->
+
+<!-- ══════════ COUNSELOR VIEW ══════════ -->
+<div id="view-counselor" class="view">
+  <div class="vbanner">
+    <div class="vb-l"><div class="vb-dot"></div>Viewing as: <span class="vb-role">Counselor — select grade below</span></div>
+    <div class="vb-r">Click any row to open support plan · SOL columns show what each student still needs</div>
+  </div>
+  <div class="grade-bar">
+    <span class="t-label">Grade / counselor:</span>
+    <button class="chip active" onclick="gradeChip(this)">12th — Cinnamon Terry</button>
+    <button class="chip" onclick="gradeChip(this)">11th — Davonni Parker</button>
+    <button class="chip" onclick="gradeChip(this)">10th — Jaide Jenkins</button>
+    <button class="chip" onclick="gradeChip(this)">9th — Ricky Norwood</button>
+    <button class="chip" onclick="gradeChip(this)">Pittman — TBA</button>
+  </div>
+  <div class="sc">
+    <div class="sc-head">
+      <div class="sc-title">12th grade caseload — Cinnamon Terry</div>
+      <div class="sc-meta">SOL gaps = VC deficits · SOL Academy and test prep are the lever · click a row to open support plan</div>
+    </div>
+    <table class="dt">
+      <thead><tr>
+        <th>Student ID</th><th>Diploma</th>
+        <th>Hist SOL</th><th>Math SOL</th><th>Sci SOL</th><th>Read SOL</th><th>Wri SOL</th>
+        <th>VC gap</th><th>CTE credential</th><th>Slider</th>
+        <th>Absences</th><th>Intervention</th><th>Last contact</th><th>Tier</th>
+      </tr></thead>
+      <tbody>
+        <tr class="clickable" onclick="openPSP('PHS-2026-0041')">
+          <td><span class="stu-id">PHS-2026-0041</span></td>
+          <td><span class="dtag dt-adv">ADV</span></td>
+          <td style="color:var(--green-text);font-weight:700;">✓</td>
+          <td style="color:var(--green-text);font-weight:700;">✓</td>
+          <td style="color:var(--green-text);font-weight:700;">✓</td>
+          <td style="color:var(--green-text);font-weight:700;">✓</td>
+          <td style="color:var(--green-text);font-weight:700;">✓</td>
+          <td style="color:var(--green-text);font-size:11px;">Complete</td>
+          <td style="color:var(--green-text);font-size:11px;">W!SE</td>
+          <td style="color:var(--text-dim);font-size:11px;">No</td>
+          <td style="color:var(--green-text);">0</td>
+          <td style="font-size:11px;color:var(--text-dim);">—</td>
+          <td style="font-size:11px;color:var(--text-dim);">Apr 22</td>
+          <td><span class="pill p-green">On Track</span></td>
+        </tr>
+        <tr class="clickable" onclick="openPSP('PHS-2026-0078')">
+          <td><span class="stu-id">PHS-2026-0078</span></td>
+          <td><span class="dtag dt-std">STD</span></td>
+          <td style="color:var(--red-text);font-weight:700;">✗</td>
+          <td style="color:var(--green-text);font-weight:700;">✓</td>
+          <td style="color:var(--red-text);font-weight:700;">✗</td>
+          <td style="color:var(--green-text);font-weight:700;">✓</td>
+          <td style="color:var(--green-text);font-weight:700;">✓</td>
+          <td style="color:var(--amber-text);font-size:11px;">2 VCs</td>
+          <td style="color:var(--amber-text);font-size:11px;">WRS in progress</td>
+          <td style="color:var(--text-dim);font-size:11px;">No</td>
+          <td style="color:var(--amber-text);">4 ⚑</td>
+          <td style="font-size:11px;color:var(--maroon-text);">SOL Academy</td>
+          <td style="font-size:11px;color:var(--text-dim);">Apr 28</td>
+          <td><span class="pill p-amber">Watch</span></td>
+        </tr>
+        <tr class="clickable" onclick="openPSP('PHS-2026-0112')">
+          <td><span class="stu-id">PHS-2026-0112</span></td>
+          <td><span class="dtag dt-std">STD</span></td>
+          <td style="color:var(--red-text);font-weight:700;">✗</td>
+          <td style="color:var(--red-text);font-weight:700;">✗</td>
+          <td style="color:var(--red-text);font-weight:700;">✗</td>
+          <td style="color:var(--green-text);font-weight:700;">✓</td>
+          <td style="color:var(--green-text);font-weight:700;">✓</td>
+          <td style="color:var(--red-text);font-size:11px;">3 VCs</td>
+          <td style="color:var(--red-text);font-size:11px;">None</td>
+          <td style="color:var(--text-dim);font-size:11px;">No</td>
+          <td style="color:var(--red-text);">7 ⚑⚑</td>
+          <td style="font-size:11px;color:var(--amber-text);">Grad coach pending</td>
+          <td style="font-size:11px;color:var(--red-text);">Apr 15 — overdue</td>
+          <td><span class="pill p-red">Intervene</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PSP DRAWER -->
+  <div class="psp" id="psp-drawer">
+    <div class="psp-head">
+      <div class="psp-title" id="psp-title">Support Plan</div>
+      <button class="psp-close" onclick="closePSP()">✕</button>
+    </div>
+    <div class="psp-grid">
+      <div>
+        <div class="psp-sec-label">SOL &amp; VC status</div>
+        <div id="psp-credits"></div>
+      </div>
+      <div>
+        <div class="psp-sec-label">Active interventions</div>
+        <div id="psp-interventions"></div>
+      </div>
+      <div>
+        <div class="psp-sec-label">Contact log</div>
+        <div id="psp-log"></div>
+        <div style="margin-top:10px;">
+          <div class="psp-sec-label">Next steps</div>
+          <div id="psp-next" style="font-size:14px;color:var(--text);line-height:1.55;"></div>
+        </div>
+      </div>
+    </div>
+    <div class="psp-foot">
+      <span style="font-size:11px;color:var(--text-dim);">SOL remediation auto-recommended · Counselor confirms enrollment · Log all contacts</span>
+      <span id="psp-3e" style="font-size:11px;background:var(--maroon-pale);color:var(--maroon-text);padding:3px 10px;border-radius:3px;border:1px solid var(--maroon-border);"></span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ GRAD COACH VIEW ══════════ -->
+<div id="view-coach" class="view">
+  <div class="vbanner">
+    <div class="vb-l"><div class="vb-dot"></div>Viewing as: <span class="vb-role">Wanda Vincent — Graduation Coach</span></div>
+    <div class="vb-r">Failing 2+ areas · recovery outreach · action queue</div>
+  </div>
+  <div class="kpi-strip kpi-4">
+    <div class="kpi k-red"><div class="kpi-label">Need grad plan</div><div class="kpi-value">19</div><div class="kpi-sub">Intervene tier · 3+ VC gaps</div></div>
+    <div class="kpi k-amber"><div class="kpi-label">Recovery outreach</div><div class="kpi-value">8</div><div class="kpi-sub">Home visits assigned</div></div>
+    <div class="kpi k-maroon"><div class="kpi-label">Plans on file</div><div class="kpi-value">61</div><div class="kpi-sub">of 71 active plans</div></div>
+    <div class="kpi k-amber"><div class="kpi-label">Plans overdue</div><div class="kpi-value">10</div><div class="kpi-sub">Must update before May 6</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div class="sc">
+        <div class="sc-head">
+          <div class="sc-title">Students requiring grad plan</div>
+          <div class="sc-meta">3+ SOL gaps · at-risk · SOL remediation is the primary lever</div>
+        </div>
+        <table class="dt">
+          <thead><tr><th>ID</th><th>Gr</th><th>SOL gaps</th><th>VC deficit</th><th>Absences</th><th>Home visit</th><th>Plan</th><th>Tier</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><span class="stu-id">PHS-2026-0112</span></td><td>12</td>
+              <td style="color:var(--red-text);font-size:11px;">Hist + Math + Sci</td>
+              <td style="color:var(--red-text);font-size:11px;">3 VCs</td>
+              <td><span class="pill p-red">SAT · 7 abs</span></td>
+              <td style="font-size:11px;color:var(--amber-text);">Needed</td>
+              <td style="font-size:11px;color:var(--red-text);font-weight:700;">Missing</td>
+              <td><span class="pill p-red">Intervene</span></td>
+            </tr>
+            <tr>
+              <td><span class="stu-id">PHS-2026-0155</span></td><td>12</td>
+              <td style="color:var(--text-dim);font-size:11px;">Unknown — LTS</td>
+              <td style="color:var(--text-dim);font-size:11px;">Unknown</td>
+              <td><span class="pill p-red">Long-term abs</span></td>
+              <td style="font-size:11px;color:var(--red-text);">Pending</td>
+              <td style="font-size:11px;color:var(--amber-text);">Recovery</td>
+              <td><span class="pill p-red">Recovery</span></td>
+            </tr>
+            <tr>
+              <td><span class="stu-id">PTM-2026-0009</span></td><td>12</td>
+              <td style="color:var(--amber-text);font-size:11px;">Hist SOL</td>
+              <td style="color:var(--amber-text);font-size:11px;">1 VC</td>
+              <td><span class="pill p-green">1 absence</span></td>
+              <td style="font-size:11px;color:var(--green-text);">Done Apr 20</td>
+              <td style="font-size:11px;color:var(--green-text);">Pittman 2.0</td>
+              <td><span class="pill p-amber">Watch</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="sc">
+        <div class="sc-head"><div class="sc-title">Action queue — before May 6 meeting</div></div>
+        <div class="action-row"><span class="action-mk" style="color:var(--red-text);">!</span><span>Complete grad plan for PHS-2026-0112 · coordinate with Cinnamon Terry · due Apr 30</span></div>
+        <div class="action-row"><span class="action-mk" style="color:var(--red-text);">!</span><span>Confirm home visit — PHS-2026-0155 · verify Sonya Bland status by Apr 30</span></div>
+        <div class="action-row"><span class="action-mk" style="color:var(--amber-text);">→</span><span>Incarcerated seniors — confirm placement coding with Richelle Hines</span></div>
+        <div class="action-row"><span class="action-mk" style="color:var(--amber-text);">→</span><span>SPED graduation needs — coordinate with Tracy Anderson (Lead Compliance)</span></div>
+        <div class="action-row"><span class="action-mk" style="color:var(--amber-text);">→</span><span>EL students with SOL gaps — follow up with Nestor Llamas (ESL Coordinator)</span></div>
+        <div class="action-row"><span class="action-mk" style="color:var(--green-text);">✓</span><span style="color:var(--text-mid);">Summer school referral list — due May 15 · coordinate with counselors</span></div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div class="sc">
+        <div class="sc-head"><div class="sc-title">Recovery tracker</div><div class="sc-meta">Exited students · outreach status</div></div>
+        <div style="padding:12px 14px;display:flex;flex-direction:column;gap:7px;">
+          <div class="rec-row" style="background:var(--red-pale);border-color:var(--red-border);">
+            <span class="stu-id">PHS-2026-0155</span>
+            <span style="font-size:11px;color:var(--amber-text);">Home visit — Sonya Bland</span>
+            <span class="pill p-red">Unconfirmed</span>
+          </div>
+          <div class="rec-row" style="background:var(--blue-pale);border-color:var(--blue-border);">
+            <span class="stu-id">PHS-2025-DR-004</span>
+            <span style="font-size:11px;color:var(--blue-text);">Enrolled other division · confirmed</span>
+            <span class="pill p-blue">Transfer</span>
+          </div>
+          <div class="rec-row" style="background:var(--green-pale);border-color:var(--green-border);">
+            <span class="stu-id">PTM-2025-DR-001</span>
+            <span style="font-size:11px;color:var(--green-text);">Re-enrolled Pittman 2.0 · active</span>
+            <span class="pill p-green">Re-engaged</span>
+          </div>
+          <div class="rec-row" style="background:#F1F3F5;border-color:var(--border);">
+            <span class="stu-id">PHS-2025-DR-007</span>
+            <span style="font-size:11px;color:var(--text-mid);">ISAEP referral — assessing</span>
+            <span class="pill p-gray">ISAEP</span>
+          </div>
+        </div>
+      </div>
+      <div class="sc">
+        <div class="sc-head"><div class="sc-title">Take 5 Mentor Program — Dr. Manson</div><div class="sc-meta">Attendance + behavior · Student Services</div></div>
+        <div class="t5-grid">
+          <div class="t5-cell"><div class="t5-val" style="color:var(--maroon-text);">14</div><div class="t5-label">Enrolled</div></div>
+          <div class="t5-cell"><div class="t5-val" style="color:var(--green-text);">9</div><div class="t5-label">Improving</div></div>
+          <div class="t5-cell"><div class="t5-val" style="color:var(--amber-text);">5</div><div class="t5-label">Monitoring</div></div>
+        </div>
+        <div style="padding:0 14px 12px;font-size:14px;color:var(--text-mid);line-height:1.55;">Dr. Manson reports at each accountability meeting. Students in Take 5 are flagged to Wanda Vincent for parallel SOL and credit monitoring.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ 3E READINESS VIEW ══════════ -->
+<div id="view-career" class="view">
+  <div class="vbanner">
+    <div class="vb-l"><div class="vb-dot"></div>Viewing as: <span class="vb-role">Thomas Midgette — Director, College, Career &amp; Workforce Development</span></div>
+    <div class="vb-r">SPSF APR 10 · Remediation plan due May 3 · Testing closes May 30</div>
+  </div>
+  <div class="kpi-strip kpi-4">
+    <div class="kpi k-gold"><div class="kpi-label">3E Index Score</div><div class="kpi-value">82.38%</div><div class="kpi-sub">Strongest weighted component · 25% weight</div></div>
+    <div class="kpi k-maroon"><div class="kpi-label">Employment path</div><div class="kpi-value">156</div><div class="kpi-sub">CTE completers with credential</div><div class="kpi-badge kb-ok">Dominant pathway</div></div>
+    <div class="kpi k-blue"><div class="kpi-label">Enrollment path</div><div class="kpi-value">27</div><div class="kpi-sub">Assoc. degree + AP/IB/Dual</div></div>
+    <div class="kpi k-red"><div class="kpi-label">No 3E pathway</div><div class="kpi-value">265</div><div class="kpi-sub">No CTE certification yet</div><div class="kpi-badge kb-alert">May 3 plan due</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px;">
+    <div class="sc">
+      <div class="sc-head"><div class="sc-title" style="color:var(--maroon-text);">Employment — CTE + credential</div></div>
+      <div style="padding:4px 0 8px;">
+        <div class="te-bar-row"><div class="te-bar-label">CTE comp + HD cred + WBL · 1.25 pts</div><div class="te-bar-bg"><div class="te-bar-fill" style="width:1%;background:var(--green);"></div></div><div class="te-bar-val">2 students</div></div>
+        <div class="te-bar-row"><div class="te-bar-label">CTE comp + HD cred or WBL · 1.0 pt</div><div class="te-bar-bg"><div class="te-bar-fill" style="width:12%;background:var(--maroon-mid);"></div></div><div class="te-bar-val">19 students</div></div>
+        <div class="te-bar-row"><div class="te-bar-label">CTE comp + state credential · 0.75 pt</div><div class="te-bar-bg"><div class="te-bar-fill" style="width:86%;background:var(--maroon-mid);"></div></div><div class="te-bar-val" style="color:var(--maroon-text);font-weight:800;">134 students</div></div>
+        <div class="te-bar-row"><div class="te-bar-label">CTE comp + WBL only · 0.5 pt</div><div class="te-bar-bg"><div class="te-bar-fill" style="width:1%;background:var(--amber);"></div></div><div class="te-bar-val">1 student</div></div>
+      </div>
+      <div class="sc-foot"><span style="font-size:11px;color:var(--text-dim);">265 students need cert · testing window closes May 30</span></div>
+    </div>
+    <div class="sc">
+      <div class="sc-head"><div class="sc-title" style="color:var(--blue-text);">Enrollment — post-secondary</div></div>
+      <div style="padding:4px 0 8px;">
+        <div class="te-bar-row"><div class="te-bar-label">Earning associate's degree · 1.25 pts</div><div class="te-bar-bg"><div class="te-bar-fill" style="width:59%;background:var(--blue);"></div></div><div class="te-bar-val" style="color:var(--blue-text);font-weight:800;">16 students</div></div>
+        <div class="te-bar-row"><div class="te-bar-label">3+ AP/IB/DE with B or better · 1.0 pt</div><div class="te-bar-bg"><div class="te-bar-fill" style="width:41%;background:var(--blue);opacity:.7;"></div></div><div class="te-bar-val">11 students</div></div>
+        <div class="te-bar-row"><div class="te-bar-label">1–2 AP/IB/DE with B · 0.75 pt</div><div class="te-bar-bg"><div class="te-bar-fill" style="width:0%;background:var(--blue);"></div></div><div class="te-bar-val" style="color:var(--text-hint);">0</div></div>
+        <div class="te-bar-row"><div class="te-bar-label">AP/IB/DE with C · 0.5 pt</div><div class="te-bar-bg"><div class="te-bar-fill" style="width:0%;background:var(--blue);"></div></div><div class="te-bar-val" style="color:var(--text-hint);">0</div></div>
+      </div>
+      <div class="sc-foot"><span style="font-size:11px;color:var(--text-dim);">Advanced Academic Programs · Dual Enrollment advisor</span></div>
+    </div>
+    <div class="sc">
+      <div class="sc-head"><div class="sc-title" style="color:var(--purple-text);">Enlistment — military</div></div>
+      <div style="padding:4px 0 8px;">
+        <div class="te-bar-row"><div class="te-bar-label">ASVAB AFQT ≥65 · 1.0 pt</div><div class="te-bar-bg"><div class="te-bar-fill" style="width:19%;background:var(--purple);"></div></div><div class="te-bar-val">3 students</div></div>
+        <div class="te-bar-row"><div class="te-bar-label">ASVAB AFQT 50–64 · 0.75 pt</div><div class="te-bar-bg"><div class="te-bar-fill" style="width:38%;background:var(--purple);opacity:.7;"></div></div><div class="te-bar-val">6 students</div></div>
+        <div class="te-bar-row"><div class="te-bar-label">ASVAB AFQT 31–49 · 0.5 pt</div><div class="te-bar-bg"><div class="te-bar-fill" style="width:44%;background:var(--purple);opacity:.5;"></div></div><div class="te-bar-val">7 students</div></div>
+      </div>
+      <div class="sc-foot"><span style="font-size:11px;color:var(--text-dim);">41 ASVAB scores on file · JROTC under future consideration</span></div>
+    </div>
+  </div>
+  <div class="sc">
+    <div class="sc-head">
+      <div class="sc-title">3E student-level tracking — Class of 2026 · sample records</div>
+      <div class="sc-meta">Thomas Midgette · alpha list updated Mar 20, 2026</div>
+    </div>
+    <table class="dt">
+      <thead><tr>
+        <th>Student ID</th><th>Diploma</th><th>Primary path</th>
+        <th>3E points</th><th>CTE credential</th><th>CTE finisher</th>
+        <th>AP / IB</th><th>Dual enroll</th><th>ASVAB</th><th>Slider</th><th>3E status</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="stu-id">PHS-2026-0041</span></td><td><span class="dtag dt-adv">ADV</span></td>
+          <td style="color:var(--maroon-text);font-size:11px;">Employment</td>
+          <td style="color:var(--maroon-text);font-weight:800;">0.75</td>
+          <td style="color:var(--green-text);font-size:11px;">W!SE</td>
+          <td style="color:var(--green-text);font-size:11px;">Y</td>
+          <td style="color:var(--text-dim);font-size:11px;">No</td><td style="color:var(--text-dim);font-size:11px;">No</td><td style="color:var(--text-dim);font-size:11px;">—</td>
+          <td style="color:var(--text-dim);font-size:11px;">No</td>
+          <td><span class="pill p-maroon">CTE comp + cred</span></td>
+        </tr>
+        <tr>
+          <td><span class="stu-id">PHS-2026-0007</span></td><td><span class="dtag dt-std">STD</span></td>
+          <td style="color:var(--blue-text);font-size:11px;">Enrollment</td>
+          <td style="color:var(--green-text);font-weight:800;">1.25</td>
+          <td style="color:var(--green-text);font-size:11px;">WRS/AAFCS</td>
+          <td style="color:var(--green-text);font-size:11px;">Y</td>
+          <td style="color:var(--text-dim);font-size:11px;">No</td><td style="color:var(--text-dim);font-size:11px;">No</td><td style="color:var(--text-dim);font-size:11px;">—</td>
+          <td style="color:var(--text-dim);font-size:11px;">No</td>
+          <td><span class="pill p-green">Assoc degree · 1.25</span></td>
+        </tr>
+        <tr>
+          <td><span class="stu-id">PHS-2026-0004</span></td><td><span class="dtag dt-std">STD</span></td>
+          <td style="color:var(--maroon-text);font-size:11px;">Employment</td>
+          <td style="color:var(--maroon-text);font-weight:800;">1.0</td>
+          <td style="color:var(--green-text);font-size:11px;">AAFCS + WRS</td>
+          <td style="color:var(--green-text);font-size:11px;">Y</td>
+          <td style="color:var(--text-dim);font-size:11px;">No</td><td style="color:var(--text-dim);font-size:11px;">No</td><td style="color:var(--text-dim);font-size:11px;">—</td>
+          <td style="color:var(--gold-text);font-size:11px;font-weight:700;">Yes</td>
+          <td><span class="pill p-maroon">HD cred + WBL · 1.0</span></td>
+        </tr>
+        <tr>
+          <td><span class="stu-id">PHS-2026-0112</span></td><td><span class="dtag dt-std">STD</span></td>
+          <td style="color:var(--red-text);font-size:11px;">None</td>
+          <td style="color:var(--red-text);font-weight:800;">0</td>
+          <td style="color:var(--red-text);font-size:11px;">None</td>
+          <td style="color:var(--red-text);font-size:11px;">No</td>
+          <td style="color:var(--text-dim);font-size:11px;">No</td><td style="color:var(--text-dim);font-size:11px;">No</td><td style="color:var(--text-dim);font-size:11px;">—</td>
+          <td style="color:var(--text-dim);font-size:11px;">No</td>
+          <td><span class="pill p-red">No pathway</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="sc-foot">
+      <span style="font-size:11px;color:var(--text-dim);">Students may earn points in multiple pathways · Employment dominant (134 at 0.75 pt) · 41 ASVAB scores on file</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════ STUDENT SUPPORT BOARD ══════════ -->
+<div id="view-support" class="view">
+
+  <div class="vbanner">
+    <div class="vb-l">
+      <div class="vb-dot"></div>
+      <span>Student Support Board — <span class="vb-role">Search any student · Full intervention picture in one place</span></span>
+    </div>
+    <div class="vb-r">All views · De-identified · Updated by Richelle Hines · Apr 29, 2026</div>
+  </div>
+
+  <!-- SEARCH BAR -->
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:14px 18px;margin-bottom:14px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 2px rgba(0,0,0,.04);">
+    <span style="font-size:12px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;flex-shrink:0;">Student ID</span>
+    <select id="stu-select" onchange="loadStudent(this.value)" style="flex:1;border:1px solid var(--border-mid);border-radius:5px;padding:8px 12px;font-family:var(--font);font-size:14px;color:var(--text);background:var(--card-alt);max-width:320px;">
+      <option value="">— Select a student —</option>
+      <option value="PHS-2026-0041">PHS-2026-0041 · 12th · ADV · On Track</option>
+      <option value="PHS-2026-0078">PHS-2026-0078 · 12th · STD · Watch — 4 absences</option>
+      <option value="PHS-2026-0112">PHS-2026-0112 · 12th · STD · Intervene — SAT escalated</option>
+      <option value="PTM-2026-0009">PTM-2026-0009 · 12th · STD · Pittman — Watch</option>
+      <option value="PHS-2026-0155">PHS-2026-0155 · 12th · STD · Recovery — Unconfirmed</option>
+      <option value="HB-2026-0003">HB-2026-0003 · 12th · STD · Homebound — Watch</option>
+    </select>
+    <div id="stu-tier-badge" style="display:none;"></div>
+    <div style="margin-left:auto;font-size:11px;color:var(--text-dim);">Click any row in Director or Counselor view to open here directly</div>
+  </div>
+
+  <!-- EMPTY STATE -->
+  <div id="ssb-empty" style="background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:48px;text-align:center;color:var(--text-dim);">
+    <div style="font-size:32px;margin-bottom:12px;">👤</div>
+    <div style="font-size:14px;font-weight:600;color:var(--text-mid);margin-bottom:6px;">No student selected</div>
+    <div style="font-size:12px;">Select a student ID above to open their full support record.</div>
+  </div>
+
+  <!-- STUDENT RECORD (hidden until selected) -->
+  <div id="ssb-record" style="display:none;">
+
+    <!-- STUDENT HEADER STRIP -->
+    <div id="ssb-header" style="background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:14px 18px;margin-bottom:12px;display:flex;align-items:center;gap:20px;box-shadow:0 1px 2px rgba(0,0,0,.04);"></div>
+
+    <!-- MAIN GRID: 3 columns -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px;">
+
+      <!-- COL 1: SOL STATUS -->
+      <div class="sc">
+        <div class="sc-head">
+          <div class="sc-title">SOL &amp; verified credit status</div>
+          <div class="sc-meta" id="ssb-diploma-meta"></div>
+        </div>
+        <div id="ssb-sols" style="padding:4px 0;"></div>
+        <div class="sc-foot" id="ssb-vc-summary"></div>
+      </div>
+
+      <!-- COL 2: INTERVENTIONS + RESOURCE PICKER -->
+      <div class="sc">
+        <div class="sc-head">
+          <div class="sc-title">Active interventions &amp; supports</div>
+          <div class="sc-meta" id="ssb-counselor-meta"></div>
+        </div>
+
+        <!-- ACTIVE LIST -->
+        <div id="ssb-interventions" style="padding:8px 14px;display:flex;flex-direction:column;gap:7px;min-height:60px;"></div>
+
+        <!-- ADD RESOURCE PICKER -->
+        <div style="border-top:2px dashed var(--border-mid);padding:12px 14px;background:var(--card-alt);">
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--text-dim);margin-bottom:10px;">+ Add support resource</div>
+
+          <!-- ROLE FILTER -->
+          <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px;" id="role-chips">
+            <button class="rchip active" data-role="all"     onclick="filterRole(this)">All roles</button>
+            <button class="rchip"        data-role="counselor" onclick="filterRole(this)">Counselor</button>
+            <button class="rchip"        data-role="coach"   onclick="filterRole(this)">Grad Coach</button>
+            <button class="rchip"        data-role="ccr"     onclick="filterRole(this)">CCR / 3E</button>
+            <button class="rchip"        data-role="attendance" onclick="filterRole(this)">Attendance</button>
+            <button class="rchip"        data-role="sped"    onclick="filterRole(this)">SPED / EL</button>
+            <button class="rchip"        data-role="pittman" onclick="filterRole(this)">Pittman</button>
+          </div>
+
+          <!-- RESOURCE SELECT -->
+          <select id="resource-select" style="width:100%;border:1px solid var(--border-mid);border-radius:5px;padding:8px 10px;font-family:var(--font);font-size:13px;color:var(--text);background:var(--surface);margin-bottom:8px;">
+            <option value="">— Choose a resource —</option>
+          </select>
+
+          <!-- DURATION + OWNER ROW -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+            <div>
+              <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);margin-bottom:4px;">Duration / frequency</div>
+              <select id="duration-select" style="width:100%;border:1px solid var(--border-mid);border-radius:5px;padding:7px 10px;font-family:var(--font);font-size:12px;color:var(--text);background:var(--surface);">
+                <option value="One session">One session</option>
+                <option value="Weekly — ongoing">Weekly — ongoing</option>
+                <option value="Bi-weekly">Bi-weekly</option>
+                <option value="Daily — short term">Daily — short term</option>
+                <option value="Through SOL testing">Through SOL testing</option>
+                <option value="Through end of year">Through end of year</option>
+                <option value="One home visit">One home visit</option>
+                <option value="Until re-enrolled">Until re-enrolled</option>
+                <option value="As needed">As needed</option>
+              </select>
+            </div>
+            <div>
+              <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);margin-bottom:4px;">Assigned to</div>
+              <select id="owner-select" style="width:100%;border:1px solid var(--border-mid);border-radius:5px;padding:7px 10px;font-family:var(--font);font-size:12px;color:var(--text);background:var(--surface);">
+                <option value="Cinnamon Terry">Cinnamon Terry — Counselor 12</option>
+                <option value="Davonni Parker">Davonni Parker — Counselor 11</option>
+                <option value="Jaide Jenkins">Jaide Jenkins — Counselor 10</option>
+                <option value="Ricky Norwood">Ricky Norwood — Counselor 9</option>
+                <option value="Wanda Vincent">Wanda Vincent — Grad Coach</option>
+                <option value="Thomas Midgette">Thomas Midgette — CCR</option>
+                <option value="Sonya Bland">Sonya Bland — Truancy</option>
+                <option value="Nestor Llamas">Nestor Llamas — ESL</option>
+                <option value="Tracy Anderson">Tracy Anderson — SPED Lead</option>
+                <option value="Angela Sykes">Angela Sykes — Homebound</option>
+                <option value="Turhonda Morrison">Turhonda Morrison — Pittman</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- ADD BUTTON -->
+          <button onclick="addResource()" style="width:100%;background:var(--maroon);color:#fff;border:none;border-radius:5px;padding:9px;font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;transition:background .15s;letter-spacing:.02em;" onmouseover="this.style.background='var(--maroon-mid)'" onmouseout="this.style.background='var(--maroon)'">
+            Add to support plan
+          </button>
+        </div>
+
+        <div class="sc-foot" style="justify-content:space-between;">
+          <span style="font-size:11px;color:var(--text-dim);">Added resources log to contact record</span>
+          <button onclick="clearAdded()" style="font-size:10px;color:var(--text-dim);background:none;border:none;cursor:pointer;font-family:var(--font);">Clear added</button>
+        </div>
+      </div>
+
+      <!-- COL 3: PEOPLE & ASSIGNMENT -->
+      <div class="sc">
+        <div class="sc-head">
+          <div class="sc-title">Assigned team</div>
+          <div class="sc-meta">Who owns what for this student</div>
+        </div>
+        <div id="ssb-team" style="padding:8px 0;"></div>
+      </div>
+
+    </div>
+
+    <!-- SECOND ROW: Contact log + Attendance + 3E + Next steps -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+
+      <!-- LEFT: Contact log + next steps -->
+      <div class="sc">
+        <div class="sc-head">
+          <div class="sc-title">Contact log</div>
+          <div class="sc-meta">All documented interactions — most recent first</div>
+        </div>
+        <div id="ssb-log" style="padding:4px 0;"></div>
+        <div style="padding:12px 14px;border-top:1px solid var(--border);background:var(--card-alt);">
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--text-dim);margin-bottom:8px;">Next required actions</div>
+          <div id="ssb-next" style="font-size:13px;color:var(--text);line-height:1.6;"></div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Attendance + 3E readiness -->
+      <div style="display:flex;flex-direction:column;gap:12px;">
+
+        <div class="sc">
+          <div class="sc-head">
+            <div class="sc-title">Attendance</div>
+            <div class="sc-meta">Current year · Threshold: 4 abs = flag · 6 abs = SAT</div>
+          </div>
+          <div id="ssb-attendance" style="padding:14px 18px;"></div>
+        </div>
+
+        <div class="sc">
+          <div class="sc-head">
+            <div class="sc-title">3E readiness pathway</div>
+            <div class="sc-meta">Thomas Midgette · College &amp; Career</div>
+          </div>
+          <div id="ssb-3e" style="padding:14px 18px;"></div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+</div><!-- /canvas -->
+
+<!-- ══ BOTTOM BAR ══ -->
+<div class="bottombar">
+  <div class="updated">FGI Working Sheet · Mar 20, 2026 · Richelle Hines · VDOE Office of School Improvement attends all accountability meetings · Graduation Correction Plan alignment verified<br><span style="font-size:9px;opacity:.7;">All student records de-identified · Data governed by FERPA (20 U.S.C. § 1232g) · Petersburg City Public Schools · Graduation CIC · EJC-PCPS-2026</span></div>
+  <div style="display:flex;gap:12px;align-items:center;">
+    <span style="font-size:11px;color:var(--red-text);font-weight:600;">Performance category: OFF TRACK · Index 79.84</span>
+    <button class="export-btn" onclick="window.print()">Export board summary →</button>
+  </div>
+</div>
+
+<script>
+function switchView(v,btn){
+  ['director','counselor','coach','career','support'].forEach(function(id){
+    var el=document.getElementById('view-'+id);
+    if(el) el.classList.remove('active');
+  });
+  document.getElementById('view-'+v).classList.add('active');
+  // Update ALL nav-btn elements (sidenav)
+  document.querySelectorAll('.nav-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  closePSP();
+  if(v === 'support') populateResourceSelect(currentRole);
+  // Close filters on view switch
+  var fs = document.getElementById('filtersidebar');
+  var ft = document.getElementById('filter-toggle');
+  var canvas = document.getElementById('canvas');
+  if(fs) fs.classList.remove('open');
+  if(ft) ft.classList.remove('open');
+  if(canvas) canvas.classList.remove('filters-open');
+}
+
+function toggleFilters(){
+  var fs = document.getElementById('filtersidebar');
+  var ft = document.getElementById('filter-toggle');
+  var canvas = document.getElementById('canvas');
+  if(!fs) return;
+  var isOpen = fs.classList.contains('open');
+  fs.classList.toggle('open');
+  ft.classList.toggle('open');
+  canvas.classList.toggle('filters-open');
+  // Reposition toggle button
+  ft.style.right = isOpen ? '0' : '220px';
+}
+
+function resetFilters(){
+  document.querySelectorAll('.chip[data-group]').forEach(function(chip){
+    var grp = chip.getAttribute('data-group');
+    // Only activate "All" chips, deactivate others
+    var isAll = chip.textContent.trim() === 'All';
+    chip.classList.toggle('active', isAll);
+  });
+}
+function chipGroup(btn){
+  // Use data-group to scope active state to only same-group chips
+  var group = btn.getAttribute('data-group');
+  var scope = group
+    ? document.querySelectorAll('.chip[data-group="' + group + '"]')
+    : btn.closest('.grade-bar')
+        ? btn.closest('.grade-bar').querySelectorAll('.chip')
+        : btn.parentElement.querySelectorAll('.chip');
+  scope.forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+}
+function gradeChip(btn){
+  btn.closest('.grade-bar').querySelectorAll('.chip').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+}
+var pspData={
+  'PHS-2026-0041':{
+    credits:'<div class="cr-row"><span class="cr-subj">History SOL</span><span style="color:var(--green-text);font-weight:700;">Passed</span></div><div class="cr-row"><span class="cr-subj">Math SOL</span><span style="color:var(--green-text);font-weight:700;">Passed</span></div><div class="cr-row"><span class="cr-subj">Science SOL</span><span style="color:var(--green-text);font-weight:700;">Passed</span></div><div class="cr-row"><span class="cr-subj">Reading SOL</span><span style="color:var(--green-text);font-weight:700;">Passed</span></div><div class="cr-row"><span class="cr-subj">Writing SOL</span><span style="color:var(--green-text);font-weight:700;">Passed</span></div><div class="cr-row"><span class="cr-subj">CTE credential</span><span style="color:var(--green-text);">W!SE earned</span></div>',
+    ivs:'<div class="iv-card"><div class="iv-name" style="color:var(--green-text);">No active interventions</div><div class="iv-meta">All SOLs cleared · W!SE credential on file · June graduation cert ready</div></div>',
+    log:'<div class="log-entry">Apr 22 · Counselor meeting · Confirmed W!SE credential · June cert filed</div><div class="log-entry">Apr 15 · Accountability meeting · Cleared to On Track</div>',
+    next:'No further action required. File June graduation certification. Confirm diploma type with registrar.',
+    badge:'3E: Employment · CTE comp + credential · 0.75 pt'
+  },
+  'PHS-2026-0078':{
+    credits:'<div class="cr-row"><span class="cr-subj">History SOL</span><span style="color:var(--red-text);">Needed — SOL Academy</span></div><div class="cr-row"><span class="cr-subj">Math SOL</span><span style="color:var(--green-text);font-weight:700;">Passed</span></div><div class="cr-row"><span class="cr-subj">Science SOL</span><span style="color:var(--red-text);">Needed — SOL Academy</span></div><div class="cr-row"><span class="cr-subj">Reading SOL</span><span style="color:var(--green-text);font-weight:700;">Passed</span></div><div class="cr-row"><span class="cr-subj">Writing SOL</span><span style="color:var(--green-text);font-weight:700;">Passed</span></div><div class="cr-row"><span class="cr-subj">CTE credential</span><span style="color:var(--amber-text);">WRS in progress</span></div>',
+    ivs:'<div class="iv-card"><div class="iv-name">SOL Academy — Hist + Sci</div><div class="iv-meta">Enrolled Apr 18 · Testing window May 14</div></div><div class="iv-card iv-warn"><div class="iv-name">4-absence threshold hit</div><div class="iv-meta">SAT notified Apr 28 · Parent contact required · Attendance plan needed</div></div>',
+    log:'<div class="log-entry">Apr 28 · Phone call · Parent notified re: absences and SOL gaps</div><div class="log-entry">Apr 22 · Student meeting · SOL Academy enrollment confirmed</div><div class="log-entry">Apr 15 · Accountability meeting · Moved to Watch tier</div>',
+    next:'History + Science SOL testing May 14. Confirm SOL Academy attendance by May 1. Parent attendance plan required before May 6 meeting.',
+    badge:'3E: Employment · WRS in progress · currently 0 pts'
+  },
+  'PHS-2026-0112':{
+    credits:'<div class="cr-row"><span class="cr-subj">History SOL</span><span style="color:var(--red-text);">Needed — no plan</span></div><div class="cr-row"><span class="cr-subj">Math SOL</span><span style="color:var(--red-text);">Needed — no plan</span></div><div class="cr-row"><span class="cr-subj">Science SOL</span><span style="color:var(--red-text);">Needed — no plan</span></div><div class="cr-row"><span class="cr-subj">Reading SOL</span><span style="color:var(--green-text);font-weight:700;">Passed</span></div><div class="cr-row"><span class="cr-subj">Writing SOL</span><span style="color:var(--green-text);font-weight:700;">Passed</span></div><div class="cr-row"><span class="cr-subj">CTE credential</span><span style="color:var(--red-text);">None</span></div>',
+    ivs:'<div class="iv-card iv-warn"><div class="iv-name">SAT escalated — 7 absences</div><div class="iv-meta">School Attendance Team active · 6-absence threshold exceeded · Home visit needed</div></div><div class="iv-card iv-warn"><div class="iv-name">Grad coach plan — missing</div><div class="iv-meta">Wanda Vincent assigned · Not on file · Due before May 6 meeting</div></div>',
+    log:'<div class="log-entry">Apr 15 · Accountability meeting · Escalated to Intervene · Grad coach assigned</div><div class="log-entry">Apr 8 · Counselor meeting · SOL gaps identified · Parent letter sent</div>',
+    next:'Wanda Vincent: complete grad plan by Apr 30. SAT meeting required. SOL Academy enrollment for Hist + Math + Sci. Parent conference and attendance plan required.',
+    badge:'3E: No pathway · 0 points · Flag to Thomas Midgette'
+  }
+};
+
+
+/* ══ RESOURCE LIBRARY ══ */
+var resourceLibrary = [
+  /* COUNSELOR */
+  {role:'counselor', label:'SOL Academy enrollment',
+   desc:'Enroll student in SOL Academy for targeted test remediation.',
+   owner:'counselor', urgency:'high'},
+  {role:'counselor', label:'Student conference — credit review',
+   desc:'One-on-one meeting to review credit status, SOL gaps, and graduation pathway.',
+   owner:'counselor', urgency:'medium'},
+  {role:'counselor', label:'Parent notification letter — credit gap',
+   desc:'Written notification to parent/guardian of current credit and SOL status.',
+   owner:'counselor', urgency:'high'},
+  {role:'counselor', label:'Parent phone call — attendance',
+   desc:'Direct parent contact regarding absence threshold and required attendance plan.',
+   owner:'counselor', urgency:'high'},
+  {role:'counselor', label:'Edgenuity enrollment — credit recovery',
+   desc:'Enroll student in Edgenuity for initial credit or credit recovery course.',
+   owner:'counselor', urgency:'medium'},
+  {role:'counselor', label:'Summer school referral',
+   desc:'Refer student to summer school for core course or SOL remediation.',
+   owner:'counselor', urgency:'medium'},
+  {role:'counselor', label:'Graduation pathway review',
+   desc:'Full review of diploma requirements, remaining credits, and realistic completion timeline.',
+   owner:'counselor', urgency:'high'},
+  {role:'counselor', label:'Schedule adjustment — remediation placement',
+   desc:'Adjust student schedule to add remediation course or SOL prep period.',
+   owner:'counselor', urgency:'medium'},
+
+  /* GRAD COACH */
+  {role:'coach', label:'Graduation plan — initial development',
+   desc:'Wanda Vincent develops comprehensive graduation plan including credits, SOLs, and intervention timeline.',
+   owner:'coach', urgency:'high'},
+  {role:'coach', label:'Graduation plan — progress update',
+   desc:'Update existing graduation plan with current credit status and next milestone.',
+   owner:'coach', urgency:'medium'},
+  {role:'coach', label:'Home visit — engagement check',
+   desc:'Wanda Vincent conducts home visit to assess barriers and re-establish school connection.',
+   owner:'coach', urgency:'high'},
+  {role:'coach', label:'Student barrier conference',
+   desc:'Conference with at-risk student to identify and document academic, social, or family barriers.',
+   owner:'coach', urgency:'medium'},
+  {role:'coach', label:'Alternative placement referral — Pittman 2.0',
+   desc:'Refer under-credited, overage student to Pittman 2.0 credit recovery program.',
+   owner:'coach', urgency:'high'},
+  {role:'coach', label:'ISAEP referral — GED pathway',
+   desc:'Refer eligible student (16–19.5, dropped out) to ISAEP GED program assessment.',
+   owner:'coach', urgency:'medium'},
+  {role:'coach', label:'Coordination with SPED lead re: graduation needs',
+   desc:'Coordinate with Tracy Anderson to identify IEP students with specific graduation requirements.',
+   owner:'coach', urgency:'medium'},
+  {role:'coach', label:'Industry certification — remediation coordination',
+   desc:'Coordinate with Thomas Midgette on certification testing schedule for CTE students.',
+   owner:'coach', urgency:'medium'},
+
+  /* CCR / 3E */
+  {role:'ccr', label:'Industry certification — testing registration',
+   desc:'Register student for state-approved industry certification exam in current testing window.',
+   owner:'ccr', urgency:'high'},
+  {role:'ccr', label:'Industry certification — remediation plan',
+   desc:'Develop subject-specific remediation plan for student who has not yet earned CTE credential.',
+   owner:'ccr', urgency:'high'},
+  {role:'ccr', label:'Work-based learning placement',
+   desc:'Place student in high-quality work-based learning experience for 3E Employment points.',
+   owner:'ccr', urgency:'medium'},
+  {role:'ccr', label:'AP/Dual enrollment — pathway confirmation',
+   desc:'Confirm AP or dual enrollment course status and expected 3E Enrollment points.',
+   owner:'ccr', urgency:'medium'},
+  {role:'ccr', label:'ASVAB registration',
+   desc:'Register student for ASVAB exam for potential 3E Enlistment pathway.',
+   owner:'ccr', urgency:'low'},
+  {role:'ccr', label:'Career pathway counseling — 3E plan',
+   desc:'Meet with student to identify and document a viable 3E readiness pathway before graduation.',
+   owner:'ccr', urgency:'medium'},
+  {role:'ccr', label:'Military recruiter connection',
+   desc:'Connect student with branch recruiter for ASVAB prep and enlistment pathway information.',
+   owner:'ccr', urgency:'low'},
+
+  /* ATTENDANCE */
+  {role:'attendance', label:'SAT notification — 4-absence threshold',
+   desc:'Formal notification to School Attendance Team upon student reaching 4 absences.',
+   owner:'attendance', urgency:'high'},
+  {role:'attendance', label:'SAT meeting — 6-absence escalation',
+   desc:'Convene School Attendance Team meeting following 6-absence threshold.',
+   owner:'attendance', urgency:'high'},
+  {role:'attendance', label:'Home visit — truancy',
+   desc:'Sonya Bland conducts home visit for truant student. Documents contact and outcome.',
+   owner:'attendance', urgency:'high'},
+  {role:'attendance', label:'Attendance plan — written documentation',
+   desc:'Develop and document written attendance improvement plan with student and parent.',
+   owner:'attendance', urgency:'high'},
+  {role:'attendance', label:'Truancy monthly summary report',
+   desc:'Sonya Bland provides monthly truancy summary report for this student's cohort.',
+   owner:'attendance', urgency:'medium'},
+  {role:'attendance', label:'Take 5 Mentor Program referral',
+   desc:'Refer student to Dr. Manson's Take 5 Mentor Program for attendance and behavior support.',
+   owner:'attendance', urgency:'medium'},
+  {role:'attendance', label:'McKinney-Vento / residency check',
+   desc:'Flag student for McKinney-Vento and residency review if homelessness is a barrier.',
+   owner:'attendance', urgency:'high'},
+
+  /* SPED / EL */
+  {role:'sped', label:'IEP graduation review — SPED coordination',
+   desc:'Tracy Anderson reviews IEP goals and accommodations relative to graduation requirements.',
+   owner:'sped', urgency:'high'},
+  {role:'sped', label:'SOL read-aloud / accommodation confirmation',
+   desc:'Confirm SOL testing accommodations are in place for students with IEPs or 504 plans.',
+   owner:'sped', urgency:'high'},
+  {role:'sped', label:'EL SOL support — Nestor Llamas',
+   desc:'Nestor Llamas provides targeted EL academic support and SOL preparation.',
+   owner:'sped', urgency:'medium'},
+  {role:'sped', label:'ESL coordinator update — cohort report',
+   desc:'Nestor Llamas provides cohort-level EL graduation status at accountability meeting.',
+   owner:'sped', urgency:'medium'},
+  {role:'sped', label:'504 plan review — graduation pathway',
+   desc:'Review 504 accommodations to ensure they support graduation requirements and SOL access.',
+   owner:'sped', urgency:'medium'},
+  {role:'sped', label:'Transition services coordination — post-secondary',
+   desc:'Coordinate transition services for SPED students approaching graduation.',
+   owner:'sped', urgency:'medium'},
+
+  /* PITTMAN */
+  {role:'pittman', label:'Pittman 2.0 enrollment',
+   desc:'Enroll under-credited, overage student in Pittman 2.0 blended credit recovery program.',
+   owner:'pittman', urgency:'high'},
+  {role:'pittman', label:'Pittman academic progress update',
+   desc:'Turhonda Morrison provides academic progress update for Pittman students at accountability meeting.',
+   owner:'pittman', urgency:'medium'},
+  {role:'pittman', label:'Slider coding verification',
+   desc:'Richelle Hines verifies slider student coding is accurate before VDOE submission.',
+   owner:'pittman', urgency:'high'},
+  {role:'pittman', label:'Incarcerated student status check',
+   desc:'Wanda Vincent confirms placement and credit status for incarcerated students in cohort.',
+   owner:'pittman', urgency:'high'},
+  {role:'pittman', label:'Pittman to PHS transition planning',
+   desc:'Coordinate transition plan for Pittman student ready to return to comprehensive setting.',
+   owner:'pittman', urgency:'medium'},
+];
+
+var currentRole = 'all';
+var addedResources = {}; // keyed by student ID
+
+var ownerMap = {
+  counselor: ['Cinnamon Terry','Davonni Parker','Jaide Jenkins','Ricky Norwood'],
+  coach:     ['Wanda Vincent'],
+  ccr:       ['Thomas Midgette'],
+  attendance:['Sonya Bland'],
+  sped:      ['Tracy Anderson','Nestor Llamas'],
+  pittman:   ['Turhonda Morrison','Richelle Hines','Wanda Vincent']
+};
+
+function filterRole(btn) {
+  document.querySelectorAll('.rchip').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  currentRole = btn.getAttribute('data-role');
+  populateResourceSelect(currentRole);
+
+  // Auto-set owner to the most relevant person for this role
+  var ownerSel = document.getElementById('owner-select');
+  if (ownerMap[currentRole]) {
+    var target = ownerMap[currentRole][0];
+    for (var i = 0; i < ownerSel.options.length; i++) {
+      if (ownerSel.options[i].value === target) {
+        ownerSel.selectedIndex = i;
+        break;
+      }
+    }
+  }
+}
+
+function populateResourceSelect(role) {
+  var sel = document.getElementById('resource-select');
+  if (!sel) return;
+  var filtered = role === 'all'
+    ? resourceLibrary
+    : resourceLibrary.filter(function(r){ return r.role === role; });
+
+  sel.innerHTML = '<option value="">— Choose a resource —</option>';
+  filtered.forEach(function(r, idx) {
+    var opt = document.createElement('option');
+    opt.value = role === 'all' ? resourceLibrary.indexOf(r) : resourceLibrary.indexOf(r);
+    var urgencyTag = r.urgency === 'high' ? ' ⚑' : '';
+    opt.textContent = r.label + urgencyTag;
+    sel.appendChild(opt);
+  });
+}
+
+function addResource() {
+  var sel = document.getElementById('resource-select');
+  var durSel = document.getElementById('duration-select');
+  var ownSel = document.getElementById('owner-select');
+  var stuSel = document.getElementById('stu-select');
+
+  var idx = parseInt(sel.value);
+  if (isNaN(idx) || !resourceLibrary[idx]) {
+    sel.style.borderColor = 'var(--red)';
+    setTimeout(function(){ sel.style.borderColor = ''; }, 1200);
+    return;
+  }
+
+  var res  = resourceLibrary[idx];
+  var dur  = durSel.value;
+  var own  = ownSel.value;
+  var stuId = stuSel.value;
+  var now  = new Date();
+  var dateStr = now.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+
+  // Build the added resource card
+  var urgencyStyle = res.urgency === 'high'
+    ? 'background:var(--amber-pale);border-left:3px solid var(--amber);'
+    : 'background:var(--maroon-pale);border-left:3px solid var(--maroon-mid);';
+  var nameColor = res.urgency === 'high' ? 'var(--amber-text)' : 'var(--maroon-text)';
+
+  var uid = 'res-' + Date.now();
+  var card = document.createElement('div');
+  card.id = uid;
+  card.className = 'res-added res-added-new';
+  card.style.cssText = urgencyStyle + 'border-radius:5px;padding:9px 12px;display:flex;align-items:flex-start;justify-content:space-between;gap:8px;';
+  card.innerHTML =
+    '<div style="flex:1;">' +
+      '<div style="font-size:13px;font-weight:700;color:' + nameColor + ';margin-bottom:3px;">' + res.label + '</div>' +
+      '<div style="font-size:11px;color:var(--text-mid);line-height:1.4;margin-bottom:5px;">' + res.desc + '</div>' +
+      '<div style="display:flex;gap:8px;flex-wrap:wrap;">' +
+        '<span style="font-size:10px;font-weight:600;color:var(--text-dim);">👤 ' + own + '</span>' +
+        '<span style="font-size:10px;font-weight:600;color:var(--text-dim);">⏱ ' + dur + '</span>' +
+        '<span style="font-size:10px;font-weight:600;color:var(--text-dim);">📅 Added ' + dateStr + '</span>' +
+      '</div>' +
+    '</div>' +
+    '<button onclick="removeResource('' + uid + '')" style="background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:14px;padding:0 2px;flex-shrink:0;" title="Remove">✕</button>';
+
+  var container = document.getElementById('ssb-interventions');
+  container.appendChild(card);
+
+  // Log to contact log
+  var logEntry = document.createElement('div');
+  logEntry.style.cssText = 'padding:9px 14px;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:flex-start;background:rgba(140,34,34,.04);';
+  logEntry.innerHTML =
+    '<div style="font-size:11px;font-weight:700;color:var(--text-dim);white-space:nowrap;min-width:44px;">' + dateStr + '</div>' +
+    '<div>' +
+      '<div style="font-size:12px;font-weight:600;color:var(--maroon-text);">' + own + ' — added via CIC</div>' +
+      '<div style="font-size:13px;color:var(--text);margin-top:2px;line-height:1.5;">' + res.label + ' · ' + dur + '</div>' +
+    '</div>';
+  var logContainer = document.getElementById('ssb-log');
+  if (logContainer) logContainer.insertBefore(logEntry, logContainer.firstChild);
+
+  // Store for clearAdded
+  if (!addedResources[stuId]) addedResources[stuId] = [];
+  addedResources[stuId].push(uid);
+
+  // Reset select
+  sel.value = '';
+}
+
+function removeResource(uid) {
+  var el = document.getElementById(uid);
+  if (el) {
+    el.style.opacity = '0';
+    el.style.transform = 'translateX(8px)';
+    el.style.transition = 'all .2s ease';
+    setTimeout(function(){ el.remove(); }, 200);
+  }
+}
+
+function clearAdded() {
+  var stuId = document.getElementById('stu-select').value;
+  if (!addedResources[stuId]) return;
+  addedResources[stuId].forEach(function(uid){ removeResource(uid); });
+  addedResources[stuId] = [];
+}
+
+// Initialize resource select on page load
+window.addEventListener('DOMContentLoaded', function(){
+  populateResourceSelect('all');
+});
+
+/* ── STUDENT SUPPORT BOARD DATA ── */
+var studentData = {
+  'PHS-2026-0041': {
+    grade: '12', diploma: 'Advanced', placement: 'Petersburg HS',
+    cohort: '2026', slider: 'No', tier: 'on-track', tierLabel: 'On Track',
+    tierClass: 'p-green',
+    counselor: 'Cinnamon Terry',
+    gradCoach: 'Not assigned',
+    specialist: 'N/A',
+    richelle: 'Richelle Hines — Enrolled · Completer status pending June cert',
+    sols: [
+      {name:'History SOL', status:'passed', text:'Passed'},
+      {name:'Math SOL',    status:'passed', text:'Passed'},
+      {name:'Science SOL', status:'passed', text:'Passed'},
+      {name:'Reading SOL', status:'passed', text:'Passed'},
+      {name:'Writing SOL', status:'passed', text:'Passed'}
+    ],
+    vcSummary: 'All verified credits confirmed · 0 outstanding · June cert ready',
+    vcClass: 'green-text',
+    interventions: [
+      {name:'No active interventions', type:'ok',
+       meta:'All SOLs cleared · W!SE credential on file · June graduation certification ready'}
+    ],
+    log: [
+      {date:'Apr 22', who:'Cinnamon Terry', note:'Student meeting · W!SE credential confirmed · June cert filed'},
+      {date:'Apr 15', who:'Accountability meeting', note:'Cleared to On Track · no further action required'}
+    ],
+    next: 'File June graduation certification. Confirm diploma type with registrar. No further intervention required.',
+    absences: 0, absenceStatus: 'clear',
+    absenceNote: 'No absence flags. No SAT involvement.',
+    threeE: {pathway:'Employment', points:'0.75', desc:'CTE completer · W!SE credential earned', status:'ok'},
+    cte: 'W!SE Financial Literacy Certification',
+    asvab: 'Not taken'
+  },
+  'PHS-2026-0078': {
+    grade: '12', diploma: 'Standard', placement: 'Petersburg HS',
+    cohort: '2026', slider: 'No', tier: 'watch', tierLabel: 'Watch',
+    tierClass: 'p-amber',
+    counselor: 'Cinnamon Terry',
+    gradCoach: 'Not assigned',
+    specialist: 'N/A',
+    richelle: 'Richelle Hines — Still enrolled · 2 VC gaps active',
+    sols: [
+      {name:'History SOL', status:'needed', text:'Needed — SOL Academy enrolled'},
+      {name:'Math SOL',    status:'passed', text:'Passed'},
+      {name:'Science SOL', status:'needed', text:'Needed — SOL Academy enrolled'},
+      {name:'Reading SOL', status:'passed', text:'Passed'},
+      {name:'Writing SOL', status:'passed', text:'Passed'}
+    ],
+    vcSummary: '2 verified credits outstanding · History + Science · Testing May 14',
+    vcClass: 'amber-text',
+    interventions: [
+      {name:'SOL Academy — History + Science', type:'active',
+       meta:'Enrolled Apr 18 · Testing window May 14 · Confirm attendance May 1'},
+      {name:'4-absence threshold — SAT notified', type:'warn',
+       meta:'Apr 28 · School Attendance Team notified · Parent contact + attendance plan required'}
+    ],
+    log: [
+      {date:'Apr 28', who:'Cinnamon Terry', note:'Phone call · Parent notified re: absences and SOL gaps'},
+      {date:'Apr 22', who:'Cinnamon Terry', note:'Student meeting · SOL Academy enrollment confirmed'},
+      {date:'Apr 15', who:'Accountability meeting', note:'Moved to Watch tier · Hist + Sci SOL flagged'}
+    ],
+    next: 'History + Science SOL testing May 14. Confirm SOL Academy attendance by May 1. Parent attendance plan required before May 6 meeting. Update counselor log after parent contact.',
+    absences: 4, absenceStatus: 'flag',
+    absenceNote: '4-absence threshold reached Apr 28 · SAT notified · Attendance plan required',
+    threeE: {pathway:'Employment', points:'0 (in progress)', desc:'WRS credential in progress · 0 pts until earned', status:'warn'},
+    cte: 'WRS — in progress',
+    asvab: 'Not taken'
+  },
+  'PHS-2026-0112': {
+    grade: '12', diploma: 'Standard', placement: 'Petersburg HS',
+    cohort: '2026', slider: 'No', tier: 'intervene', tierLabel: 'Intervene',
+    tierClass: 'p-red',
+    counselor: 'Cinnamon Terry',
+    gradCoach: 'Wanda Vincent — plan MISSING · due Apr 30',
+    specialist: 'N/A',
+    richelle: 'Richelle Hines — Still enrolled · 3 VC gaps · SAT active',
+    sols: [
+      {name:'History SOL', status:'needed', text:'Needed — no remediation plan yet'},
+      {name:'Math SOL',    status:'needed', text:'Needed — no remediation plan yet'},
+      {name:'Science SOL', status:'needed', text:'Needed — no remediation plan yet'},
+      {name:'Reading SOL', status:'passed', text:'Passed'},
+      {name:'Writing SOL', status:'passed', text:'Passed'}
+    ],
+    vcSummary: '3 verified credits outstanding · Hist + Math + Sci · No remediation plan on file',
+    vcClass: 'red-text',
+    interventions: [
+      {name:'SAT escalated — 7 absences', type:'warn',
+       meta:'School Attendance Team active · 6-absence threshold exceeded · Home visit coordination needed'},
+      {name:'Graduation coach plan — MISSING', type:'warn',
+       meta:'Wanda Vincent assigned · Plan not on file · Must be completed before May 6 meeting'},
+      {name:'SOL Academy — not yet enrolled', type:'warn',
+       meta:'Hist + Math + Sci all needed · No enrollment recorded · Urgent action required'}
+    ],
+    log: [
+      {date:'Apr 15', who:'Accountability meeting', note:'Escalated to Intervene tier · Grad coach assigned · SAT activated'},
+      {date:'Apr 8',  who:'Cinnamon Terry', note:'Student meeting · SOL gaps identified · Parent letter sent'}
+    ],
+    next: 'Wanda Vincent: complete grad plan by Apr 30. SAT meeting required immediately. Enroll in SOL Academy for Hist + Math + Sci. Parent conference + written attendance plan required. Update counselor log after each contact.',
+    absences: 7, absenceStatus: 'escalated',
+    absenceNote: '7 absences · SAT escalated · 6-absence threshold exceeded · Home visit coordination needed',
+    threeE: {pathway:'None identified', points:'0', desc:'No CTE credential · No pathway · Flag to Thomas Midgette', status:'alert'},
+    cte: 'None',
+    asvab: 'Not taken'
+  },
+  'PTM-2026-0009': {
+    grade: '12', diploma: 'Standard', placement: 'Pittman Alternative Program',
+    cohort: '2026', slider: 'Yes', tier: 'watch', tierLabel: 'Watch',
+    tierClass: 'p-amber',
+    counselor: 'Pittman Counselor — TBA',
+    gradCoach: 'Wanda Vincent — Pittman 2.0 plan active',
+    specialist: 'Turhonda Morrison — Pittman Supervisor',
+    richelle: 'Richelle Hines — Alt program · Slider · GCI impact tracked',
+    sols: [
+      {name:'History SOL', status:'needed', text:'Needed — Pittman 2.0 CR active'},
+      {name:'Math SOL',    status:'passed', text:'Passed'},
+      {name:'Science SOL', status:'passed', text:'Passed'},
+      {name:'Reading SOL', status:'passed', text:'Passed'},
+      {name:'Writing SOL', status:'passed', text:'Passed'}
+    ],
+    vcSummary: '1 verified credit outstanding · History SOL needed · Pittman 2.0 credit recovery active',
+    vcClass: 'amber-text',
+    interventions: [
+      {name:'Pittman 2.0 Credit Recovery', type:'active',
+       meta:'Active enrollment · History SOL prep · Home visit completed Apr 20 · Wanda Vincent'},
+      {name:'Slider — GCI calculation flag', type:'info',
+       meta:'Slider status affects GCI rate calculation · Richelle Hines to confirm coding accuracy'}
+    ],
+    log: [
+      {date:'Apr 20', who:'Wanda Vincent', note:'Home visit completed · Student engaged · Pittman 2.0 on track'},
+      {date:'Apr 15', who:'Accountability meeting', note:'Pittman update from Turhonda Morrison · Watch tier maintained'}
+    ],
+    next: 'Confirm History SOL testing date. Verify slider coding with Richelle Hines before VDOE submission. Turhonda Morrison to provide May 6 Pittman update.',
+    absences: 1, absenceStatus: 'clear',
+    absenceNote: '1 absence · No threshold flags · Attendance strong at Pittman',
+    threeE: {pathway:'Employment', points:'0.75', desc:'WRS credential earned · CTE completer', status:'ok'},
+    cte: 'WRS — earned',
+    asvab: 'Not taken'
+  },
+  'PHS-2026-0155': {
+    grade: '12', diploma: 'Standard', placement: 'Petersburg HS',
+    cohort: '2026', slider: 'No', tier: 'recovery', tierLabel: 'Recovery',
+    tierClass: 'p-red',
+    counselor: 'Cinnamon Terry',
+    gradCoach: 'Wanda Vincent — recovery protocol initiated',
+    specialist: 'N/A',
+    richelle: 'Richelle Hines — Unconfirmed · Long-term absence · Status under review',
+    sols: [
+      {name:'History SOL', status:'unknown', text:'Status unknown — LTS'},
+      {name:'Math SOL',    status:'unknown', text:'Status unknown — LTS'},
+      {name:'Science SOL', status:'unknown', text:'Status unknown — LTS'},
+      {name:'Reading SOL', status:'unknown', text:'Status unknown — LTS'},
+      {name:'Writing SOL', status:'unknown', text:'Status unknown — LTS'}
+    ],
+    vcSummary: 'VC status unknown · Long-term absence · Must confirm enrollment before SOL data is actionable',
+    vcClass: 'text-dim',
+    interventions: [
+      {name:'Truancy — home visit assigned', type:'warn',
+       meta:'Sonya Bland · Home visit pending · Not yet completed · Confirm by Apr 30'},
+      {name:'Recovery protocol — active', type:'warn',
+       meta:'Wanda Vincent coordinating · Status: Enrolled → Unconfirmed · Re-engagement goal'}
+    ],
+    log: [
+      {date:'Apr 28', who:'Richelle Hines', note:'Status changed to Unconfirmed · Long-term absence documented'},
+      {date:'Apr 15', who:'Accountability meeting', note:'Recovery protocol initiated · Sonya Bland assigned'}
+    ],
+    next: 'Sonya Bland: complete home visit by Apr 30 and report to May 6 meeting. Wanda Vincent: determine re-enrollment pathway. Richelle Hines: confirm coding — Dropout, LTS, or Transfer. Do not close record until status is confirmed.',
+    absences: 99, absenceStatus: 'lts',
+    absenceNote: 'Long-term absence · Status unconfirmed · Recovery protocol active · Sonya Bland assigned',
+    threeE: {pathway:'Unknown', points:'—', desc:'Status unconfirmed · Cannot assess 3E pathway until re-enrolled', status:'unknown'},
+    cte: 'Unknown',
+    asvab: 'Unknown'
+  },
+  'HB-2026-0003': {
+    grade: '12', diploma: 'Standard', placement: 'Homebound',
+    cohort: '2026', slider: 'No', tier: 'watch', tierLabel: 'Watch',
+    tierClass: 'p-amber',
+    counselor: 'Cinnamon Terry',
+    gradCoach: 'Not assigned',
+    specialist: 'Angela Sykes — Homebound/Home-Based Coordinator',
+    richelle: 'Richelle Hines — Homebound · 1 VC gap · Angela Sykes coordinating',
+    sols: [
+      {name:'History SOL', status:'passed', text:'Passed'},
+      {name:'Math SOL',    status:'passed', text:'Passed'},
+      {name:'Science SOL', status:'needed', text:'Needed — SOL Academy pathway via homebound'},
+      {name:'Reading SOL', status:'passed', text:'Passed'},
+      {name:'Writing SOL', status:'passed', text:'Passed'}
+    ],
+    vcSummary: '1 verified credit outstanding · Science SOL needed · Angela Sykes coordinating test access',
+    vcClass: 'amber-text',
+    interventions: [
+      {name:'Homebound instruction — active', type:'active',
+       meta:'Angela Sykes coordinating · Home-based SOL prep for Science · Test access being arranged'},
+      {name:'SOL Academy — homebound pathway', type:'info',
+       meta:'Science SOL testing access needed · Coordinate with Angela Sykes and assessment office'}
+    ],
+    log: [
+      {date:'Apr 22', who:'Angela Sykes', note:'Homebound instruction active · Science SOL prep underway · Test logistics in progress'},
+      {date:'Apr 15', who:'Accountability meeting', note:'Homebound status confirmed · Angela Sykes reporting at each meeting'}
+    ],
+    next: 'Angela Sykes to confirm Science SOL testing logistics and date before May 6 meeting. Cinnamon Terry to update record when test is scheduled. Monitor for any change in homebound status.',
+    absences: 0, absenceStatus: 'homebound',
+    absenceNote: 'Homebound placement · Attendance tracked by Angela Sykes · Standard absence count does not apply',
+    threeE: {pathway:'None identified', points:'0', desc:'No CTE credential on record · No pathway documented', status:'alert'},
+    cte: 'None',
+    asvab: 'Not taken'
+  }
+};
+
+
+/* ══ SSB EXTENDED PANEL DATA ══ */
+var ssbExtended = {
+  'PHS-2026-0041': {
+    credits: [
+      {subj:'English',   needed:4, earned:4},
+      {subj:'Math',      needed:3, earned:3},
+      {subj:'Science',   needed:3, earned:3},
+      {subj:'History',   needed:3, earned:3},
+      {subj:'Electives', needed:4, earned:4},
+      {subj:'Health/PE', needed:2, earned:2},
+    ],
+    trajectory: [
+      {meeting:'Sep 2025', tier:'On Track', cls:'p-green'},
+      {meeting:'Nov 2025', tier:'On Track', cls:'p-green'},
+      {meeting:'Jan 2026', tier:'On Track', cls:'p-green'},
+      {meeting:'Mar 2026', tier:'On Track', cls:'p-green'},
+      {meeting:'Apr 2026', tier:'On Track', cls:'p-green'},
+    ],
+    meetings: [
+      {date:'Apr 15', flag:'Cleared to On Track · June cert ready', who:'Cinnamon Terry'},
+      {date:'Mar 10', flag:'On Track confirmed · no action needed', who:'Accountability team'},
+    ],
+    parent: [
+      {date:'Apr 22', type:'Meeting', topic:'Graduation confirmation', outcome:'Complete · June cert filed', status:'green'},
+    ],
+    referrals: [
+      {program:'None required', date:'—', status:'On Track — no referrals needed', outcome:'—', cls:'p-green'},
+    ]
+  },
+  'PHS-2026-0078': {
+    credits: [
+      {subj:'English',   needed:4, earned:4},
+      {subj:'Math',      needed:3, earned:2},
+      {subj:'Science',   needed:3, earned:2},
+      {subj:'History',   needed:3, earned:3},
+      {subj:'Electives', needed:4, earned:4},
+      {subj:'Health/PE', needed:2, earned:2},
+    ],
+    trajectory: [
+      {meeting:'Sep 2025', tier:'On Track',  cls:'p-green'},
+      {meeting:'Nov 2025', tier:'On Track',  cls:'p-green'},
+      {meeting:'Jan 2026', tier:'Watch',     cls:'p-amber'},
+      {meeting:'Mar 2026', tier:'Watch',     cls:'p-amber'},
+      {meeting:'Apr 2026', tier:'Watch',     cls:'p-amber'},
+    ],
+    meetings: [
+      {date:'Apr 15', flag:'Watch tier · Sci + Hist SOL flagged · 4 absences', who:'Cinnamon Terry'},
+      {date:'Jan 14', flag:'Moved to Watch · SOL gaps identified at mid-year review', who:'Accountability team'},
+    ],
+    parent: [
+      {date:'Apr 28', type:'Phone call',  topic:'Absences + SOL gaps',   outcome:'Aware · attend plan needed', status:'amber'},
+      {date:'Jan 20', type:'Letter sent', topic:'Mid-year credit status', outcome:'Delivered · no response',     status:'amber'},
+    ],
+    referrals: [
+      {program:'SOL Academy — Hist + Sci', date:'Apr 18', status:'Enrolled · testing May 14', outcome:'Pending', cls:'p-maroon'},
+      {program:'PCG Tutoring',             date:'Apr 22', status:'Referred · SOL prep',        outcome:'Active',  cls:'p-maroon'},
+    ]
+  },
+  'PHS-2026-0112': {
+    credits: [
+      {subj:'English',   needed:4, earned:3},
+      {subj:'Math',      needed:3, earned:1},
+      {subj:'Science',   needed:3, earned:1},
+      {subj:'History',   needed:3, earned:3},
+      {subj:'Electives', needed:4, earned:4},
+      {subj:'Health/PE', needed:2, earned:2},
+    ],
+    trajectory: [
+      {meeting:'Sep 2025', tier:'Watch',    cls:'p-amber'},
+      {meeting:'Nov 2025', tier:'Watch',    cls:'p-amber'},
+      {meeting:'Jan 2026', tier:'Intervene',cls:'p-red'},
+      {meeting:'Mar 2026', tier:'Intervene',cls:'p-red'},
+      {meeting:'Apr 2026', tier:'Intervene',cls:'p-red'},
+    ],
+    meetings: [
+      {date:'Apr 15', flag:'SAT escalated · 7 abs · grad coach assigned · plan MISSING', who:'Dr. Jackson'},
+      {date:'Mar 10', flag:'Intervene · SOL gaps worsening · attendance pattern flagged', who:'Accountability team'},
+      {date:'Jan 14', flag:'Escalated to Intervene · 3 SOL gaps identified',             who:'Cinnamon Terry'},
+    ],
+    parent: [
+      {date:'Apr 8',  type:'Letter sent', topic:'Credit + SOL status', outcome:'Delivered · no response',    status:'red'},
+      {date:'Jan 20', type:'Letter sent', topic:'Failing 2+ courses',  outcome:'Delivered · parent responded', status:'amber'},
+    ],
+    referrals: [
+      {program:'Grad Coach — Wanda Vincent', date:'Apr 15', status:'Assigned · plan MISSING', outcome:'Overdue',   cls:'p-red'},
+      {program:'SOL Academy',                date:'Apr 15', status:'Not yet enrolled',        outcome:'Urgent',     cls:'p-red'},
+      {program:'SAT',                        date:'Apr 28', status:'Escalated · active',      outcome:'In process', cls:'p-amber'},
+    ]
+  },
+  'PTM-2026-0009': {
+    credits: [
+      {subj:'English',   needed:4, earned:4},
+      {subj:'Math',      needed:3, earned:3},
+      {subj:'Science',   needed:3, earned:3},
+      {subj:'History',   needed:3, earned:2},
+      {subj:'Electives', needed:4, earned:4},
+      {subj:'Health/PE', needed:2, earned:2},
+    ],
+    trajectory: [
+      {meeting:'Sep 2025', tier:'Intervene', cls:'p-red'},
+      {meeting:'Nov 2025', tier:'Watch',     cls:'p-amber'},
+      {meeting:'Jan 2026', tier:'Watch',     cls:'p-amber'},
+      {meeting:'Mar 2026', tier:'Watch',     cls:'p-amber'},
+      {meeting:'Apr 2026', tier:'Watch',     cls:'p-amber'},
+    ],
+    meetings: [
+      {date:'Apr 15', flag:'Watch · Pittman 2.0 active · Hist SOL remaining · slider confirmed', who:'Turhonda Morrison'},
+      {date:'Sep 10', flag:'Enrolled Pittman 2.0 · moved from Intervene to Watch',               who:'Accountability team'},
+    ],
+    parent: [
+      {date:'Apr 20', type:'Home visit', topic:'Pittman check-in', outcome:'Student engaged · on track', status:'green'},
+    ],
+    referrals: [
+      {program:'Pittman 2.0 CR', date:'Sep 2025', status:'Enrolled · active', outcome:'68% complete', cls:'p-blue'},
+      {program:'SOL Academy — Hist', date:'Apr 15', status:'Next step after CR', outcome:'Scheduled', cls:'p-amber'},
+    ]
+  },
+  'PHS-2026-0155': {
+    credits: [
+      {subj:'English',   needed:4, earned:3},
+      {subj:'Math',      needed:3, earned:2},
+      {subj:'Science',   needed:3, earned:2},
+      {subj:'History',   needed:3, earned:2},
+      {subj:'Electives', needed:4, earned:3},
+      {subj:'Health/PE', needed:2, earned:1},
+    ],
+    trajectory: [
+      {meeting:'Sep 2025', tier:'Watch',    cls:'p-amber'},
+      {meeting:'Nov 2025', tier:'Intervene',cls:'p-red'},
+      {meeting:'Jan 2026', tier:'Intervene',cls:'p-red'},
+      {meeting:'Mar 2026', tier:'Intervene',cls:'p-red'},
+      {meeting:'Apr 2026', tier:'Recovery', cls:'p-red'},
+    ],
+    meetings: [
+      {date:'Apr 15', flag:'Recovery protocol initiated · status Unconfirmed · LTS', who:'Dr. Jackson'},
+      {date:'Mar 10', flag:'Intervene · chronic absence worsening · home visit ordered', who:'Sonya Bland'},
+    ],
+    parent: [
+      {date:'Apr 28', type:'No contact', topic:'LTS — home visit', outcome:'No response · Sonya Bland assigned', status:'red'},
+      {date:'Mar 1',  type:'Letter sent', topic:'Chronic absence warning', outcome:'Returned undeliverable', status:'red'},
+    ],
+    referrals: [
+      {program:'Truancy — Sonya Bland', date:'Apr 15', status:'Home visit pending', outcome:'Not completed', cls:'p-red'},
+      {program:'Recovery protocol',     date:'Apr 28', status:'Active — Wanda Vincent', outcome:'In progress', cls:'p-amber'},
+    ]
+  },
+  'HB-2026-0003': {
+    credits: [
+      {subj:'English',   needed:4, earned:4},
+      {subj:'Math',      needed:3, earned:3},
+      {subj:'Science',   needed:3, earned:2},
+      {subj:'History',   needed:3, earned:3},
+      {subj:'Electives', needed:4, earned:4},
+      {subj:'Health/PE', needed:2, earned:2},
+    ],
+    trajectory: [
+      {meeting:'Sep 2025', tier:'On Track', cls:'p-green'},
+      {meeting:'Nov 2025', tier:'Watch',    cls:'p-amber'},
+      {meeting:'Jan 2026', tier:'Watch',    cls:'p-amber'},
+      {meeting:'Mar 2026', tier:'Watch',    cls:'p-amber'},
+      {meeting:'Apr 2026', tier:'Watch',    cls:'p-amber'},
+    ],
+    meetings: [
+      {date:'Apr 15', flag:'Watch · Sci SOL needed · Angela Sykes coordinating test access', who:'Angela Sykes'},
+      {date:'Nov 12', flag:'Homebound placement confirmed · moved to Watch', who:'Accountability team'},
+    ],
+    parent: [
+      {date:'Apr 22', type:'Coord call', topic:'Science SOL access', outcome:'Angela Sykes + family coordinating test logistics', status:'amber'},
+    ],
+    referrals: [
+      {program:'Homebound instruction', date:'Nov 2025', status:'Active · Angela Sykes', outcome:'Ongoing', cls:'p-blue'},
+      {program:'SOL Academy — Sci', date:'Apr 22', status:'Test access being arranged', outcome:'Pending', cls:'p-amber'},
+    ]
+  }
+};
+
+function renderSsbExtended(id) {
+  var ext = ssbExtended[id];
+  var stu = studentData[id];
+  if (!ext) return;
+
+  // Credit completion bars
+  var creditHtml = '';
+  var totalNeeded = 0, totalEarned = 0;
+  ext.credits.forEach(function(c) {
+    totalNeeded += c.needed; totalEarned += c.earned;
+    var pct = Math.round((c.earned / c.needed) * 100);
+    var barColor = pct >= 100 ? 'var(--green)' : pct >= 67 ? 'var(--amber)' : 'var(--red)';
+    creditHtml +=
+      '<div style="display:flex;align-items:center;gap:8px;">' +
+        '<div style="font-size:11px;color:var(--text-mid);width:70px;">' + c.subj + '</div>' +
+        '<div style="flex:1;height:8px;background:var(--bg);border:1px solid var(--border);border-radius:4px;overflow:hidden;">' +
+          '<div style="width:' + Math.min(pct,100) + '%;height:100%;background:' + barColor + ';border-radius:4px;transition:width .4s ease;"></div>' +
+        '</div>' +
+        '<div style="font-size:11px;font-weight:700;color:' + (pct>=100?'var(--green-text)':'var(--amber-text)') + ';width:40px;text-align:right;">' + c.earned + '/' + c.needed + '</div>' +
+      '</div>';
+  });
+  var creditBars = document.getElementById('ssb-credit-bars');
+  if (creditBars) creditBars.innerHTML = '<div style="display:flex;flex-direction:column;gap:7px;">' + creditHtml + '</div>';
+  var diplomaType = stu ? stu.diploma : 'Standard';
+  var creditMeta = document.getElementById('ssb-credit-diploma');
+  if (creditMeta) creditMeta.textContent = diplomaType + ' diploma · ' + totalEarned + ' of ' + totalNeeded + ' credits earned';
+  var creditFoot = document.getElementById('ssb-credit-foot');
+  var remaining = totalNeeded - totalEarned;
+  if (creditFoot) creditFoot.innerHTML = '<span style="font-size:11px;color:' + (remaining===0?'var(--green-text)':'var(--amber-text)') + ';font-weight:700;">' + (remaining===0?'All course credits complete':''+remaining+' course credits remaining') + '</span>';
+
+  // Risk trajectory
+  var trajHtml = '<div style="display:flex;align-items:flex-end;gap:6px;padding:4px 0 10px;">';
+  ext.trajectory.forEach(function(t, i) {
+    var isLast = i === ext.trajectory.length - 1;
+    trajHtml +=
+      '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">' +
+        '<span class="pill ' + t.cls + '" style="font-size:9px;padding:3px 6px;' + (isLast?'outline:2px solid var(--maroon-mid);':'opacity:.7;') + '">' + t.tier + '</span>' +
+        '<div style="font-size:9px;color:var(--text-dim);text-align:center;line-height:1.3;">' + t.meeting + '</div>' +
+      '</div>';
+    if (i < ext.trajectory.length - 1) {
+      trajHtml += '<div style="width:12px;height:1px;background:var(--border-mid);flex-shrink:0;margin-bottom:20px;"></div>';
+    }
+  });
+  trajHtml += '</div>';
+  var trendNote = '';
+  if (ext.trajectory.length >= 2) {
+    var first = ext.trajectory[0].tier, last = ext.trajectory[ext.trajectory.length-1].tier;
+    if (first === last) trendNote = 'Status stable across meetings';
+    else if (['On Track','Watch','Intervene','Recovery'].indexOf(last) > ['On Track','Watch','Intervene','Recovery'].indexOf(first)) trendNote = '⬇ Status declined since start of year';
+    else trendNote = '⬆ Status improved since start of year';
+  }
+  var trajEl = document.getElementById('ssb-trajectory');
+  if (trajEl) trajEl.innerHTML = trajHtml + '<div style="font-size:11px;color:var(--text-dim);border-top:1px solid var(--border);padding-top:8px;">' + trendNote + '</div>';
+
+  // Meeting history
+  var mtgHtml = '';
+  ext.meetings.forEach(function(m) {
+    mtgHtml +=
+      '<div style="display:flex;gap:10px;align-items:flex-start;padding:9px 14px;border-bottom:1px solid var(--border);">' +
+        '<div style="font-size:11px;font-weight:700;color:var(--text-dim);white-space:nowrap;min-width:44px;">' + m.date + '</div>' +
+        '<div>' +
+          '<div style="font-size:11px;color:var(--text-dim);">' + m.who + '</div>' +
+          '<div style="font-size:13px;color:var(--text);margin-top:2px;line-height:1.5;">' + m.flag + '</div>' +
+        '</div>' +
+      '</div>';
+  });
+  var mtgEl = document.getElementById('ssb-meetings');
+  if (mtgEl) mtgEl.innerHTML = mtgHtml || '<div style="padding:14px;font-size:13px;color:var(--text-dim);">No meeting flags on record.</div>';
+
+  // Parent engagement
+  var parentColors = {green:'p-green', amber:'p-amber', red:'p-red'};
+  var parentHtml = '';
+  ext.parent.forEach(function(p) {
+    parentHtml +=
+      '<div style="display:flex;gap:10px;align-items:flex-start;padding:9px 14px;border-bottom:1px solid var(--border);">' +
+        '<div style="font-size:11px;font-weight:700;color:var(--text-dim);white-space:nowrap;min-width:44px;">' + p.date + '</div>' +
+        '<div style="flex:1;">' +
+          '<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">' +
+            '<span class="pill ' + parentColors[p.status] + '" style="font-size:9px;">' + p.type + '</span>' +
+            '<span style="font-size:11px;color:var(--text-mid);">' + p.topic + '</span>' +
+          '</div>' +
+          '<div style="font-size:12px;color:var(--text);line-height:1.45;">' + p.outcome + '</div>' +
+        '</div>' +
+      '</div>';
+  });
+  var parentEl = document.getElementById('ssb-parent');
+  if (parentEl) parentEl.innerHTML = parentHtml || '<div style="padding:14px;font-size:13px;color:var(--text-dim);">No contact log entries.</div>';
+
+  // Referral history
+  var refHtml = '';
+  ext.referrals.forEach(function(r) {
+    refHtml +=
+      '<div style="display:flex;gap:10px;align-items:flex-start;padding:9px 14px;border-bottom:1px solid var(--border);">' +
+        '<div style="flex:1;">' +
+          '<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">' +
+            '<span class="pill ' + r.cls + '" style="font-size:9px;">' + r.program + '</span>' +
+            '<span style="font-size:10px;color:var(--text-dim);">' + r.date + '</span>' +
+          '</div>' +
+          '<div style="font-size:12px;color:var(--text-mid);">' + r.status + ' · ' + r.outcome + '</div>' +
+        '</div>' +
+      '</div>';
+  });
+  var refEl = document.getElementById('ssb-referrals');
+  if (refEl) refEl.innerHTML = refHtml || '<div style="padding:14px;font-size:13px;color:var(--text-dim);">No referrals on record.</div>';
+}
+
+function loadStudent(id) {
+  var d = studentData[id];
+  var empty = document.getElementById('ssb-empty');
+  var record = document.getElementById('ssb-record');
+  var badge = document.getElementById('stu-tier-badge');
+
+  if (!d) {
+    empty.style.display = 'block';
+    record.style.display = 'none';
+    badge.style.display = 'none';
+    return;
+  }
+
+  empty.style.display = 'none';
+  record.style.display = 'block';
+
+  // Tier badge
+  badge.style.display = 'block';
+  badge.innerHTML = '<span class="pill ' + d.tierClass + '" style="font-size:12px;padding:4px 12px;">' + d.tierLabel + '</span>';
+
+  // Header strip
+  var placementColor = d.placement.includes('Pittman') ? 'var(--blue-text)' :
+                       d.placement.includes('Homebound') ? 'var(--purple-text)' : 'var(--text-mid)';
+  document.getElementById('ssb-header').innerHTML =
+    '<div style="display:flex;flex-direction:column;">' +
+      '<div style="font-size:18px;font-weight:900;color:var(--text);font-family:var(--font);">' + id + '</div>' +
+      '<div style="font-size:12px;color:var(--text-mid);margin-top:2px;">Grade ' + d.grade + ' · ' + d.diploma + ' Diploma · Cohort ' + d.cohort + '</div>' +
+    '</div>' +
+    '<div style="margin-left:16px;padding-left:16px;border-left:1px solid var(--border);">' +
+      '<div style="font-size:11px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px;">Placement</div>' +
+      '<div style="font-size:14px;font-weight:700;color:' + placementColor + ';">' + d.placement + '</div>' +
+    '</div>' +
+    '<div style="margin-left:16px;padding-left:16px;border-left:1px solid var(--border);">' +
+      '<div style="font-size:11px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px;">Slider</div>' +
+      '<div style="font-size:14px;font-weight:700;color:' + (d.slider==='Yes' ? 'var(--gold-text)' : 'var(--text-mid)') + ';">' + d.slider + '</div>' +
+    '</div>' +
+    '<div style="margin-left:16px;padding-left:16px;border-left:1px solid var(--border);flex:1;">' +
+      '<div style="font-size:11px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:3px;">Master record</div>' +
+      '<div style="font-size:12px;color:var(--text-mid);">' + d.richelle + '</div>' +
+    '</div>' +
+    '<div style="margin-left:auto;"><span class="pill ' + d.tierClass + '" style="font-size:13px;padding:6px 16px;">' + d.tierLabel + '</span></div>';
+
+  // SOLs
+  var solColors = {passed:'var(--green-text)', needed:'var(--red-text)', unknown:'var(--text-dim)'};
+  var solIcons  = {passed:'✓', needed:'✗', unknown:'—'};
+  var solHtml = '';
+  d.sols.forEach(function(s) {
+    solHtml +=
+      '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 14px;border-bottom:1px solid var(--border);">' +
+        '<span style="font-size:13px;color:var(--text-mid);">' + s.name + '</span>' +
+        '<span style="font-size:13px;font-weight:700;color:' + solColors[s.status] + ';">' + solIcons[s.status] + ' ' + s.text + '</span>' +
+      '</div>';
+  });
+  document.getElementById('ssb-sols').innerHTML = solHtml;
+  document.getElementById('ssb-diploma-meta').textContent = d.diploma + ' diploma · ' + d.cohort;
+  document.getElementById('ssb-vc-summary').innerHTML =
+    '<span style="font-size:11px;color:var(--' + d.vcClass + ');">' + d.vcSummary + '</span>';
+
+  // Interventions
+  var ivTypeStyle = {
+    ok:     'background:var(--green-pale);border-left:3px solid var(--green);',
+    active: 'background:var(--card-alt);border-left:3px solid var(--maroon-mid);',
+    warn:   'background:var(--amber-pale);border-left:3px solid var(--amber);',
+    info:   'background:var(--blue-pale);border-left:3px solid var(--blue);'
+  };
+  var ivNameColor = {
+    ok:'var(--green-text)', active:'var(--maroon-text)', warn:'var(--amber-text)', info:'var(--blue-text)'
+  };
+  var ivHtml = '';
+  d.interventions.forEach(function(iv) {
+    ivHtml +=
+      '<div style="border-radius:5px;padding:9px 12px;' + ivTypeStyle[iv.type] + '">' +
+        '<div style="font-size:13px;font-weight:700;color:' + ivNameColor[iv.type] + ';margin-bottom:3px;">' + iv.name + '</div>' +
+        '<div style="font-size:12px;color:var(--text-mid);line-height:1.5;">' + iv.meta + '</div>' +
+      '</div>';
+  });
+  document.getElementById('ssb-interventions').innerHTML = ivHtml;
+  document.getElementById('ssb-counselor-meta').textContent = 'Counselor: ' + d.counselor;
+
+  // Team
+  var teamHtml =
+    teamRow('👩‍🏫', 'School Counselor', d.counselor, d.counselor.includes('TBA') ? 'amber' : 'green') +
+    teamRow('🎓', 'Graduation Coach', d.gradCoach, d.gradCoach.includes('MISSING') ? 'red' : d.gradCoach === 'Not assigned' ? 'dim' : 'green') +
+    teamRow('🏫', 'Specialist / Coordinator', d.specialist, d.specialist === 'N/A' ? 'dim' : 'blue') +
+    teamRow('📊', 'Data Coordinator', 'Richelle Hines', 'green') +
+    teamRow('⚖️', 'Truancy Specialist', d.tier === 'recovery' || d.absences >= 6 ? 'Sonya Bland — active' : 'Sonya Bland', d.tier === 'recovery' || d.absences >= 6 ? 'amber' : 'dim');
+  document.getElementById('ssb-team').innerHTML = teamHtml;
+
+  // Contact log
+  var logHtml = '';
+  d.log.forEach(function(l) {
+    logHtml +=
+      '<div style="padding:9px 14px;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:flex-start;">' +
+        '<div style="font-size:11px;font-weight:700;color:var(--text-dim);white-space:nowrap;min-width:44px;">' + l.date + '</div>' +
+        '<div>' +
+          '<div style="font-size:12px;font-weight:600;color:var(--text-mid);">' + l.who + '</div>' +
+          '<div style="font-size:13px;color:var(--text);margin-top:2px;line-height:1.5;">' + l.note + '</div>' +
+        '</div>' +
+      '</div>';
+  });
+  if (!logHtml) logHtml = '<div style="padding:14px;font-size:13px;color:var(--text-dim);">No contact log entries on file.</div>';
+  document.getElementById('ssb-log').innerHTML = logHtml;
+
+  // Next steps
+  document.getElementById('ssb-next').textContent = d.next;
+
+  // Attendance
+  var absColors = {clear:'var(--green-text)', flag:'var(--amber-text)', escalated:'var(--red-text)', lts:'var(--red-text)', homebound:'var(--blue-text)'};
+  var absLabels = {clear:'Clear', flag:'4-Absence Flag', escalated:'SAT Escalated', lts:'Long-Term Absence', homebound:'Homebound'};
+  var absNum = d.absences < 99 ? d.absences : '—';
+  document.getElementById('ssb-attendance').innerHTML =
+    '<div style="display:flex;align-items:center;gap:16px;margin-bottom:10px;">' +
+      '<div style="text-align:center;">' +
+        '<div style="font-size:36px;font-weight:900;color:' + absColors[d.absenceStatus] + ';line-height:1;">' + absNum + '</div>' +
+        '<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);margin-top:2px;">Absences</div>' +
+      '</div>' +
+      '<div style="padding-left:16px;border-left:1px solid var(--border);flex:1;">' +
+        '<div class="pill ' + (d.absenceStatus === 'clear' || d.absenceStatus === 'homebound' ? 'p-green' : d.absenceStatus === 'flag' ? 'p-amber' : 'p-red') + '" style="font-size:12px;padding:4px 12px;margin-bottom:8px;">' + absLabels[d.absenceStatus] + '</div>' +
+        '<div style="font-size:12px;color:var(--text-mid);line-height:1.55;">' + d.absenceNote + '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div style="font-size:11px;color:var(--text-dim);border-top:1px solid var(--border);padding-top:8px;">4-absence threshold → SAT notification &nbsp;·&nbsp; 6-absence threshold → SAT escalation &nbsp;·&nbsp; PCPS Attendance Manual</div>';
+
+  // Extended panels
+  renderSsbExtended(id);
+
+  // 3E
+  var te3Colors = {ok:'var(--green-text)', warn:'var(--amber-text)', alert:'var(--red-text)', unknown:'var(--text-dim)'};
+  document.getElementById('ssb-3e').innerHTML =
+    '<div style="display:flex;align-items:center;gap:14px;margin-bottom:10px;">' +
+      '<div>' +
+        '<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);margin-bottom:4px;">Pathway</div>' +
+        '<div style="font-size:16px;font-weight:800;color:' + te3Colors[d.threeE.status] + ';">' + d.threeE.pathway + '</div>' +
+      '</div>' +
+      '<div style="padding-left:14px;border-left:1px solid var(--border);">' +
+        '<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);margin-bottom:4px;">Points</div>' +
+        '<div style="font-size:16px;font-weight:800;color:' + te3Colors[d.threeE.status] + ';">' + d.threeE.points + '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div style="font-size:12px;color:var(--text-mid);line-height:1.5;border-top:1px solid var(--border);padding-top:8px;">' + d.threeE.desc + '</div>' +
+    '<div style="font-size:11px;color:var(--text-dim);margin-top:6px;">CTE: ' + d.cte + ' &nbsp;·&nbsp; ASVAB: ' + d.asvab + '</div>';
+}
+
+function teamRow(icon, role, name, status) {
+  var nameColor = {
+    green:'var(--green-text)', amber:'var(--amber-text)',
+    red:'var(--red-text)', blue:'var(--blue-text)', dim:'var(--text-dim)'
+  };
+  return '<div style="display:flex;align-items:flex-start;gap:10px;padding:8px 14px;border-bottom:1px solid var(--border);">' +
+    '<span style="font-size:16px;flex-shrink:0;margin-top:1px;">' + icon + '</span>' +
+    '<div>' +
+      '<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);">' + role + '</div>' +
+      '<div style="font-size:13px;font-weight:600;color:' + nameColor[status] + ';margin-top:2px;">' + name + '</div>' +
+    '</div></div>';
+}
+
+function openPSP(id){
+  var d=pspData[id]; if(!d) return;
+  document.getElementById('psp-title').textContent='Support plan — '+id;
+  document.getElementById('psp-credits').innerHTML=d.credits;
+  document.getElementById('psp-interventions').innerHTML=d.ivs;
+  document.getElementById('psp-log').innerHTML=d.log;
+  document.getElementById('psp-next').textContent=d.next;
+  document.getElementById('psp-3e').textContent=d.badge;
+  var drawer=document.getElementById('psp-drawer');
+  drawer.style.display='block';
+  drawer.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function closePSP(){
+  var d=document.getElementById('psp-drawer');
+  if(d) d.style.display='none';
+}
+</script>
+</body>
+</html>
