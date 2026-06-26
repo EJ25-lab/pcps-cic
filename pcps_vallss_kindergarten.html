@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PCPS VALLSS Kindergarten Dashboard</title>
+<style>
+  :root{
+    --maroon:#6B1F2E; --navy:#1F3A5F; --gold:#C9A84C; --notscored:#C9C2B6;
+    --bg:#F5F3EF; --card:#FFFFFF; --ink:#1A2A30; --mid:#5A6B73; --light:#8A9BA3;
+    --line:#E6E1D8; --maroon-soft:#F3E9EA;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Liberation Sans','Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--ink);padding:24px;line-height:1.45}
+  .frame{max-width:1080px;margin:0 auto}
+  .titlebar{background:var(--navy);border-radius:10px;padding:16px 22px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+  .titlebar .left{display:flex;align-items:center;gap:14px}
+  .crest{width:38px;height:38px;border-radius:7px;background:var(--maroon);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px;letter-spacing:.5px;flex-shrink:0}
+  .titlebar h1{color:#fff;font-size:17px;font-weight:700}
+  .titlebar .sub{color:rgba(255,255,255,.72);font-size:11px;margin-top:2px}
+  #viewBadge{color:rgba(255,255,255,.9);font-size:10px;border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:5px 12px;letter-spacing:.4px}
+  .controls{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+  .seg-toggle{display:flex;background:var(--card);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+  .seg-toggle button{border:0;background:transparent;padding:9px 18px;font-size:12px;font-weight:600;color:var(--mid);cursor:pointer;font-family:inherit}
+  .seg-toggle button.active{background:var(--navy);color:#fff}
+  select{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-size:12px;color:var(--ink);font-weight:600;font-family:inherit;cursor:pointer;min-width:200px}
+  select:disabled{opacity:.45;cursor:not-allowed}
+  .scorecards{display:grid;gap:12px;margin-bottom:16px}
+  .scorecards.four{grid-template-columns:repeat(4,1fr)}
+  .scorecards.three{grid-template-columns:repeat(3,1fr)}
+  .card{background:var(--card);border-radius:10px;padding:16px 18px;box-shadow:0 1px 3px rgba(26,42,48,.06);border:1px solid var(--line)}
+  .scard .label{font-size:11px;color:var(--mid);font-weight:600;letter-spacing:.3px;text-transform:uppercase;margin-bottom:7px}
+  .scard .num{font-size:32px;font-weight:700;color:var(--navy);line-height:1}
+  .scard .foot{font-size:11px;color:var(--light);margin-top:6px}
+  .scard.high{border-left:4px solid var(--maroon)}
+  .scard.high .num{color:var(--maroon)}
+  .row{display:grid;gap:12px;margin-bottom:12px}
+  .row.two{grid-template-columns:1fr 1fr}
+  .row.one{grid-template-columns:1fr}
+  .chart{background:var(--card);border-radius:10px;padding:16px 18px 18px;box-shadow:0 1px 3px rgba(26,42,48,.06);border:1px solid var(--line)}
+  .chart h3{font-size:13.5px;font-weight:700;color:var(--ink);margin-bottom:2px}
+  .chart .csub{font-size:11px;color:var(--light);margin-bottom:14px}
+  .stack{display:flex;flex-direction:column;gap:13px;margin-top:4px}
+  .stackrow .rl{display:flex;justify-content:space-between;font-size:11.5px;margin-bottom:5px}
+  .stackrow .rl .nm{font-weight:600;color:var(--ink)}
+  .stackrow .rl .nn{color:var(--mid)}
+  .bar{height:26px;border-radius:5px;overflow:hidden;display:flex;background:#f0ece4}
+  .seg{height:100%;display:flex;align-items:center;justify-content:center;font-size:10.5px;color:#fff;font-weight:600;transition:width .5s ease}
+  .seg.ns{color:#5a5448}
+  .seg-high{background:var(--maroon)} .seg-mod{background:var(--gold)} .seg-low{background:var(--navy)} .seg-ns{background:var(--notscored)}
+  .legend{display:flex;gap:16px;justify-content:flex-end;margin-bottom:10px;flex-wrap:wrap}
+  .legend.center{justify-content:center;margin-top:14px}
+  .lg{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--mid)}
+  .sw{width:11px;height:11px;border-radius:3px}
+  .skillbar{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+  .skillbar .sn{font-size:11.5px;color:var(--ink);width:130px;flex-shrink:0}
+  .skilltrack{flex:1;height:18px;background:#f0ece4;border-radius:4px;overflow:hidden}
+  .skillfill{height:100%;background:var(--navy);border-radius:4px;transition:width .5s ease}
+  .skillpct{font-size:11px;color:var(--mid);width:46px;text-align:right;font-weight:600}
+  .suppressed{background:repeating-linear-gradient(45deg,#f0ece4,#f0ece4 6px,#e8e2d8 6px,#e8e2d8 12px);border-radius:5px;height:26px;display:flex;align-items:center;padding-left:12px;font-size:11px;color:var(--mid);font-style:italic}
+  .privacy-note{font-size:10px;color:var(--light);margin-top:10px;font-style:italic;border-top:1px dashed var(--line);padding-top:8px}
+  .grouped{display:flex;justify-content:space-around;align-items:flex-end;height:200px;padding:0 20px;border-bottom:1px solid var(--line);margin-top:8px}
+  .ggroup{display:flex;flex-direction:column;align-items:center;gap:8px;flex:1}
+  .gbars{display:flex;align-items:flex-end;gap:10px;height:170px}
+  .gbar{width:34px;border-radius:4px 4px 0 0;position:relative;display:flex;align-items:flex-start;justify-content:center;transition:height .5s ease}
+  .gbar span{position:absolute;top:-18px;font-size:10px;font-weight:600;color:var(--mid)}
+  .gyear{font-size:11.5px;font-weight:600;color:var(--ink)}
+  .note{font-size:10.5px;color:var(--light);margin-top:24px;text-align:center;font-style:italic;line-height:1.6}
+  .tag{display:inline-block;background:var(--maroon-soft);color:var(--maroon);font-size:10px;font-weight:700;padding:3px 9px;border-radius:5px;letter-spacing:.4px;margin-left:8px;vertical-align:middle}
+  .hidden{display:none !important}
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="titlebar">
+    <div class="left">
+      <div class="crest">PCPS</div>
+      <div>
+        <h1>Petersburg City Public Schools</h1>
+        <div class="sub">VALLSS Kindergarten · Spring · Band of Risk</div>
+      </div>
+    </div>
+    <div id="viewBadge">DISTRICT VIEW</div>
+  </div>
+
+  <div class="controls">
+    <div class="seg-toggle">
+      <button id="btnDistrict" class="active" onclick="setView('district')">District</button>
+      <button id="btnSchool" onclick="setView('school')">School</button>
+    </div>
+    <select id="schoolSel" onchange="render()" disabled>
+      <option value="Cool Spring Elementary">Cool Spring Elementary</option>
+      <option value="Pleasants Lane Elementary">Pleasants Lane Elementary</option>
+    </select>
+    <select id="yearSel" onchange="render()">
+      <option value="2025-2026">School Year: 2025–2026</option>
+      <option value="2024-2025">School Year: 2024–2025</option>
+    </select>
+  </div>
+
+  <div id="scorecards" class="scorecards four"></div>
+
+  <div class="legend">
+    <div class="lg"><span class="sw seg-high"></span>High</div>
+    <div class="lg"><span class="sw seg-mod"></span>Moderate</div>
+    <div class="lg"><span class="sw seg-low"></span>Low</div>
+    <div class="lg"><span class="sw seg-ns"></span>Not Scored</div>
+  </div>
+
+  <div id="chartArea"></div>
+
+  <div class="note" id="footnote"></div>
+</div>
+
+<script>
+const DATA = {"Cool Spring Elementary": {"2024-2025": {"bands": {"High": 44, "Low": 17, "Moderate": 17}, "n": 78, "teachers": {"Teacher A": {"High": 13, "Low": 2, "Moderate": 2}, "Teacher B": {"Low": 6, "High": 8, "Moderate": 5}, "Teacher C": {"High": 14, "Low": 2, "Moderate": 5}, "Teacher D": {"High": 8, "Moderate": 5, "Low": 7}, "Teacher F": {"High": 1}}, "skills": {"LetterSounds_Flag": 56.4, "BeginningSounds_Flag": 56.4, "Blending_Flag": 65.4, "DecodeReal_Flag": 66.7, "DecodePseudo_Flag": 65.4, "Encoding_Flag": 73.1}, "esl": {"No": {"High": 43, "Low": 17, "Moderate": 17}, "Yes": {"High": 1}}, "sex": {"F": {"High": 22, "Low": 9, "Moderate": 8}, "M": {"Low": 8, "High": 22, "Moderate": 9}}, "race": {"Black/African American": {"High": 32, "Low": 14, "Moderate": 16}, "Hispanic/Latino": {"Low": 2, "High": 10}, "Unknown": {"High": 2, "Moderate": 1}, "Hispanic": {"Low": 1}}}, "2025-2026": {"bands": {"Moderate": 10, "Not Scored": 1, "Low": 25, "High": 65}, "n": 101, "teachers": {"Teacher C": {"Moderate": 2, "Not Scored": 1, "Low": 2, "High": 16}, "Teacher D": {"Low": 15, "High": 3, "Moderate": 1}, "Teacher E": {"Moderate": 3, "High": 13, "Low": 6}, "Teacher F": {"High": 4}, "Teacher G": {"High": 13, "Moderate": 3, "Low": 1}, "Teacher H": {"Low": 1, "High": 16, "Moderate": 1}}, "skills": {"LetterSounds_Flag": 65.3, "BeginningSounds_Flag": 65.3, "Blending_Flag": 74.3, "DecodeReal_Flag": 69.3, "DecodePseudo_Flag": 65.3, "Encoding_Flag": 76.2}, "esl": {"No": {"Moderate": 10, "Not Scored": 1, "Low": 23, "High": 60}, "Yes": {"High": 5, "Low": 2}}, "sex": {"M": {"Moderate": 5, "High": 32, "Low": 9}, "F": {"Not Scored": 1, "Low": 16, "High": 33, "Moderate": 5}}, "race": {"Asian": {"Moderate": 1, "Low": 1}, "Hispanic/Latino": {"Not Scored": 1, "High": 11, "Low": 4, "Moderate": 1}, "Two or More": {"Low": 1}, "Black/African American": {"High": 51, "Low": 17, "Moderate": 8}, "Unknown": {"High": 1}, "White": {"High": 2, "Low": 2}}}}, "Pleasants Lane Elementary": {"2024-2025": {"bands": {"Moderate": 15, "High": 23, "Low": 22, "Not Scored": 1}, "n": 61, "teachers": {"Teacher A": {"Moderate": 3, "High": 7, "Low": 3}, "Teacher C": {"Low": 5, "Moderate": 4, "High": 1}, "Teacher D": {"High": 5, "Low": 6, "Moderate": 2}, "Teacher E": {"Low": 7, "Moderate": 5, "High": 1}, "Teacher H": {"High": 9, "Not Scored": 1, "Low": 1, "Moderate": 1}}, "skills": {"LetterSounds_Flag": 45.9, "BeginningSounds_Flag": 52.5, "Blending_Flag": 55.7, "DecodeReal_Flag": 49.2, "DecodePseudo_Flag": 50.8, "Encoding_Flag": 57.4}, "esl": {"No": {"Moderate": 15, "High": 18, "Low": 22, "Not Scored": 1}, "Yes": {"High": 5}}, "sex": {"M": {"Moderate": 4, "High": 10, "Low": 8, "Not Scored": 1}, "F": {"High": 13, "Low": 14, "Moderate": 11}}, "race": {"Black/African American": {"Moderate": 14, "High": 13, "Low": 21, "Not Scored": 1}, "White": {"High": 2}, "Hispanic/Latino": {"High": 8, "Moderate": 1}, "American Indian/Alaska Native": {"Low": 1}}}, "2025-2026": {"bands": {"High": 46, "Low": 22, "Moderate": 15, "Not Scored": 1}, "n": 84, "teachers": {"Teacher B": {"High": 13, "Low": 1, "Moderate": 1}, "Teacher C": {"Low": 3, "High": 7, "Moderate": 7}, "Teacher F": {"Low": 8, "Moderate": 4, "High": 4}, "Teacher G": {"High": 13, "Low": 1, "Not Scored": 1, "Moderate": 3}, "Teacher H": {"High": 9, "Low": 9}}, "skills": {"LetterSounds_Flag": 40.5, "BeginningSounds_Flag": 39.3, "Blending_Flag": 52.4, "DecodeReal_Flag": 60.7, "DecodePseudo_Flag": 58.3, "Encoding_Flag": 76.2}, "esl": {"No": {"High": 45, "Low": 22, "Moderate": 14, "Not Scored": 1}, "Yes": {"Moderate": 1, "High": 1}}, "sex": {"M": {"High": 22, "Low": 10, "Moderate": 6, "Not Scored": 1}, "F": {"High": 24, "Low": 12, "Moderate": 9}}, "race": {"Hispanic/Latino": {"High": 9, "Low": 4, "Moderate": 2}, "Black/African American": {"High": 35, "Low": 18, "Moderate": 13, "Not Scored": 1}, "Asian": {"High": 1}, "American Indian/Alaska Native": {"High": 1}}}}};
+const SCHOOLS = ['Cool Spring Elementary','Pleasants Lane Elementary'];
+const BANDS = ['High','Moderate','Low','Not Scored'];
+const BANDCLS = {High:'seg-high',Moderate:'seg-mod',Low:'seg-low','Not Scored':'seg-ns'};
+const SKILLNAMES = {LetterSounds_Flag:'Letter Sounds',BeginningSounds_Flag:'Beginning Sounds',Blending_Flag:'Blending',DecodeReal_Flag:'Decode (Real)',DecodePseudo_Flag:'Decode (Pseudo)',Encoding_Flag:'Encoding'};
+let view='district';
+
+function setView(v){
+  view=v;
+  document.getElementById('btnDistrict').classList.toggle('active',v==='district');
+  document.getElementById('btnSchool').classList.toggle('active',v==='school');
+  document.getElementById('schoolSel').disabled = (v==='district');
+  document.getElementById('viewBadge').textContent = v==='district'?'DISTRICT VIEW':'SCHOOL VIEW';
+  render();
+}
+
+function sumBands(yr, sch){ // returns {High,Moderate,Low,Not Scored, n}
+  let out={High:0,Moderate:0,Low:0,'Not Scored':0};
+  let schools = sch ? [sch] : SCHOOLS;
+  schools.forEach(s=>{ const b=DATA[s][yr].bands; BANDS.forEach(k=>out[k]+=(b[k]||0)); });
+  out.n = out.High+out.Moderate+out.Low+out['Not Scored'];
+  return out;
+}
+function pct(n,d){ return d? Math.round(100*n/d):0; }
+
+function stackBar(counts, n, height){
+  height=height||26;
+  let html='<div class="bar" style="height:'+height+'px">';
+  BANDS.forEach(b=>{
+    const v=counts[b]||0; if(!v) return;
+    const w=(100*v/n).toFixed(1);
+    const showLabel = w>=12;
+    html+='<div class="seg '+BANDCLS[b]+(b==='Not Scored'?' ns':'')+'" style="width:'+w+'%">'+(showLabel?(b==='High'||b==='Low'?b+' · '+v:v):'')+'</div>';
+  });
+  return html+'</div>';
+}
+
+function scorecards(yr, sch){
+  const b=sumBands(yr,sch);
+  const el=document.getElementById('scorecards');
+  if(view==='district'){
+    el.className='scorecards four';
+    el.innerHTML =
+      card('% High Risk', pct(b.High,b.n)+'%','of K students assessed',true)+
+      card('# High Risk', b.High,'students in High band')+
+      card('# Assessed', b.n,'kindergartners, Spring')+
+      card('# Schools','2','reporting this window');
+  } else {
+    el.className='scorecards three';
+    el.innerHTML =
+      card('% High Risk', pct(b.High,b.n)+'%','of K students assessed',true)+
+      card('# High Risk', b.High,'students in High band')+
+      card('# Assessed', b.n,'kindergartners, Spring');
+  }
+}
+function card(label,num,foot,high){
+  return '<div class="card scard'+(high?' high':'')+'"><div class="label">'+label+'</div><div class="num">'+num+'</div><div class="foot">'+foot+'</div></div>';
+}
+
+function render(){
+  const yr=document.getElementById('yearSel').value;
+  const sch=document.getElementById('schoolSel').value;
+  scorecards(yr, view==='district'?null:sch);
+  const area=document.getElementById('chartArea');
+  area.innerHTML = view==='district' ? districtCharts(yr) : schoolCharts(yr,sch);
+  document.getElementById('footnote').innerHTML = view==='district'
+    ? 'Live mockup · real validated VALLSS figures · bands read directly from the state classification (BOR_CB). Spring-to-Spring compares different cohorts each year, not the same students over time.'
+    : 'Live mockup · '+sch+' · teachers de-identified · classes and subgroups under 10 students show totals only — band detail suppressed to protect privacy.';
+}
+
+function districtCharts(yr){
+  // Risk by school (current yr) + risk by grade(K) ; spring-to-spring full width
+  let bySchool='';
+  SCHOOLS.forEach(s=>{
+    const b=DATA[s][yr].bands, n=DATA[s][yr].n;
+    bySchool+='<div class="stackrow"><div class="rl"><span class="nm">'+s.replace(' Elementary','')+'</span><span class="nn">n = '+n+'</span></div>'+stackBar(b,n)+'</div>';
+  });
+  const tot=sumBands(yr,null);
+  const gradeRows = BANDS.filter(b=>b!=='Not Scored').map(b=>{
+    const col = b==='High'?'var(--maroon)':b==='Moderate'?'#a8842e':'var(--navy)';
+    return '<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line)"><span>'+b+' Risk</span><b style="color:'+col+'">'+tot[b]+' · '+pct(tot[b],tot.n)+'%</b></div>';
+  }).join('');
+
+  // spring to spring: both years district totals
+  const y1=sumBands('2024-2025',null), y2=sumBands('2025-2026',null);
+  const maxV=Math.max(y1.High,y1.Moderate,y1.Low,y2.High,y2.Moderate,y2.Low);
+  function grp(b,lab){
+    function bar(band){const h=(150*b[band]/maxV).toFixed(0);return '<div class="gbar '+BANDCLS[band]+'" style="height:'+h+'px"><span>'+b[band]+'</span></div>';}
+    return '<div class="ggroup"><div class="gbars">'+bar('High')+bar('Moderate')+bar('Low')+'</div><div class="gyear">'+lab+' · n = '+b.n+'</div></div>';
+  }
+
+  return '<div class="row two">'+
+    '<div class="chart"><h3>Risk by School</h3><div class="csub">Share of kindergartners in each band</div><div class="stack">'+bySchool+'</div></div>'+
+    '<div class="chart"><h3>Risk by Grade Level</h3><div class="csub">Kindergarten only this year</div><div class="stack"><div class="stackrow"><div class="rl"><span class="nm">Kindergarten</span><span class="nn">n = '+tot.n+'</span></div>'+stackBar(tot,tot.n,30)+'</div><div style="margin-top:16px;font-size:11.5px">'+gradeRows+'</div></div></div>'+
+  '</div>'+
+  '<div class="row one"><div class="chart"><h3>Spring-to-Spring <span class="tag">COHORT-TO-COHORT, NOT GROWTH</span></h3><div class="csub">Different kindergartners each year — compares cohorts, not the same students over time</div><div class="grouped">'+grp(y1,'Spring 2024–25')+grp(y2,'Spring 2025–26')+'</div><div class="legend center"><div class="lg"><span class="sw seg-high"></span>High</div><div class="lg"><span class="sw seg-mod"></span>Moderate</div><div class="lg"><span class="sw seg-low"></span>Low</div></div></div></div>';
+}
+
+function schoolCharts(yr,sch){
+  const d=DATA[sch][yr];
+  // by teacher (de-identified; classes under 10 suppressed)
+  let teacherRows='';
+  const tnames=Object.keys(d.teachers).sort();
+  tnames.forEach(t=>{
+    const tb=d.teachers[t]; const tn=BANDS.reduce((a,b)=>a+(tb[b]||0),0);
+    if(tn<10){
+      teacherRows+='<div class="stackrow" style="margin-bottom:9px"><div class="rl"><span class="nm">'+t+'</span><span class="nn">n = '+tn+'</span></div><div class="suppressed">Band detail suppressed (n &lt; 10)</div></div>';
+    } else {
+      teacherRows+='<div class="stackrow"><div class="rl"><span class="nm">'+t+'</span><span class="nn">n = '+tn+'</span></div>'+stackBar(tb,tn)+'</div>';
+    }
+  });
+  // subskills
+  let skillRows='';
+  Object.keys(SKILLNAMES).forEach(k=>{
+    const v=d.skills[k];
+    skillRows+='<div class="skillbar"><div class="sn">'+SKILLNAMES[k]+'</div><div class="skilltrack"><div class="skillfill" style="width:'+v+'%"></div></div><div class="skillpct">'+v+'%</div></div>';
+  });
+  // subgroups with n<10 suppression
+  function subgroupChart(title, sub, sortKeys){
+    let keys = sortKeys || Object.keys(sub);
+    let rows='';
+    keys.forEach(k=>{
+      if(!sub[k]) return;
+      const grp=sub[k]; const n=BANDS.reduce((a,b)=>a+(grp[b]||0),0);
+      if(n<10){
+        rows+='<div style="margin-bottom:11px"><div class="rl" style="display:flex;justify-content:space-between;font-size:11.5px;margin-bottom:5px"><span class="nm" style="font-weight:600">'+k+'</span><span class="nn" style="color:var(--mid)">n = '+n+'</span></div><div class="suppressed">Band detail suppressed (n &lt; 10)</div></div>';
+      } else {
+        rows+='<div class="stackrow" style="margin-bottom:11px"><div class="rl"><span class="nm">'+k+'</span><span class="nn">n = '+n+'</span></div>'+stackBar(grp,n)+'</div>';
+      }
+    });
+    return '<div class="chart"><h3>'+title+'</h3><div class="csub">Band of risk within group</div><div class="stack">'+rows+'</div><div class="privacy-note">Groups under 10 students: band detail hidden to protect student privacy. Counts shown.</div></div>';
+  }
+
+  return '<div class="row one"><div class="chart"><h3>Risk by Teacher</h3><div class="csub">Each class, band of risk · teachers de-identified · per-class counts shown</div><div class="stack">'+teacherRows+'</div><div class="privacy-note">Teacher names de-identified. Classes under 10 students: band detail hidden to protect privacy. Counts shown.</div></div></div>'+
+    '<div class="row two">'+
+      '<div class="chart"><h3>Sub-skill Instructional Indicators</h3><div class="csub">% of students flagged for explicit instruction · drives the Band of Risk</div>'+skillRows+'</div>'+
+      subgroupChart('Subgroup — English Learner', d.esl, ['No','Yes'])+
+    '</div>'+
+    '<div class="row two">'+
+      subgroupChart('Subgroup — Sex', d.sex)+
+      subgroupChart('Subgroup — Race / Ethnicity', d.race)+
+    '</div>';
+}
+
+render();
+</script>
+</body>
+</html>
